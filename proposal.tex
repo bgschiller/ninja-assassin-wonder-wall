@@ -1,0 +1,175 @@
+\documentclass[12pt]{article} 
+
+%math commands and symbols
+\usepackage{amsmath}
+%\usepackage{amssymb}
+
+%\usepackage{amsthm}
+%\newtheorem*{lem}{Lemma}
+%\newtheorem{thm}{Theorem}
+%\renewcommand{\qedsymbol}{$\blacksquare$}
+
+%%%%%%% allows augmented matrices defined as 
+%%% \begin{pmatrix}[cc|c] %or bmatrix, or matrix...
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+%used following an integral for proper spacing and font
+\newcommand{\ud}{\,\mathrm{d}}
+
+%begins paragraphs with an empty line instead of a tab.
+\usepackage[parfill]{parskip}  
+
+%smaller section titles
+%\usepackage[compact,small]{titlesec}
+
+%creates smaller margins
+%\usepackage{fullpage} 
+
+\usepackage[margin=1in]{geometry}
+
+%in older versions of latex, replace [pdf] with auto-pst-pdf
+%\usepackage{auto-pst-pdf}
+\usepackage[pdf]{pstricks}
+%\usepackage{pst-plot}
+%\usepackage{pst-node}
+%\usepackage{pst-tree}
+%\usepackage{qtree}
+
+%pseudocode typeset as in CLRS Intro to Algorithms
+%\usepackage{clrscode3e}
+
+%allows you to put boxes around stuff
+%\usepackage{framed}
+
+%allows for comment blocks and verbatim sections
+%\usepackage{verbatim} 
+%permits use of verbatimtab environment, which preserves tabbing.
+%\usepackage{moreverb}
+
+%Include columns
+\usepackage{multicol}
+
+%allows for \includegraphics
+%\usepackage{graphicx}
+
+%clickable URLs, sections names
+%\usepackage[pdfborder={0 0 0}]{hyperref}
+
+\title{Undergraduate Research Proposal}
+\author{Brian Schiller}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+I would like to study a problem that comes from a camp game called `Ninja-Assassin Wonder-Wall'. The game works like this: $n$ players all stand in a circle. Each player chooses two other players  (without indicating their choices), one to be their Ninja-Assassin and the other to be their Wonder-Wall. When the game starts every player tries to keep their Wonder-Wall between themself and their Ninja Assassin.
+
+%solved game
+\begin{center}
+\begin{multicols}{2}
+\begin{pspicture}(0,0)(10,10)
+\qdisk(1,1){2pt}
+\uput[u](1,1){C}
+
+\qdisk(0,2){2pt}
+\uput[u](0,2){E}
+
+\qdisk(2,2){2pt}
+\uput[u](2,2){B}
+
+\qdisk(3,3){2pt}
+\uput[u](3,3){A}
+
+\qdisk(4,2){2pt}
+\uput[u](4,2){D}
+
+\qdisk(6,2){2pt}
+\uput[u](6,2){F}
+\end{pspicture}
+
+\columnbreak
+
+\begin{tabular}{l | c | c}
+ & WW & NA \\
+ \hline
+ A &  B& C\\
+ B &  D& F\\
+ C &  B& A\\
+ D &  B& E\\
+ E &  D& F\\
+ F &  D& B
+ \end{tabular}
+ \end{multicols}
+ \small Above is a game in which all players are satisfied with their position.
+ \end{center}
+ 
+ 
+%unsolvable game
+\begin{center}
+\begin{multicols}{2}
+\begin{pspicture}(0,0)(10,10)
+\qdisk(1,1){2pt}
+\uput[u](1,1){C}
+
+\qdisk(1,2){2pt}
+\uput[u](1,2){B}
+
+\qdisk(1,3){2pt}
+\uput[u](1,3){A}
+
+\qdisk(0,2){2pt}
+\uput[u](0,2){D}
+
+\end{pspicture}
+
+\columnbreak
+
+\begin{tabular}{l | c | c}
+ & WW & NA \\
+ \hline
+ A & B& C\\
+ B & D& A\\
+ C & B& A\\
+ D & B& A
+ \end{tabular}
+ \end{multicols}
+ \small Above is a game where there is no orientation which satisfies all players.
+ \end{center}
+
+
+Because I came up with this problem, and it is not the specialty of any professor, it is important to plan for the event that I become blocked. I can see many different directions to explore with this problem---hopefully enough so that if I'm blocked on one approach I can advance from another angle.
+
+Some directions:
+\begin{description}
+\item[Counting Problem:] How many $n$ player games are there, where two games are the same if one can be turned into the other by a renaming of the players. For how many of those games is there a solution, an arrangement where all players are satisfied with their position? How does that proportion change with $n$?
+\item[Constructive Algorithm:] Given a relationship table, how can we determine if there is a straight-line solution (all players arranged in a straight line with every player satisfied)? Can we give an efficient algorithm to construct such a solution?
+\item[Pursuit curves, Diff-Eq:] Create animations of games in two ways:
+	\begin{itemize}
+	\item ``Continuously'' to create pursuit curves where every player moves toward the ray formed between their Ninja-Assassin and their Wonder-Wall.
+	\begin{center}
+	\begin{pspicture}(0,0)(10,10)
+	\psline{*->}(3,5)(3.4,4.2)
+	\uput[ul](3,5){A}
+	\uput[dl](3,5){A goes}
+	\uput[dl](3.1,4.6){thatta-way}
+	
+	\psline{*-}(4,3)(1,0)
+	\uput[r](4,3){A's WW}
+	
+	\psline[linestyle=dashed]{*-*}(5,4)(4,3)
+	\uput[ur](5,4){A's NA}
+	\end{pspicture}
+	\end{center}
+	\item ``Discretely'' At each state, every player chooses a new lattice point, then all players jump to their chosen point to start the new stage.
+	\end{itemize}
+\end{description}
+
+
+
+\end{document}

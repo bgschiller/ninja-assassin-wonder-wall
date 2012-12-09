@@ -15,7 +15,8 @@ permutations xs0        =  xs0 : perms xs0 []
  
  
 {-players is a list of the players.
-permutations is a list of triplets, one for each player p: (p, p's wonderwall, p's ninja assassin)-}
+permutations is a list of triplets, one for each player p: 
+(p, p's wonderwall, p's ninja assassin)-}
 validOrderings::(Show a, Ord a) => [a] -> [(a,a,a)] -> [[a]]
 validOrderings players preferences = filter validOrder (permutations players)
     where

@@ -1,6 +1,7 @@
 #! /usr/local/bin/python
 from collections import Counter, deque
 import networkx as nx
+import sys
 
 def is_edge(g, edge):
     """edge should be a 2-tuple. returns True if edge is in the graph, False if it is not"""
@@ -32,7 +33,7 @@ def add_preds(g, x, queue=None, preds=[]):
     for succ in succs:
         add_preds(g,succ, queue, preds + [x])
     
-def make_assumption(pair, pairs_count, given_graph, relationships, 
+def make_assumption(pair, pairs_count, given_graph, relationships, outfile,
         reverse_checked=False, spaces=2):
     """Given an edge to start with, make_assumption fixes that edge in the given orientation.
     Then it fixes all the edges implied by this orientation. If this produces a DAG, recurse 
@@ -49,7 +50,7 @@ def make_assumption(pair, pairs_count, given_graph, relationships,
     spaces -- should not be set at top level call. spaces determines the indentation level, 
     so that the output visually represents the recursion depth."""
 
-    print '{spaces}Assume {u} -> {v}:'.format(spaces=' '*(spaces-2), u=pair[0], v=pair[1])
+    outfile.write( '{spaces}Assume {u} -> {v}:\n'.format(spaces=' '*(spaces-2), u=pair[0], v=pair[1]))
     working_graph = given_graph.copy()
     to_process = deque([pair])
     working_count = pairs_count.copy()
@@ -68,8 +69,8 @@ def make_assumption(pair, pairs_count, given_graph, relationships,
             elif (z,y) == (a,b):
                 to_add = (y,x)
             if to_add is not None and (to_add not in working_graph.edges_iter()):
-                print '{spaces}{a} -> {b} is given, so relationship {xyz} => {w} -> {u}'.format(
-                        spaces=' '*spaces, a=a, b=b, xyz=(x,y,z), w=to_add[0], u=to_add[1])
+                outfile.write( '{spaces}{a} -> {b} is given, so relationship {xyz} => {w} -> {u}\n'.format(
+                        spaces=' '*spaces, a=a, b=b, xyz=(x,y,z), w=to_add[0], u=to_add[1]))
                 working_graph.add_edge(*to_add)
                 to_process.append(to_add)
         if nx.is_directed_acyclic_graph(working_graph):
@@ -85,15 +86,15 @@ def make_assumption(pair, pairs_count, given_graph, relationships,
         if len(working_graph.nodes()) == len(relationships):
             return True, working_graph #success!
         next_pair = sorted(working_count.most_common(1)[0][0])#no contradictions, but not done yet
-        return make_assumption(next_pair, working_count, working_graph, relationships, 
-                spaces=spaces+2)
+        return make_assumption(next_pair, working_count, working_graph, relationships,
+                outfile, spaces=spaces+2)
     elif not reverse_checked: #that didn't work out... check the other side!
-        print '{spaces}Cycle in graph! try the reverse...'.format(spaces=' '*spaces)
+        outfile.write( '{spaces}Cycle in graph! try the reverse...\n'.format(spaces=' '*spaces))
         return make_assumption(list(reversed(pair)), pairs_count, given_graph, 
-                relationships, reverse_checked=True, spaces=spaces)
+                relationships, outfile, reverse_checked=True, spaces=spaces)
     else:
-        print '{spaces}Cycle in graph, and we\'ve already checked the other side! Returning false.'.format(
-                spaces=' '*spaces)
+        outfile.write('{spaces}Cycle in graph, and we\'ve already checked the other side! Returning false.\n'.format(
+                spaces=' '*spaces))
         return False, working_graph
 
 def count_pairs(relationships):
@@ -105,7 +106,7 @@ def count_pairs(relationships):
         pair_count[tuple(sorted([y,z]))] += 1
     return pair_count
 
-def find_ordering(relationships):
+def find_ordering(relationships, outfile=sys.stdout):
     """main function. Given a table of relationships, either print a solution or 
     print 'no solution' and list the simple cycles.
     relationships should be a list of 3-tuples, (x,y,z) where y is x's WW and z is x's NA"""
@@ -113,20 +114,23 @@ def find_ordering(relationships):
     starting_pair = pair_count.most_common(1)[0][0]
     order_graph = nx.DiGraph()
     solvable, order_graph = make_assumption(starting_pair, pair_count, order_graph, 
-            relationships)
+            relationships, outfile)
     if solvable:
-        print 'solution: {}'.format(nx.topological_sort(order_graph))
+        order = nx.topological_sort(order_graph)
+        outfile.write('solution: {0}\n'.format(order))
+        return order
     else:
-        print 'no solution.'
+        outfile.write('no solution.\n')
         for cycle in nx.simple_cycles(order_graph):
-            print 'cycle: {}'.format(' -> '.join(map(str, cycle))) 
+            outfile.write('cycle: {0}\n'.format(' -> '.join(map(str, cycle))))
+        return None
 
 if __name__ == '__main__':
     relationships = [('a','b','c'),('b','c','d'),('c','b','a'),('d','b','a'),('e','a','d'),
             ('f','c','e')]
-    print 'is there a solution to {}?'.format(relationships)
+    print 'is there a solution to {0}?'.format(relationships)
     find_ordering(relationships)
     raw_input()
     relationships = [(1,2,3),(2,4,6),(3,4,7),(4,1,5),(5,6,3),(6,1,7),(7,2,5)]
-    print 'is there a solution to {}?'.format(relationships)
+    print 'is there a solution to {0}?'.format(relationships)
     find_ordering(relationships)

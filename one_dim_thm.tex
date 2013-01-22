@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\newtheorem*{thm}{Theorem}
+
+
+\begin{document}
+\begin{thm}
+Any Ninja Assassin Wonderwall game which has a solution in $n$ dimensions ($n > 1$) has a solution in $n-1$ dimensions.
+\end{thm}
+\begin{proof}
+Suppose we have a game that has a solution in $\mathbb{R}^n$. That is, we have a one-to-one function $S: P \to \mathbb{R}^n$ such that for each $p \in P$, $p$'s wonderwall lies on the line segment between $p$'s ninja assassin and $p$. 
+
+Consider the set $L$ of all lines in $\mathbb{R}^n$ which go through two or more points in the image of $P$ under $S$. Since there are $\lvert P \rvert$ points, there are no more than $\binom{ \lvert P \rvert}{2}$ such lines. 
+
+We want an $n-1$ dimensional hyperplane through the origin that is not perpendicular to any line in $L$. Since each line is perpendicular to exactly one hyperplane, and $\lvert L \rvert \leq \binom{\lvert P \rvert}{2}$, which is finite, such a hyperplane exists. (There are uncountably many hyperplanes through the origin of $n-1$ dimensions).
+
+Form a new solution, $S'$ by mapping each player $p\in P$ to the projection onto the hyperplane of $S(p)$. Since we chose our hyperplane to be not perpendicular to any line in $L$, each player's position is distinct. Since projection onto a plane through the origin is a linear transformation, linear relationships are preserved. In particular, the linear relationships which put every player's wonderwall on the line segment between that player and their ninja assassin. So $S'$ is a solution in $n-1$ dimensions.
+\end{proof}
+
+This theorem, repeated as necessary, shows that if a solution exists in $n>1$ dimensions, a solution exists in one dimension. Thus, if we are looking for solutions, it is enough to consider orderings of players on a line.
+\end{document}

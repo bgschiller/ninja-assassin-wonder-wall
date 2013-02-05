@@ -68,6 +68,10 @@ def make_assumption(pair, pairs_count, given_graph, relationships, outfile,
                 to_add = (x,y)
             elif (z,y) == (a,b):
                 to_add = (y,x)
+            elif (x,z) == (a,b):
+                to_add = (y,z) # we should also add (x,y), but add_preds will take care of it.
+            elif (z,x) == (a,b):
+                to_add = (z,y)
             if to_add is not None and (to_add not in working_graph.edges_iter()):
                 outfile.write( '{spaces}{a} -> {b} is given, so relationship {xyz} => {w} -> {u}\n'.format(
                         spaces=' '*(2*(depth-1)), a=a, b=b, xyz=(x,y,z), w=to_add[0], u=to_add[1]))
@@ -99,11 +103,12 @@ def make_assumption(pair, pairs_count, given_graph, relationships, outfile,
 
 def count_pairs(relationships):
     """relationships should be a list of 3-tuples (x,y,z). return a Counter
-    object with a count for every (x,y) and (y,z)"""
+    object with a count for every (x,y), (y,z), and (x,z)"""
     pair_count = Counter()
     for (x,y,z) in relationships:
         pair_count[tuple(sorted([x,y]))] += 1
         pair_count[tuple(sorted([y,z]))] += 1
+        pair_count[tuple(sorted([x,z]))] += 1
     return pair_count
 
 def find_ordering(relationships, outfile=sys.stdout):

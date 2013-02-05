@@ -1,5 +1,5 @@
 #!/usr/local/bin/python
-from implication import find_ordering
+from implication import find_ordering, count_pairs
 import random
 from StringIO import StringIO
 
@@ -11,6 +11,16 @@ def random_game(players):
         relationships.append((p,ww,na))
     return relationships
 
+def count_shared_pairs(relationships):
+    '''Count the number of pairs in a relationship table that appear
+    in more than one row. This tests a result found analytically that
+    the average number of shared pairs approaches 11 as n->infty'''
+    shared_pairs = 0
+    for pair, count in count_pairs(relationships).most_common():
+        if count == 1:
+            break
+        shared_pairs += count
+    return shared_pairs
 
 def combinations(lst, so_far=[]):
     if len(lst) == 0:

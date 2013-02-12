@@ -3,16 +3,22 @@
 \usepackage{amsmath, amssymb}
 
 \begin{document}
+\begin{center}
+\begin{Large}
+Ninja Assassin Wonderwall: a better title here
+\end{Large}
+\end{center}
 My senior project for the purposes of Graduation with Distinction from the Math Department concerns a game called Ninja Assassin Wonderwall. The game works like this: $n$ players all stand in a circle. Each player chooses two other players  (without indicating their choices), one to be their Ninja Assassin and the other to be their Wonderwall. When the game starts every player tries to keep their Wonderwall between themself and their Ninja Assassin. 
 
 I define a `solution' to a Ninja Assassin Wonderwall (NAWW) problem to be a configuration of the players such that every player has their Wonderwall between themselves and their Ninja Assassin. For my senior project, I will 
 
 \begin{itemize}
-    \item Write and prove correct an algorithm for finding solutions to NAWW problems.
+    \item Write and prove correct an algorithm for finding solutions to NAWW problems by looking for cycles in a directed graph.
     \item Devise a way to transform a NAWW instance into an instance of a well-known problem, such as a linear program or a CNF SAT problem.
-    \item Prove that an instance of $p$ players that has a solution in $\mathbb{R}^n$ has a solution in $Z_p$. This will show that is sufficient to search for solutions in one dimension. That is, if an instance has no solution in the space of permutations of the players, it has no solution in $\mathbb{R}^n$.
-    \item Explore the np-completeness of the problem, and attempt to prove one way or another.
+    \item Prove that an instance of $p$ players that has a solution in $\mathbb{R}^n$ has a solution in $\mathbb{R}$. This will show that is sufficient to search for solutions in one dimension. That is, if an instance has no solution in the space of permutations of the players, it has no solution in $\mathbb{R}^n$.
+    \item Explore whether the problem is np-complete, and attempt to prove one way or another.
     \item Use computer models to approximate the probability that an instance of a given size has a solution.
+    \item Explore and conjecture about what happens to that probability for large numbers of players.
     \item Make animations to illustrate the game (and algorithm).
     \item Read about Steiner Triple Systems, implement a construction algorithm for STS(n), and use this to show that the algorithm has exponential worst-case time.
 \end{itemize}

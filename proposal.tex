@@ -1,16 +1,24 @@
 \documentclass{article}
 
 \usepackage{amsmath, amssymb}
-
+\usepackage[parfill]{parskip}
+\usepackage[margin=1.25in]{geometry}
+\pagestyle{empty}
 \begin{document}
 \begin{center}
 \begin{Large}
-Ninja Assassin Wonderwall: a better title here
-\end{Large}
+Ninja Assassin Wonderwall
+\end{Large}\\
+Senior Project proposal by Brian Schiler\\
+Advisor: Tilman Glimm\\
+\date{}
+\vspace{20pt}
 \end{center}
-My senior project for the purposes of Graduation with Distinction from the Math Department concerns a game called Ninja Assassin Wonderwall. The game works like this: $n$ players all stand in a circle. Each player chooses two other players  (without indicating their choices), one to be their Ninja Assassin and the other to be their Wonderwall. When the game starts every player tries to keep their Wonderwall between themself and their Ninja Assassin. 
+My senior project for the purposes of Graduation with Distinction from the Math Department concerns a game called Ninja Assassin Wonderwall. The game works like this: $n$ players all stand in a circle. Each player chooses two other players  (without indicating their choices), one to be their ninja assassin and the other to be their wonderwall. When the game starts every player tries to keep their wonderwall between themself and their ninja assassin. 
 
-I define a `solution' to a Ninja Assassin Wonderwall (NAWW) problem to be a configuration of the players such that every player has their Wonderwall between themselves and their Ninja Assassin. For my senior project, I will 
+\textbf{Definitions:} Let $P$ be the set of players, and let \[w: P \to P,\quad w(p) = \text{$p$'s wonderwall}\] \[n: P \to P,\quad n(p) = \text{$p$'s ninja assassin}\] for all $p \in P$. We define a solution $\phi$ as a function $\phi: P \to R^n$ such that for every $p \in P$, $\phi(w(p))$ lies on the line segment between $\phi(p)$ and $\phi(n(p))$. (Thought of in terms of the game, $p$'s wonderwall is standing between $p$ and $p$'s ninja assassin.) 
+
+For my senior project, I will:
 
 \begin{itemize}
     \item Write and prove correct an algorithm for finding solutions to NAWW problems by looking for cycles in a directed graph.
@@ -22,5 +30,28 @@ I define a `solution' to a Ninja Assassin Wonderwall (NAWW) problem to be a conf
     \item Make animations to illustrate the game (and algorithm).
     \item Read about Steiner Triple Systems, implement a construction algorithm for STS(n), and use this to show that the algorithm has exponential worst-case time.
 \end{itemize}
+
+\begin{thebibliography}{9}
+
+\bibitem{stinson}
+    Douglas R. Stinson
+    \emph{Combinatorial Designs: Constructions and Analysis}.
+    Springer, New York,
+    2004 edition.
+
+\bibitem{cameron}
+    Peter J. Cameron
+    \emph{Combinatorics: Topics, Techniques, Algorithms}.
+    Cambridge University Press,
+    1995 edition.
+
+\bibitem{clrs}
+    T.~H. Cormen, C.~E. Leiserson, R.~L. Rivest, and C.~Stein
+    \emph{Introduction to Algorithms}.
+    The MIT Press,
+    2009 edition.
+
+
+\end{thebibliography}
 
 \end{document}

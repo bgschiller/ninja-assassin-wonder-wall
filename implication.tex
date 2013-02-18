@@ -1,0 +1,97 @@
+\documentclass{article}
+
+\usepackage{clrscode3e}
+
+\usepackage[parfill]{parskip}
+\usepackage{amsmath,amsthm,amssymb}
+\newtheorem*{lem}{Lemma}
+\newtheorem*{thm}{Theorem}
+
+\DeclareMathOperator{\w}{w}
+\DeclareMathOperator{\n}{n}
+\DeclareMathOperator{\pairs}{pairs}
+\usepackage{moreverb}
+\begin{document}
+
+
+Let $P$ be the set of $n$ players.\\
+Let $R$ be a set of $n$ triplets $(x,y,z)$ where $y=\w(x), z=\n(x)$, $x,y,z \in P$. \\ %i.e. it is a naww problem.
+Let $\pairs((x,y,z)) = \{(x,y),(x,z),(y,z),(y,x),(z,x),(z,y)\}$\\
+Let $A = \bigcup\limits_{r\in R} \pairs(r)$\\
+Let $G = (V,E)$ be a directed graph, where $V \subseteq P$. We interpret an edge $(a,b) \in E$ to represent the statement `$a$ appears to the left of $b$ in a (one-dimensional) solution to the Ninja Assassin Wonderwall problem on $R$.' \\
+
+\begin{codebox}
+\Procname{$\proc{FindOrdering}(R)$}
+\li Let $(a,b) \in A$. 
+\li $G \gets (\emptyset, \emptyset)$
+\li $ReverseChecked \gets \const{True}$
+\li $G \gets \proc{MakeAssumption}(G, (a,b), R, ReverseChecked)$
+\li \If $G$ is acyclic:
+\li \Do
+        \kw{output} $\proc{TopologicalSort}(G)$
+\li \Else
+        \kw{output} ``No ordering exists"
+    \End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{MakeAssumption}(G, pair, R, ReverseChecked)$}
+\li $W \gets G$ \Comment W is a working copy of G
+\li $Q \gets \emptyset$
+\li $\proc{Enqueue}(Q,pair)$
+\li \While $\attrib{Q}{length} > 0$ 
+\li \Do
+        $(a,b) \gets \proc{Dequeue}(Q)$
+\li     $\attrib{W}{E} \gets \attrib{W}{E} \cup \{(a,b)\}$
+\li     Add to $W$ and $Q$ every edge (not already in $W$) that is implied by the edge $(a,b)$
+\zi  \Comment e.g. If $(a,b) \in \attrib{W}{E}$ and $(a,b,c) \in R$, add edge $(b,c)$
+\li     Add to $W$ and $Q$ the edges (not already in $W$) implied by the Transitive property.
+\zi  \Comment e.g. If $(a,b),(b,c) \in \attrib{W}{E}$, add edge $(a,c)$
+    \End % end While Q.length > 0
+\li \If $W$ is acyclic
+\li \Do
+        \If $\attrib{W}{V} \isequal P$
+\li     \Do
+            \Return $W$ \Comment Success!
+\li        \Else
+\li         Let $(a,b) \in A \setminus \attrib{W}{E}$. \Comment Make another guess.
+\li         $ReverseChecked \gets \const{false}$
+\li         \Return $\proc{MakeAssumption}(W,(a,b), R, ReverseChecked)$
+        \End
+\li \ElseIf not $ReverseChecked$
+\li \Do
+        Let $(a,b) = pair$.
+\li     $ReverseCheceked = \const{true}$
+\li     \Return $\proc{MakeAssumption}(G, (b,a), R, ReverseChecked)$
+\li \Else
+        \Return $W$ \Comment both (a,b) and (b,a) lead to a contradiction. No solution.
+    \End
+\end{codebox} 
+
+\begin{lem}
+With $G$ and $R$ as described above, and $G$ acyclic, $\proc{MakeAssumption}$ returns a directed acyclic graph containing edge $(a,b)$ whose edges are consistent with both 
+\begin{itemize}
+    \item The transitive property: if $(a,b)$ and $(b,c)$ are edges, then $(a,c)$ is an edge.
+    \item The constraints imposed by the Ninja Assassin Wonderwall problem: if $(a,b,c) \in R$, and $(a,b)$ is an edge, then $(b,c)$ is an edge.
+\end{itemize}
+as long as one exists. If no such DAG exists, it returns a cyclic graph.
+\end{lem}
+\begin{proof}
+Suppose for some call of $\proc{MakeAssumption}(G,(a,b),R,ReverseChecked)$, the lemma is true for all subsequent recursive calls.
+The \kw{while} loop on line 4 adds at least one edge to $W$, our working graph, so this call makes progress towards a solution. It also adds every edge implied by either the transitive property or the problem constraints.
+
+If $W$ does not have a cycle and includes every player as a vertex, then we have created a dag that meets the requirements of the lemma, and we're done.
+
+If $W$ does not have a cycle, but does not include every player, then we can make another guess. By assumption, this call maintains the truth of the lemma.
+
+If $W$ has a cycle, the guess that $(a,b)$ was an edge ultimately created it. Therefore, $a$ is not to the left of $b$ in the ordering of players. So either $b$ is to the left of $a$ or there is no possible ordering. If we haven't checked $(b,a)$, the recursive call on line 19 will return the correct result. Otherwise, we know that there is no possible ordering and we return the cyclic graph $W$.
+\end{proof}
+
+\begin{thm}
+Let $R$ be as described. $\proc{FindOrdering}(R)$ outputs an ordering of the $P$ players which satisfies the constraints of the Ninja Assassing Wonderwall problem represented by $R$, or outputs ``No ordering exists"
+\end{thm}
+\begin{proof}
+Notice that for any ordering of the players which satisfies the constraints, its reverse also satisfies the constraints. Then we can assume for some $(a,b) \in A$ that $(a,b)$ is an edge in $G$. By the lemma, the call to $\proc{MakeAssumption}$ returns a DAG whose edges are consistent with the constraints of the Ninja Assassin Wonderwall problem if one exists, and a cyclic graph otherwise. So if $G$ is acyclic on line 5, a topological sort will produce an ordering consistent with the edges in $G$ and therefore the constraints of the Ninja Assassin Wonderwall problem. Otherwise, it outputs ``No ordering exists''.
+\end{proof}
+
+\end{document}

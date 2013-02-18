@@ -21,7 +21,7 @@ def add_preds(g, x, queue=None, preds=[]):
         a --> b --> c
               |
               -> d --> e
-    will add edges a -> c, a -> d, a -> e, and b -> e (the direct edges are 
+    it will add edges a -> c, a -> d, a -> e, and b -> e (the direct edges are 
     already present)
     These edges will also be put on the queue to be processed, if one is given"""
     for pred in preds:

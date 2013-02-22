@@ -4,6 +4,7 @@
 
 \usepackage[parfill]{parskip}
 \usepackage{amsmath,amsthm,amssymb}
+\usepackage{latexsym} %gives nice \leadsto
 \newtheorem*{lem}{Lemma}
 \newtheorem*{thm}{Theorem}
 
@@ -13,7 +14,144 @@
 \usepackage{moreverb}
 \begin{document}
 
+An instance of a Ninja Assassin Wonderwall problem is described by a set $P$ of $n$ players, and two functions $\w : P \to P, \quad \n : P \to P$, that satisfy $\w(p) \neq p$, $\n(p) \neq p$, and $\w(p) \neq \n(p)$ for all $p\in P$. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 
 
+This says, transitively, that if there is a path from $a$ to $b$, then $a$ is to the left of $b$ (we will use $a \leadsto b$ to denote both of these). Notice that if these graphs actually represent an ordering of players, they should not contain cycles. For example, when both $(a,b)$ and $(b,a)$ are in $E$, this says $a \leadsto b$ and $b \leadsto a$, which is a contradiction. 
+
+
+\begin{thm}
+A Ninja Assassin Wonderwall problem has a solution iff there is a directed acyclic graph $G=(P,E)$ such that, for all $p\in P$, either  $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
+\end{thm}
+\begin{proof} \mbox{}
+
+\begin{description}
+\item[$(\Rightarrow)$] Let $\phi: P \to \mathbb{R}$ be a solution to a Ninja Assassin Wonderwall problem. Construct a graph $G$ with an edge $(p,q)$ whenever $\phi(p)<\phi(q)$. By construction, $G$ is acyclic (in fact it is an ordered graph).
+
+Consider an arbitrary player $p$. Since $\phi$ is a solution, $\phi(\w(p))$ must be between $\phi(p)$ and $\phi(\n(p))$. So either $\phi(p) < \phi(\w(p)) < \phi(\n(p))$ or $\phi(\n(p)) < \phi(\w(p)) < \phi(p)$. Then either $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
+
+\item[$(\Leftarrow)$] Let $G$ be such a graph. Let $\{p_i\}$ be a topological ordering of $G$. Define $\phi(p_i) = i$. 
+
+Let $p_i$ be an arbitrary player. By assumption, either $p_i \leadsto \w(p_i) \leadsto \n(p_i)$ or $\n(p_i) \leadsto \w(p_i) \leadsto p_i$. Without loss of generality, $p_i \leadsto \w(p_i) \leadsto \n(p_i)$. Since $\{p_i\}$ is a topological sort on $G$, $p_i$ must come before $\w(p_i)$, which must come before $\n(p_i)$. So $\phi(p_i) < \phi(\w(p_i)) < \phi(\n(p_i))$. Thus, $\phi$ is a solution to a Ninja Assassin Wonderwall problem.
+\end{description}
+\end{proof}
+
+This proof leads to an algorithm for constructing solutions. Consider the set $D$ of all digraphs $G=(P,E)$, where $E$ is constructed by taking, for all $p \in P$, either  $(p,\w(p)), (\w(p),\n(p))$ or $(\n(p),\w(p)),(\w(p),p)$. There are $2^n$ such graphs, and if a NAWW problem has a solution, one of them must be acyclic.
+
+\begin{codebox}
+\Procname{$\proc{FindOrdering}(P,n,w)$}
+\li \For $G\in D$
+\li     \Do
+        \If $G$ is acyclic
+\li         \Do
+                \Return $\proc{TopologicalSort}(G)$
+        \End
+    \End
+\li \Return None
+\end{codebox}
+    
+There are many small efficiencies we can add to this algorithm. We can avoid enumerating all the elements of $D$ by trying to construct our graph from scratch. We will start with an empty graph $G$. Then we will choose a $p \in P$, add the edges $(p,\w(p))$ and $(\w(p),\n(p))$ and recurse. If this leads to a cyclic graph, we will try the opposite edges and recurse. If \emph{this} leads to a cyclic graph, then neither $p \leadsto \w(p) \leadsto \n(p)$ nor $\n(p) \leadsto \w(p) \leadsto p$ is consitent with the graph, and so there is no solution.
+
+\begin{codebox}
+\Procname{$\proc{FindOrdering}(P,n,w)$}
+\li $G \gets (\emptyset, \emptyset)$
+\li $S \gets P$
+\li $G \gets \proc{MakeAssumption}(G,S,n,w)$
+\li \If $G$ is acyclic
+\li     \Do
+        \Return $\proc{TopologicalSort}(G)$
+    \End
+\li \Return None
+\end{codebox}
+
+
+\begin{codebox}
+\Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
+\li Let $p \in S$
+\li $F \gets G$
+\li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(p,\w(p)), (\w(p),\n(p))\}$
+\li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
+\li \If $F$ is acyclic
+\li     \Do
+        \Return $F$ \Comment Success!
+    \End
+\li $F \gets G$ \Comment That didn't work, try the other way.
+\li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(\n(p), \w(p)), (\w(p),p)\}$
+\li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
+\end{codebox}
+
+We can make another small improvement by noticing that if $a \leadsto b$ where $a,b \in \{p, \w(p), \n(p)\}$ for some $p$, is already in the graph, then we can add the third element of $\{p, \w(p), \n(p)\}$ immediately. For example if $p \leadsto \n(p)$, then if $G$ is a subgraph of the acyclic graph in the theorem, $p \leadsto \w(p)$ and $\w(p) \leadsto \n(p)$. We will use the same definition of $\proc{FindOrdering}$.
+
+\begin{codebox}
+\Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
+\li \If $S = \emptyset$
+\li \Do \Return
+    \End
+\li Let $p \in S$.
+\li $F \gets G$
+\li $F \gets \proc{AddImpliedEdges}(F, (p,\w(p)), S,\n,\w)$
+\li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
+\li \If $F$ is acyclic
+\li     \Do
+        \Return $F$ \Comment Success!
+    \End
+\li $F \gets G$ \Comment That didn't work, try the other way.
+\li $F \gets \proc{AddImpliedEdges}(F, (\w(p), p), S, \n, \w)$
+\li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
+\end{codebox}
+
+
+\begin{codebox}
+\Procname{$\proc{AddImpliedEdges}(F,(a,b),S,\n,\w)$}
+\li $Q \gets \emptyset$
+\li $\proc{Enqueue}(Q,(a,b))$
+\li \While $Q$ is not empty
+\li     \Do
+        $(r,s) \gets \proc{Dequeue}(Q)$
+\li     $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(r,s)\}$
+\li     \For $(t,u) \in \proc{ImpliedEdges}((r,s),S,\n,\w)$
+\li         \Do
+            \If $(t,u) \notin \attrib{F}{E}$
+\li             \Do
+                $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(t,u)\}$
+\li             $\proc{Enqueue}(Q,(t,u))$
+            \End
+        \End
+    \End
+\li \Return $F$
+\end{codebox}
+
+
+
+\begin{codebox}
+\Procname{$\proc{ImpliedEdges}((r,s),S,\n,\w)$}
+\li $E \gets \emptyset$
+\li \For $t \in S$
+\li     \Do
+        \If $(r,s) \isequal (t, \w(t))$
+\li         \Do
+            $E \gets E \cup \{(\w(t),\n(t)), (t, \n(t))\}$
+\li     \ElseIf $(r,s) \isequal (\w(t), t)$
+\li         \Do
+            $E \gets E \cup \{(\n(t),\w(t)), (\n(t), t)\}$ 
+\li     \ElseIf $(r,s) \isequal (t, \n(t))$
+\li         \Do
+            $E \gets E \cup \{(t,\w(t)), (\w(t), \n(t))\}$
+\li     \ElseIf $(r,s) \isequal (\n(t), t)$
+\li         \Do
+            $E \gets E \cup \{(\w(t), t), (\n(t), \w(t))\}$
+\li     \ElseIf $(r,s) \isequal (\w(n), \n(w))$
+\li         \Do
+            $E \gets E \cup \{(t,\w(n)), (t, \n(w))\}$
+\li     \ElseIf $(r,s) \isequal (\n(w), \w(n))$
+\li         \Do
+            $E \gets E \cup \{(\w(n), t), (\n(w), t)\}$
+        \End
+    \End
+\li \Return $E$
+\end{codebox}
+
+Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. So a small efficiency is gained by choosing players $p$ where the number of overlapping 
+\begin{comment}
 Let $P$ be the set of $n$ players.\\
 Let $R$ be a set of $n$ triplets $(x,y,z)$ where $y=\w(x), z=\n(x)$, $x,y,z \in P$. \\ %i.e. it is a naww problem.
 Let $\pairs((x,y,z)) = \{(x,y),(x,z),(y,z),(y,x),(z,x),(z,y)\}$\\
@@ -93,5 +231,5 @@ Let $R$ be as described. $\proc{FindOrdering}(R)$ outputs an ordering of the $P$
 \begin{proof}
 Notice that for any ordering of the players which satisfies the constraints, its reverse also satisfies the constraints. Then we can assume for some $(a,b) \in A$ that $(a,b)$ is an edge in $G$. By the lemma, the call to $\proc{MakeAssumption}$ returns a DAG whose edges are consistent with the constraints of the Ninja Assassin Wonderwall problem if one exists, and a cyclic graph otherwise. So if $G$ is acyclic on line 5, a topological sort will produce an ordering consistent with the edges in $G$ and therefore the constraints of the Ninja Assassin Wonderwall problem. Otherwise, it outputs ``No ordering exists''.
 \end{proof}
-
+\end{comment}
 \end{document}

@@ -1,6 +1,5 @@
 import math as m
-import matplotlib.pyplot as plt
-
+import time
 class Vector(object):
     def __init__(self,x,y):
         self.x=x
@@ -12,9 +11,10 @@ class Vector(object):
     __repr__ = __str__
 
     def normalize(self):
-        mag = self.mag
+        mag = self.mag()
         self.x /= mag
         self.y /= mag
+        return self
 
     def mag(self):
         return m.sqrt(self.x*self.x + self.y*self.y)
@@ -35,7 +35,7 @@ class Vector(object):
         the vector v returned is such that self + v is a point on the line.
         as described at 
         http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line'''
-        return (offset - self) - ((offset - self).dot(slope)) * slope
+        return (offset - self) - slope * ((offset - self).dot(slope)) 
 
     def __add__(self,b):
         return Vector(self.x + b.x, self.y + b.y)
@@ -47,11 +47,11 @@ class Vector(object):
         self = self + b
     def __isub__(self,b):
         self = self - b
-    def __mul__(self,k):
+    def __mul__(self,b):
         if type(b) == type(self):
             #perform element-wise
             return Vector(self.x * b.x, self.y * b.y)
-        return Vector(self.x*k, self.y*k)
+        return Vector(self.x*b, self.y*b)
     def __imul__(self,k):
         self = self * k
     def __div__(self,b):
@@ -76,14 +76,16 @@ class Player(object):
     __repr__=__str__
 
 class NawwGame(object):
-    def __init__(self,relationships, step_size=0.01):
+    def __init__(self,relationships, step_size=0.001):
         self.step_size = step_size
         n_players = len(relationships)
         t_vals = map(lambda x: x*2*m.pi/n_players, range(n_players))
         self.players = [ Player(r[0],Vector(m.sin(t), m.cos(t)),r[1],r[2]) for (r,t) in zip(relationships, t_vals) ]
         for player in self.players:
-            player.na = filter(lambda p: p.name == player.na, self.players)
-            player.ww = filter(lambda p: p.name == player.ww, self.players)
+            player.na = filter(lambda p: p.name == player.na, self.players)[0]
+            player.ww = filter(lambda p: p.name == player.ww, self.players)[0]
+
+        self.init_show()
     
     def step(self):
         '''move each player closer to safety.
@@ -106,24 +108,37 @@ class NawwGame(object):
             if (t_p - t_ww) * (t_na - t_ww) > 0:
                 #we should move towards ww instead of towards the line
                 direction = ww_pos - player.pos
-            t_positions.append(direction.normalize() / self.step_size)
+            new_pos = player.pos + (direction.normalize() * self.step_size)
+            t_positions.append(new_pos)
 
         for player, new_pos in zip(self.players,t_positions):
             player.pos = new_pos
     
+
+    def init_show(self):
+        print '''set terminal gif animate delay 4
+set output "anim.gif"
+set xrange [-2:2]
+set yrange [-2:2]
+set nokey
+unset xtics
+unset ytics
+unset border'''
+
     def show(self):
-        plt.plot([p.pos.x for p in self.players], [p.pos.y for p in self.players])
-        plt.axes([-1,1,-1,1])
-        plt.show()
+        print "plot '-' with points"
+        for player in self.players:
+            print '{} {}'.format(player.pos.x, player.pos.y)
+        print 'e'
+
 
 if __name__=='__main__':
     relationships = [('a','b','c'),('b','c','d'),('c','b','a'),('d','b','a'),('e','a','d'), ('f','c','e')]
-    game = NawwGame(relationships,0.1)
-    while True:
+    game = NawwGame(relationships)
+    for i in range(10000):
         game.show()
-        print 'showed game!'
-        raw_input()
         game.step()
+
         
 
 

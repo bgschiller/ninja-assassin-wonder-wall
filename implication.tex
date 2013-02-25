@@ -86,7 +86,7 @@ We can make another small improvement by noticing that if $a \leadsto b$ where $
 \li \If $S = \emptyset$
 \li \Do \Return
     \End
-\li Let $p \in S$.
+\li Let $p \in S$.  			\label{li:choose-p}
 \li $F \gets G$
 \li $F \gets \proc{AddImpliedEdges}(F, (p,\w(p)), S,\n,\w)$
 \li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
@@ -150,7 +150,7 @@ We can make another small improvement by noticing that if $a \leadsto b$ where $
 \li \Return $E$
 \end{codebox}
 
-Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. So a small efficiency is gained by choosing players $p$ where the number of overlapping 
+Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. We accomplish this by choosing our $p\in S$ on line~\ref{li:choose-p} such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible.
 \begin{comment}
 Let $P$ be the set of $n$ players.\\
 Let $R$ be a set of $n$ triplets $(x,y,z)$ where $y=\w(x), z=\n(x)$, $x,y,z \in P$. \\ %i.e. it is a naww problem.

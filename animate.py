@@ -30,13 +30,25 @@ class Vector(object):
 
     def dir_to_line(self, slope, offset):
         '''gives a vector representing the direction from self to the given line
-        slope and offset should be vectors as returned by Vector.line()-- in
+        slope and offset should be vectors as returned by vector.line()-- in
         particular, slope should be normalized.
         the vector v returned is such that self + v is a point on the line.
         as described at 
-        http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line'''
+        http://en.wikipedia.org/wiki/distance_from_a_point_to_a_line'''
         return (offset - self) - slope * ((offset - self).dot(slope)) 
 
+    def ratio(self, b):
+        '''try to find the ratio between two vectors.
+        if one component is zero, use the other.
+        otherwise we average the ratios of the components'''
+        if b.x == 0.0 and b.y == 0.0:
+            raise ZeroDivisionError
+        elif b.x == 0.0:
+            return self.y/ b.y
+        elif b.y == 0.0:
+            return self.x/b.x
+        return (self / b).dot(Vector(0.5,0.5))
+        
     def __add__(self,b):
         return Vector(self.x + b.x, self.y + b.y)
     def __neg__(self):
@@ -100,30 +112,38 @@ class NawwGame(object):
             direction = player.pos.dir_to_line(slope,offset)
             proj = player.pos + direction
             # these are the t values such that, eg, na_pos == slope * t_na + offset
-            t_na = (na_pos - offset) / slope 
-            t_ww = (ww_pos - offset) / slope
-            t_p = (proj - offset) / slope
-            # proj is between na and ww iff (t_p - t_ww) * (t_na - t_ww) > 0
-            # (i.e. when t_na and t_p are on the same side of t_ww )
-            if (t_p - t_ww) * (t_na - t_ww) > 0:
+            t_na = (na_pos - offset).ratio(slope)
+            t_ww = (ww_pos - offset).ratio(slope)
+            t_p = (proj - offset).ratio(slope)
+            if m.fabs(t_p - t_ww) < self.step_size:
+                #player and ww are too close to move
+                direction = Vector(0,0)
+            elif (t_p - t_ww) * (t_na - t_ww) > 0:
+                # proj is between na and ww iff (t_p - t_ww) * (t_na - t_ww) > 0
+                # (i.e. when t_na and t_p are on the same side of t_ww )
                 #we should move towards ww instead of towards the line
                 direction = ww_pos - player.pos
-            new_pos = player.pos + (direction.normalize() * self.step_size)
-            t_positions.append(new_pos)
+
+            if direction.mag() > self.step_size / 100.0:
+                new_pos = player.pos + (direction.normalize() * self.step_size)
+                t_positions.append(new_pos)
+            else: #stay put
+                t_positions.append(player.pos)
 
         for player, new_pos in zip(self.players,t_positions):
             player.pos = new_pos
     
 
     def init_show(self):
-        print '''set terminal gif animate delay 4
-set output "anim.gif"
-set xrange [-2:2]
-set yrange [-2:2]
-set nokey
-unset xtics
-unset ytics
-unset border'''
+        print 'set terminal gif animate delay 4'
+        print 'set output "anim.gif"'
+        print 'set xrange [-2:2]'
+        print 'set yrange [-2:2]'
+        print 'set nokey'
+        print 'unset xtics'
+        print 'unset ytics'
+        print 'unset border'
+        print "set style line 1 lc rgb '#0060ad' lt 1 lw 0.5 pt 7 ps 1.5"   # --- blue
 
     def show(self):
         print "plot '-' with points"
@@ -135,7 +155,7 @@ unset border'''
 if __name__=='__main__':
     relationships = [('a','b','c'),('b','c','d'),('c','b','a'),('d','b','a'),('e','a','d'), ('f','c','e')]
     game = NawwGame(relationships)
-    for i in range(10000):
+    for i in range(1000):
         game.show()
         game.step()
 

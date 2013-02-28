@@ -17,7 +17,9 @@ typedef struct {
     int n;
 } player_t;
 typedef pair<int,int> Edge;
+typedef graph_traits<Graph>::vertex_descriptor Vertex;
 
+/* function prototypes */
 vector<Edge> ImpliedEdges(Edge guess, const vector<player_t>& players);
 void AddImpliedEdges(graph_t& F, Edge guess, const vector<player_t>& players);
 pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players);
@@ -40,10 +42,11 @@ bool is_acyclic(const graph_t& G)
 }
 
 
-vector<int> FindOrdering(vector<player_t> players){
+
+vector<Vertex> FindOrdering(vector<player_t> players){
     graph_t order_g();
     pair<bool,graph_t> result = MakeAssumption(order_g, players);
-    vector<int> order;
+    vector<Vertex> order;
     if (result.first){
         topological_sort(result.second, front_inserter(order));
     }
@@ -52,8 +55,8 @@ vector<int> FindOrdering(vector<player_t> players){
 
 vector<Edge> ImpliedEdges(Edge guess, const vector<player_t>& players){
     vector<Edge> impl_edges();
-    int rr = guess.first;
-    int ss = guess.second;
+    Vertex rr = guess.first;
+    Vertex ss = guess.second;
     for (size_t ii = 0; ii < players.size(); ++ii){
         int tt = players[ii].p;
         int ww = players[ii].w;

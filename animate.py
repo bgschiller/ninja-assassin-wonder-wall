@@ -117,7 +117,7 @@ class NawwGame(object):
             t_p = (proj - offset).ratio(slope)
             if m.fabs(t_p - t_ww) < self.step_size:
                 #player and ww are too close to move
-                direction = Vector(0,0)
+                direction = slope * -1 #Vector(0,0)
             elif (t_p - t_ww) * (t_na - t_ww) > 0:
                 # proj is between na and ww iff (t_p - t_ww) * (t_na - t_ww) > 0
                 # (i.e. when t_na and t_p are on the same side of t_ww )
@@ -135,7 +135,7 @@ class NawwGame(object):
     
 
     def init_show(self):
-        print 'set terminal gif animate delay 4'
+        print 'set terminal gif animate delay 1'
         print 'set output "anim.gif"'
         print 'set xrange [-2:2]'
         print 'set yrange [-2:2]'

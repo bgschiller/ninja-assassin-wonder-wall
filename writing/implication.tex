@@ -66,6 +66,14 @@ There are many small efficiencies we can add to this algorithm. We can avoid enu
 
 \begin{codebox}
 \Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
+\li \If $S \isequal \emptyset$
+\li     \Then
+        \Return $G$ \Comment Success!
+    \End
+\li \If $G$ contains a cycle
+\li     \Then
+        \Return $G$ \Comment Failure case
+    \End
 \li Let $p \in S$
 \li $F \gets G$
 \li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(p,\w(p)), (\w(p),\n(p))\}$
@@ -84,7 +92,11 @@ We can make another small improvement by noticing that if $a \leadsto b$ where $
 \begin{codebox}
 \Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
 \li \If $S = \emptyset$
-\li \Do \Return
+\li \Do \Return $G$ \Comment Success!
+    \End
+\li \If $G$ contains a cycle
+\li     \Then
+        \Return $G$ \Comment Failure case
     \End
 \li Let $p \in S$.  			\label{li:choose-p}
 \li $F \gets G$
@@ -139,12 +151,12 @@ We can make another small improvement by noticing that if $a \leadsto b$ where $
 \li     \ElseIf $(r,s) \isequal (\n(t), t)$
 \li         \Do
             $E \gets E \cup \{(\w(t), t), (\n(t), \w(t))\}$
-\li     \ElseIf $(r,s) \isequal (\w(n), \n(w))$
+\li     \ElseIf $(r,s) \isequal (\w(t), \n(t))$
 \li         \Do
-            $E \gets E \cup \{(t,\w(n)), (t, \n(w))\}$
-\li     \ElseIf $(r,s) \isequal (\n(w), \w(n))$
+            $E \gets E \cup \{(t,\w(t)), (t, \n(t))\}$
+\li     \ElseIf $(r,s) \isequal (\n(t), \w(t))$
 \li         \Do
-            $E \gets E \cup \{(\w(n), t), (\n(w), t)\}$
+            $E \gets E \cup \{(\w(t), t), (\n(t), t)\}$
         \End
     \End
 \li \Return $E$

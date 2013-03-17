@@ -1,7 +1,9 @@
 #include<iostream>
 #include<stdlib.h>
 #include<queue>
+#include<algorithm>
 #include <boost/utility.hpp>
+
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/depth_first_search.hpp>
@@ -11,6 +13,7 @@
 using namespace boost;
 using namespace std;
 
+#define DEBUG
 
 #ifdef DEBUG
 #define SPACES(x) for(int ii=0; ii<2*x; ii++) printf(" ");
@@ -19,7 +22,9 @@ using namespace std;
 #define SPACES(x) 
 #define OUTPUT(x) 
 #endif
-//programmingexamples.net/wiki/Bost/BGL/CreateGraph
+
+#define max(x,y) x > y ? x : y
+
 //typedef so that we can change this later
 typedef adjacency_list<> graph_t;
 typedef struct {
@@ -33,9 +38,10 @@ typedef pair<int,int> Edge;
 vector<Edge> ImpliedEdges(Edge guess, const vector<player_t>& players);
 void AddImpliedEdges(graph_t& F, Edge guess, const vector<player_t>& players, unsigned short depth);
 pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, unsigned short depth=0);
+void sort_on_pair_count(vector<player_t>& players);
 
-struct cycle_detector : public dfs_visitor<> //code from boost/graph/example/file_dependencies.cpp
-{
+struct cycle_detector : public dfs_visitor<> 
+{//code from boost/graph/example/file_dependencies.cpp
     cycle_detector(bool& has_cycle) : m_has_cycle(has_cycle) { }
       template <class Edge, class Graph>
            void back_edge(Edge, Graph&) { m_has_cycle = true; }
@@ -59,6 +65,7 @@ vector<int> FindOrdering(vector<player_t> players){
     OUTPUT(("inside FindOrdering\n"));
     add_edge(1,2,order_g);      //BGL causes a segfault if we ask edge() on an empty group
     remove_edge(1,2,order_g);   //(2nd part of hack)
+    sort_on_pair_count(players);
     boost::tie(acyclic,order_g) =  MakeAssumption(order_g, players);
     vector<int> order;
     if (acyclic){
@@ -97,6 +104,115 @@ vector<Edge> ImpliedEdges(Edge guess, const vector<player_t>& players){
     }
     return impl_edges;
 }
+
+void inline swap(int& x, int& y){
+    int temp = x;
+    x = y;
+    y = temp;
+}
+
+void order_triplet(int& a, int& b, int& c){
+    //Given three unique integers, re-assign them so that
+    // a < b < c 
+    // where the set {a,b,c} remains unchanged
+    // (we move the values around, but they're all still there)
+    if (a < b && b < c){ //abc
+        return;
+    } else if (b < a && a < c){ //bac
+        swap(a,b);
+    } else if ( c < a && a < b){ //cab
+        swap(c,a);
+        swap(c,b);
+    } else if (a < c && c < b){ //acb
+        swap(c,b);
+    } else if (c < b && b < a){ //cba
+        swap(a,c);
+    } else if (b < c && c < a){//bca
+        swap(b,c);
+        swap(a,c);
+    }
+#ifdef DEBUG
+    if (! ( a<b && b < c)){
+        OUTPUT(("Uh oh, order triplet failed.\n"));
+        exit(127);
+    }
+#endif
+}
+
+template <typename T>
+vector<size_t> sort_indices(const vector<T> &v) {
+
+  // initialize original index locations
+  vector<size_t> idx(v.size());
+  for (size_t i = 0; i != idx.size(); ++i) idx[i] = i;
+
+  // sort indices based on comparing values in v
+  sort(idx.begin(), idx.end(),
+       [&v](size_t i1, size_t i2) {return v[i1] < v[i2];});
+
+  return idx;
+}
+
+void sort_on_pair_count(vector<player_t>& players){
+    int counts[players.size()][players.size()] ;
+    memset(counts, 0, sizeof(counts[0][0]) * players.size() *players.size());
+    //counts will always be indexed on [a][b] such that a < b.
+#ifdef DEBUG
+    for (size_t i=0; i < players.size(); i++){
+        for (size_t j=0; j < players.size(); j++){
+            if (counts[i][j] != 0) OUTPUT(("uninitialized counts!!\n"));
+        }
+    }
+#endif
+    for(int i=0; i < players.size(); i++){ // count up all pairs
+        player_t pp = players[i];//we need to make a copy because order_triplet screws with the values
+        order_triplet(pp.p,pp.w,pp.n);
+        //now pp.p < pp.w < pp.n
+        counts[pp.p][pp.w] += 1;
+        counts[pp.w][pp.n] += 1;
+        counts[pp.p][pp.n] += 1;
+    }
+    vector<int> player_scores(players.size());
+    for (size_t i=0; i < player_scores.size(); i++){
+        //each player's score is the count of their most valuable pair
+        player_t pp = players[i];
+        order_triplet(pp.p,pp.w,pp.n);
+        player_scores[i] = max(counts[pp.p][pp.w], counts[pp.w][pp.n]);
+        player_scores[i] = max(player_scores[i], counts[pp.p][pp.n]);
+    }
+    //we want to sort players based on the values in player_scores,
+    //so we sort the indices of player_score and reorder players according
+    //to that permutation on the indices.
+#ifdef DEBUG
+    OUTPUT(("scores are \n"));
+    for(int s: player_scores){
+        OUTPUT(("%d ",s));
+    }
+    OUTPUT(("\n"));
+#endif
+    vector<size_t> perm = sort_indices(player_scores);
+#ifdef DEBUG
+    OUTPUT(("perms is \n"));
+    for (size_t p: perm){
+        OUTPUT(("%u ",p));
+    }
+    OUTPUT(("\n"));
+#endif
+    vector<player_t> temp_players(players.size());
+    for (size_t i = 0; i < perm.size(); i++){
+        temp_players[i] = players[perm[i]];
+    }
+    players = temp_players;
+#ifdef DEBUG
+    OUTPUT(("sorted order:\n"));
+    for (player_t p: players){
+        OUTPUT(("%d ",p.p));
+    }
+    OUTPUT(("\n"));
+#endif
+}
+
+     
 
 void AddImpliedEdges(graph_t& F, Edge guess, const vector<player_t>& players, unsigned short depth){
     queue<Edge> Q;
@@ -173,7 +289,7 @@ int main()
     for(int i=0; i < n; i++){
         cin >> players[i].p >> players[i].w >> players[i].n;
     }
-   
+ 
     vector<int> ordering = FindOrdering(players);
     for(int i = ordering.size() - 1; i >= 0 ; i-- )
             std::cout << ordering[i] << ' ';
@@ -181,4 +297,15 @@ int main()
     return 0;
 }
 
+   /*
+     *
+6 0 1 2 1 2 3 2 1 0 3 1 0 4 0 3 5 2 4 
 
+6 
+0 1 2 
+1 2 3 
+2 1 0 
+3 1 0 
+4 0 3 
+5 2 4 
+*/

@@ -1,4 +1,4 @@
-'''designed to be called over ssh by driver.py
+'''designed to be called over ssh by naww_master.py
 should pass along as command line parameters the location of a redis instance
 and the number of children to maintain at a time.
 The redis instance will include a list 'jobs', each entry of which will be of the form

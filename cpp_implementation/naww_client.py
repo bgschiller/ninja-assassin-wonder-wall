@@ -1,3 +1,4 @@
+#!/home/schillb/Research/ninja-assassin-wonder-wall/mypy/bin/python
 '''designed to be called over ssh by naww_master.py
 should pass along as command line parameters the location of a redis instance
 and the number of children to maintain at a time.
@@ -18,13 +19,14 @@ import multiprocessing
 import subprocess
 import redis
 
-r = redis.Redis()
+r = redis.Redis('newman.cs.wwu.edu')
 
 def find_solution(problem):
     '''solve a single problem, presented as a string:
     n p1 w1 a1 p2 w2 a2 ...
     and push the results to redis'''
     solution = subprocess.check_output("echo {} | ./implication".format(problem))
+    r.lrem('inprogress', 1, problem)
     size = int(problem.split()[0]) 
     if solution:
         r.sadd('solved:{}'.format(size), problem)
@@ -35,7 +37,7 @@ def find_solution(problem):
 def problems():
     '''This generator will continue to produce values for the pool until 
     there are no more in the redis list'''
-    new_prob = r.rpoplrpush('jobs','inprogress')
+    new_prob = r.rpoplpush('jobs','inprogress')
     while new_prob is not None:
         yield new_prob
         new_prob = r.rpoplpush('jobs','inprogress')

@@ -13,7 +13,6 @@
 using namespace boost;
 using namespace std;
 
-#define DEBUG
 
 #ifdef DEBUG
 #define SPACES(x) for(int ii=0; ii<2*x; ii++) printf(" ");
@@ -42,7 +41,7 @@ typedef pair<int,int> Edge;
 pair< vector<Edge>, vector<player_t> >
 ImpliedEdges(Edge guess, const vector<player_t>& players);
 void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned short depth);
-pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, unsigned short depth=0);
+pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t player_count, unsigned short depth=0);
 void sort_on_pair_count(vector<player_t>& players);
 
 struct cycle_detector : public dfs_visitor<> 
@@ -71,7 +70,7 @@ vector<int> FindOrdering(vector<player_t> players){
     add_edge(1,2,order_g);      //BGL causes a segfault if we ask edge() on an empty group
     remove_edge(1,2,order_g);   //(2nd part of hack)
     sort_on_pair_count(players);
-    boost::tie(acyclic,order_g) =  MakeAssumption(order_g, players);
+    boost::tie(acyclic,order_g) =  MakeAssumption(order_g, players, players.size());
     vector<int> order;
     if (acyclic){
         topological_sort(order_g, back_inserter(order));
@@ -93,7 +92,7 @@ ImpliedEdges(Edge guess, const vector<player_t>& players){
         int tt = players[ii].p;
         int ww = players[ii].w;
         int nn = players[ii].n;
-        //set flag for used players!
+        OUTPUT(("testing player %d\n",players[ii].p));
         bool used_this_player = false;
         if (rr == tt && ss == ww){
             impl_edges.push_back(make_pair(ww,nn));
@@ -121,6 +120,7 @@ ImpliedEdges(Edge guess, const vector<player_t>& players){
             used_this_player = true;
         }
         if (used_this_player){
+            OUTPUT(("used player %d\n",players[ii].p));
             used_players.push_back(players[ii]);
         }
     }
@@ -247,15 +247,20 @@ void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned
         SPACES(depth);
         OUTPUT(("%d -> %d is an edge\n",rr,ss));
         auto edge_exists = boost::lookup_edge(rr,ss,F);
-        if (! edge_exists.second){ //second gives true if edge exists
+        if (true ||! edge_exists.second){ //second gives true if edge exists
+            OUTPUT(("and it's new!\n"));
             add_edge(rr,ss,F);
             vector<Edge> impl_edges;
             vector<player_t> used_players;
             tie(impl_edges, used_players) = ImpliedEdges(next, players);
             for (Edge new_edge : impl_edges){
+                OUTPUT(("adding %d -> %d\n",new_edge.first, new_edge.second));
                 if (! edge(new_edge.first, new_edge.second, F).second){
                     add_edge(new_edge.first, new_edge.second, F);
                     Q.push(new_edge);
+                }
+                else {
+                    OUTPUT(("%d -> %d exists already\n",new_edge.first, new_edge.second));
                 }
             }
             for (size_t ii = 0; ii < players.size(); ++ii){
@@ -267,6 +272,7 @@ void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned
             }
             OUTPUT(("here in AIE, we see %zu players\n",players.size()));
         }
+
     }
 }
 /* MakeAssumption(G, players)
@@ -274,7 +280,7 @@ void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned
  *      players is empty -- all edges are in G (success case)
  *      G contains a cycle -- this says we made a mistake and must backtrack (failure case)
  */
-pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, unsigned short depth){
+pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t player_count, unsigned short depth){
     if (depth > 10){
         exit(12);
     }
@@ -282,14 +288,19 @@ pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, unsigned
     OUTPUT(("top of MakeAssumption\n"));
     SPACES(depth);
     OUTPUT(("still %d players left in list\n", (int) players.size()));
-    OUTPUT(("player is\n"));
 #ifdef DEBUG
+    OUTPUT(("player is\n"));
     for (player_t p : players){
         OUTPUT(("%d ",p.p));
     }
     OUTPUT(("\n"));
 #endif
-    if (players.size() == 0){
+    if (players.size() == 0 || num_vertices(G) == player_count){
+        OUTPUT(("graph contains\n"));
+        for (auto vp = vertices(G); vp.first != vp.second; ++vp.first){
+              OUTPUT(("%zu ",*vp.first));
+        }
+        OUTPUT(("\n"));
         auto ret_val = make_pair(is_acyclic(G), G);
         SPACES(depth);
         OUTPUT(("G is %scyclic\n",ret_val.first ? "a" : ""));
@@ -308,7 +319,7 @@ pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, unsigned
     OUTPUT(("Assuming %d -> %d\n",player.p,player.w));
     graph_t F = G; //make a copy so as to not mess up the original if this guess is wrong
     AddImpliedEdges(F, make_pair(player.p, player.w), players, depth);
-    pair<bool, graph_t> result = MakeAssumption(F, players, depth+1);
+    pair<bool, graph_t> result = MakeAssumption(F, players, player_count, depth+1);
     if (result.first){ //if F is complete and acyclic!
         return result;
     }
@@ -316,7 +327,7 @@ pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, unsigned
     SPACES(depth);
     OUTPUT(("Assuming %d -> %d\n",player.w,player.p));
     AddImpliedEdges(F, make_pair(player.w, player.p), players_backup, depth);
-    return MakeAssumption(F, players_backup, depth+1); //Success or failure, this is our last shot.
+    return MakeAssumption(F, players_backup, player_count, depth+1); //Success or failure, this is our last shot.
 }
 
 int main()  

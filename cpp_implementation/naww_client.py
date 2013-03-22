@@ -25,12 +25,12 @@ def find_solution(problem):
     '''solve a single problem, presented as a string:
     n p1 w1 a1 p2 w2 a2 ...
     and push the results to redis'''
-    solution = subprocess.check_output("echo {} | ./implication".format(problem))
+    solution = subprocess.check_output("echo {} | ./implication".format(problem), shell=True).translate(None, '\n')
     r.lrem('inprogress', 1, problem)
     size = int(problem.split()[0]) 
     if solution:
         r.sadd('solved:{}'.format(size), problem)
-        r.set('game:{}'.format(problem), solution)
+        r.hset('solutions:{}'.format(size), problem, solution)
     else:
         r.sadd('unsolvable:{}'.format(size),problem)
 
@@ -42,8 +42,8 @@ def problems():
         yield new_prob
         new_prob = r.rpoplpush('jobs','inprogress')
 
-
-num_cpus = multiprocessing.cpu_count()
-pool = multiprocessing.Pool(num_cpus * 2)
-pool.map_async(find_solution,problems()).wait()
+if __name__=='__main__':
+    num_cpus = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(num_cpus * 2)
+    pool.map_async(find_solution,problems()).wait()
 

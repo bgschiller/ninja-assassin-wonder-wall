@@ -13,7 +13,6 @@
 using namespace boost;
 using namespace std;
 
-
 #ifdef DEBUG
 #define SPACES(x) for(int ii=0; ii<2*x; ii++) printf(" ");
 #define OUTPUT(x) printf x
@@ -246,32 +245,28 @@ void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned
         ss = next.second;
         SPACES(depth);
         OUTPUT(("%d -> %d is an edge\n",rr,ss));
-        auto edge_exists = boost::lookup_edge(rr,ss,F);
-        if (true ||! edge_exists.second){ //second gives true if edge exists
-            OUTPUT(("and it's new!\n"));
-            add_edge(rr,ss,F);
-            vector<Edge> impl_edges;
-            vector<player_t> used_players;
-            tie(impl_edges, used_players) = ImpliedEdges(next, players);
-            for (Edge new_edge : impl_edges){
-                OUTPUT(("adding %d -> %d\n",new_edge.first, new_edge.second));
-                if (! edge(new_edge.first, new_edge.second, F).second){
-                    add_edge(new_edge.first, new_edge.second, F);
-                    Q.push(new_edge);
-                }
-                else {
-                    OUTPUT(("%d -> %d exists already\n",new_edge.first, new_edge.second));
-                }
+        add_edge(rr,ss,F);
+        vector<Edge> impl_edges;
+        vector<player_t> used_players;
+        tie(impl_edges, used_players) = ImpliedEdges(next, players);
+        for (Edge new_edge : impl_edges){
+            OUTPUT(("adding %d -> %d\n",new_edge.first, new_edge.second));
+            if (add_edge(new_edge.first, new_edge.second, F).second){
+                //add_edge.second is True if the edges did not already exist
+                Q.push(new_edge);
             }
-            for (size_t ii = 0; ii < players.size(); ++ii){
-                if (std::find(used_players.begin(), used_players.end(),
-                            players[ii]) != used_players.end()){
-                    OUTPUT(("erasing %d\n",players[ii].p));
-                    players.erase(players.begin() + ii);
-                }
+            else {
+                OUTPUT(("%d -> %d exists already\n",new_edge.first, new_edge.second));
             }
-            OUTPUT(("here in AIE, we see %zu players\n",players.size()));
         }
+        for (size_t ii = 0; ii < players.size(); ++ii){
+            if (std::find(used_players.begin(), used_players.end(),
+                        players[ii]) != used_players.end()){
+                OUTPUT(("erasing %d\n",players[ii].p));
+                players.erase(players.begin() + ii);
+            }
+        }
+        OUTPUT(("here in AIE, we see %zu players\n",players.size()));
 
     }
 }

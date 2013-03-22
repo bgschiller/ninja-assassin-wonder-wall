@@ -2,6 +2,7 @@
 from implication import find_ordering, count_pairs
 import random
 from StringIO import StringIO
+import itertools
 
 def random_game(players):
     relationships = []
@@ -41,7 +42,7 @@ def all_choices(players):
         yield choices
 
 def all_games(players):
-    return combinations(list(all_choices(players)))
+    return itertools.product(*all_choices(players))
 
 def display_game(game):
     return '{} {}'.format(len(game),
@@ -65,6 +66,8 @@ def count_solvable(game_list):
 if __name__ == '__main__':
     import redis
     r = redis.Redis('newman.cs.wwu.edu')
-    for size in range(4,5):
-        for game in all_games(range(size)):
-            r.lpush('jobs',game)
+    num_games = 10000
+    solved = r.keys('solutions:*')
+    highest = max(map(lambda s: int(s.split(':')[1]), solved))
+    for game in (random_game(range(highest + 1)) for i in xrange(num_games)):
+        r.sadd('jobs',display_game(game))

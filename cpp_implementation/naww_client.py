@@ -16,6 +16,7 @@ If there is no solution, add the key to 'unsolvable:n' (for appropriate n).'''
 
 
 import multiprocessing
+import itertools
 import subprocess
 import redis
 
@@ -26,10 +27,9 @@ def find_solution(problem):
     n p1 w1 a1 p2 w2 a2 ...
     and push the results to redis'''
     solution = subprocess.check_output("echo {} | ./implication".format(problem), shell=True).translate(None, '\n')
-    r.lrem('inprogress', 1, problem)
     size = int(problem.split()[0]) 
+    r.srem('inprogress',problem)
     if solution:
-        r.sadd('solved:{}'.format(size), problem)
         r.hset('solutions:{}'.format(size), problem, solution)
     else:
         r.sadd('unsolvable:{}'.format(size),problem)
@@ -37,13 +37,18 @@ def find_solution(problem):
 def problems():
     '''This generator will continue to produce values for the pool until 
     there are no more in the redis list'''
-    new_prob = r.rpoplpush('jobs','inprogress')
+    new_prob = r.spop('jobs')
     while new_prob is not None:
+        r.sadd('inprogress',new_prob)
         yield new_prob
-        new_prob = r.rpoplpush('jobs','inprogress')
+        new_prob = r.spop('jobs')
+    exit(0)
 
 if __name__=='__main__':
+    probs = problems()
     num_cpus = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(num_cpus * 2)
-    pool.map_async(find_solution,problems()).wait()
+    NN = num_cpus * 4
+    while True:
+        pool.map_async(find_solution,itertools.islice(probs, NN)).wait()
 

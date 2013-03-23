@@ -276,9 +276,6 @@ void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned
  *      G contains a cycle -- this says we made a mistake and must backtrack (failure case)
  */
 pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t player_count, unsigned short depth){
-    if (depth > 10){
-        exit(12);
-    }
     SPACES(depth);
     OUTPUT(("top of MakeAssumption\n"));
     SPACES(depth);

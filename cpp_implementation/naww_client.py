@@ -20,31 +20,29 @@ import itertools
 import subprocess
 import redis
 
-r = redis.Redis('newman.cs.wwu.edu')
 
 def find_solution(problem):
     '''solve a single problem, presented as a string:
     n p1 w1 a1 p2 w2 a2 ...
     and push the results to redis'''
-    solution = subprocess.check_output("echo {} | ./implication".format(problem), shell=True).translate(None, '\n')
+    solution = subprocess.check_output("echo {} | /home/schillb/Research/ninja-assassin-wonder-wall/cpp_implementation/implication".format(problem), shell=True).translate(None, '\n')
     size = int(problem.split()[0]) 
-    r.srem('inprogress',problem)
     if solution:
-        r.hset('solutions:{}'.format(size), problem, solution)
+        r.incr('n_solvable:{}'.format(size))
     else:
-        r.sadd('unsolvable:{}'.format(size),problem)
+        r.incr('n_unsolvable:{}'.format(size))
 
 def problems():
     '''This generator will continue to produce values for the pool until 
     there are no more in the redis list'''
-    new_prob = r.spop('jobs')
+    new_prob = r.lpop('jobs')
     while new_prob is not None:
-        r.sadd('inprogress',new_prob)
         yield new_prob
-        new_prob = r.spop('jobs')
+        new_prob = r.lpop('jobs')
     exit(0)
 
 if __name__=='__main__':
+    r = redis.Redis('newman.cs.wwu.edu')
     probs = problems()
     num_cpus = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(num_cpus * 2)

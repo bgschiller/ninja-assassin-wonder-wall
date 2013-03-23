@@ -67,7 +67,17 @@ if __name__ == '__main__':
     import redis
     r = redis.Redis('newman.cs.wwu.edu')
     num_games = 10000
-    solved = r.keys('solutions:*')
-    highest = max(map(lambda s: int(s.split(':')[1]), solved))
-    for game in (random_game(range(highest + 1)) for i in xrange(num_games)):
-        r.sadd('jobs',display_game(game))
+    highest = 6
+    while highest < 40:
+        print 'generating {} random games of size {}'.format(num_games, highest + 1)
+        cnt = 0
+        for game in (random_game(range(highest + 1)) for i in xrange(num_games)):
+            if cnt == num_games/4:
+                print '1/4 of the way'
+            elif cnt == num_games/2:
+                print '1/2 of the way'
+            elif cnt == num_games*3/4:
+                print '3/4 of the way'
+            cnt += 1
+            r.rpush('jobs',display_game(game))
+        highest = highest + 1

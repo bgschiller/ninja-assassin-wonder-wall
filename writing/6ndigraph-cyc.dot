@@ -1,0 +1,18 @@
+digraph untitled {
+        graph[bgcolor="transparent"];
+        node [fontname="Bitstream Vera Sans", fontsize="22.00", shape=circle, style="bold,filled" fillcolor=white];
+        edge [style=bold];
+        1[color=red];
+        2[color=red];
+        3;
+        4;
+        5[color=red];
+        6;
+        6 -> 4;
+        4 -> 5;
+        5 -> 1[color=red];
+        1 -> 2[color=red];
+        2 -> 3;
+        3 -> 4;
+        2 -> 5[color=red];
+}

@@ -1,0 +1,8 @@
+digraph G{
+    A -> B;
+    B -> C [color=red];
+    C -> D [color=red];
+    C -> B;
+    B -> A;
+    D -> B [color=red];
+}

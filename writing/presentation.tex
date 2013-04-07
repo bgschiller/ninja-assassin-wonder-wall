@@ -1,0 +1,543 @@
+\documentclass[svgnames]{beamer}
+\setbeamertemplate{navigation symbols}{}
+\usetheme{Boadilla}
+
+
+%\usepackage[svgnames]{xcolor}
+\usepackage{amsmath}
+\usepackage{multicol}
+\usepackage{pstricks}
+\usepackage{auto-pst-pdf}
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{clrscode3e}
+\usepackage{verbatim}
+\newtheorem{idea}{Idea}
+\newtheorem{intuit}{Intuition}
+
+\title{The Ninja Assassin Wonderwall Game}
+\author[B. Schiller]{Brian Schiller \\{\scriptsize advised by Dr. Tilmann Glimm}}
+\institute{Western Washington University}
+\date[April 2013]{April 6, 2013}
+
+\DeclareMathOperator{\w}{w}
+\DeclareMathOperator{\n}{n}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{How to Play}
+    Every Player:
+        \begin{itemize}
+            \item Choose someone to be your Ninja Assassin.
+            \item<2-> Choose someone to be your Wonderwall.
+            \item<3-> (don't tell anyone who you picked)
+            \item<4-> When I yell ``Go'', run to keep yourself on the `safe' side of the line between your Ninja Assassin and your Wonderwall.
+            \item<5-> (Stop when dinner is ready)
+            \begin{itemize}
+                \item<6-> Funny thing, sometimes it stops early.
+            \end{itemize}
+        \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Definitions: problem, solution}
+\begin{definition}
+A \emph{Ninja Assassin Wonderwall problem} is a set $P$ together with two functions $\w:P\to P, \quad \n: P\to P$ that satisfy $\w(p) \neq p, \n(p) \neq p, \text{ and } \w(p) \neq \n(p)$ for all $p \in P$.
+\end{definition}
+
+\uncover<2->{%
+\begin{definition}
+A \emph{solution} to a Ninja Assassin Wonderwall problem is a function $S: P\to R^{n}$ such that:
+    \begin{itemize}
+    \item<3-> $S$ is one-to-one (two players may not occupy the same space)
+    \item<4-> For each $p \in P$, $\w(p)$ lies on the line segment between $p$ and $\n(p)$.
+    \end{itemize}
+\end{definition}
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Directions}
+\begin{itemize}
+    \item<1-> How can we tell if a game has a solution?
+    \item<2-> Given a game, construct a solution or say that one does not exist.
+    \item<3-> Try to determine how the probability a solutions exists changes for games of different sizes.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Small Example}
+    %solved game
+\vspace{0.2\textheight}
+    \begin{multicols}{2}
+\uncover<3->{
+    \begin{pspicture}(0,0)(10,10)
+    \qdisk(0,1){2pt}
+    \uput[u](0,1){C}
+
+    \qdisk(-0.4,2){2pt}
+    \uput[u](-0.4,2){E}
+
+    \qdisk(1,2){2pt}
+    \uput[u](1,2){B}
+
+    \qdisk(2,3){2pt}
+    \uput[u](2,3){A}
+
+    \qdisk(2.4,2){2pt}
+    \uput[u](2.4,2){D}
+
+    \qdisk(3.5,2){2pt}
+    \uput[u](3.5,2){F}
+    \end{pspicture}
+}
+    \columnbreak
+
+    \begin{tabular}{l | c | c}
+     $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+     A &  B& C\\
+     B &  D& F\\
+     C &  B& A\\
+     D &  B& E\\
+     E &  D& F\\
+     F &  D& B
+     \end{tabular}
+     \end{multicols}
+
+    \only<4>{Couldn't we put them all in a line?}
+\end{frame} 
+
+\begin{frame}
+\frametitle{Theorem: one-dimensional solutions}
+\begin{theorem}
+Any Ninja Assassin Wonderwall game which has a solution in $\mathbb{R}^n$ has a solution in $\mathbb{R}$.
+\end{theorem}
+\uncover<2->{Why is this important? \\}
+\uncover<3->{In searching for solutions, we can stop when we've considered all the 1-dimensional orderings.}
+\end{frame}
+
+
+
+\begin{frame}
+
+\setbeamercolor{alerted text}{fg=red,bg=}
+
+    \frametitle{Small Example}
+    %unsolvable game
+    \begin{multicols}{2}
+\begin{itemize}
+\psset{unit=0.7cm}
+    \item[]<2-> 
+    \begin{pspicture}(-5,-5)(5,5)
+    \qdisk(0,0){2pt}
+    \uput[u](0,0){A}
+
+    \qdisk(1,0){2pt}
+    \uput[u](1,0){B}
+
+    \qdisk(2,0){2pt}
+    \uput[u](2,0){C}
+
+    \qdisk(3,0){2pt}
+    \uput[u](3,0){D}
+    \visible<4->{
+        \psline(-0.5,1)(3.5,-0.5)
+    }
+    \end{pspicture}
+    \item[]<5->
+    \begin{pspicture}(-5,-5)(5,5)
+    \qdisk(0,0){2pt}
+    \uput[u](0,0){C}
+
+    \qdisk(1,0){2pt}
+    \uput[u](1,0){A}
+
+    \qdisk(2,0){2pt}
+    \uput[u](2,0){D}
+
+    \qdisk(3,0){2pt}
+    \uput[u](3,0){B}
+    \visible<7->{
+        \psline(-0.5,1)(3.5,-0.5)
+    }
+    \end{pspicture} 
+    \item[]<8->
+    \begin{pspicture}(-5,-5)(5,5)
+    \qdisk(0,0){2pt}
+    \uput[u](0,0){D}
+
+    \qdisk(1,0){2pt}
+    \uput[u](1,0){B}
+
+    \qdisk(2,0){2pt}
+    \uput[u](2,0){A}
+
+    \qdisk(3,0){2pt}
+    \uput[u](3,0){C}
+    \visible<10->{
+        \psline(-0.5,1)(3.5,-0.5)
+    }
+    \end{pspicture} 
+
+\end{itemize}
+    \columnbreak
+
+    \begin{tabular}{l | c | c}
+     $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+     \alert<6-7>{A} & \alert<6-7>{B}& \alert<6-7>{C}\\
+     \alert<3-4>{B} & \alert<3-4>{D}& \alert<3-4>{A}\\
+     \alert<9-10>{C} & \alert<9-10>{B}& \alert<9-10>{A}\\
+     D & B& A
+     \end{tabular}
+     \end{multicols}
+\begin{overlayarea}{\textwidth}{\textheight}
+   \only<11>{ In fact, there is not a solution to this problem.}
+    \only<12>{ How can we tell if a problem has a solution?}
+\end{overlayarea}
+\end{frame}
+
+\begin{frame}
+\frametitle{Finding solutions I}
+\begin{idea}
+    Try all the orderings!
+\end{idea}
+\uncover<2->{How long would this take?}
+\uncover<3->{For $n$ players, $O(n!)$ time. }
+
+\uncover<4->{If we could check 1000 permutations a second, solving one problem would take:}
+\begin{description}
+    \item<5->[n=7]\quad 5 seconds
+    \item<6->[n=8]\quad 40 seconds
+    \item<7->[n=9]\quad 6 minutes
+    \item<8->[n=10]\quad 1 hour
+    \item<9->[\vdots] \text{}
+    \item<10->[n=20] \quad $7.71\cdot 10^7$ years
+\end{description}
+
+\uncover<11-> {We need a better idea...}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Definitions: graph theory terms}
+
+    \begin{definition}
+    A \emph{graph}, written $G=(V,E)$, is a collection of vertices $V$ and a collection of edges $E$ that connect pairs of vertices.
+    \end{definition}
+        \begin{center}
+        \includegraphics<-4>[width=0.35\textwidth]{6ngraph.png}
+        \includegraphics<5->[width=0.35\textwidth]{6ngraph-red.png}
+        \end{center}
+    \begin{overlayarea}{\textwidth}{0.25\textheight}
+        \only<2>{Here, $V=\{1,2,3,4,5,6\}$ and $E=\{(1,2),(1,5),(2,3),(2,5),(3,4),(4,5),(4,6)\}$.}
+        \only<3->{ 
+        \begin{definition}
+            A \emph{path} in a graph is a sequence of vertices such that from each of its vertices there is an edge to the next vertex in the sequence.
+        \end{definition} }
+    \end{overlayarea}
+\uncover<4->{
+For example, $\langle 1,2,5,4 \rangle$.}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Definitions: graph theory terms}
+\begin{definition}
+A \emph{directed graph}, or digraph, is a graph whose edges have a direction associated with them.
+\end{definition}
+\begin{center}
+\includegraphics<-2>[width=0.35\textwidth]{6ndigraph.png}
+\includegraphics<3->[width=0.35\textwidth]{6ndigraph-cyc.png}
+\end{center}
+\uncover<2->{
+\begin{definition}
+A \emph{cycle} in a digraph is a path which starts and ends at the same vertex.
+\end{definition}}
+\end{frame}
+
+\begin{frame}
+\frametitle{Definitions: graph theory terms}
+\begin{definition}
+A \emph{directed acyclic graph}, or DAG, is a digraph with no cycles.
+\end{definition}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{6ndag.png}
+\end{center}
+\uncover<2->{
+\begin{definition}
+A \emph{topological sort} on a DAG is a linear ordering of its vertices such that each node appears before every node to which it has outbound edges.
+\end{definition}}
+\uncover<3->{
+A topological sort on the graph above might produce $\langle 6, 4, 3, 2, 5, 1 \rangle$.}
+
+\uncover<4->{
+Notice that a topological sort is not unique. $\langle 3, 6, 2, 4, 5, 1 \rangle$ is also valid.}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Finding solutions II example}
+\begin{intuit}
+
+If a permutation of players satisfies a player $p$'s constraints, then $p$, $\w(p)$, $\n(p)$ appear in that order or its reverse. 
+
+We will build a DAG where a path exists from player $p$ to player $q$ (denoted $p \leadsto q$) if `$p$ appears to the left of $q$ in a solution to the Ninja Assassin Wonderwall problem'.
+\end{intuit}
+
+\begin{multicols}{2}
+\begin{overlayarea}{0.5\textwidth}{0.35\textheight}
+\only<2>{
+\begin{tabular}{l l | c | c}
+     \textcolor{white}{$\rightarrow$} & $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+     & A &  B& C\\
+     & B &  C& D\\
+     & C &  B& A\\
+     & D &  B& A\\
+\end{tabular}}
+\only<3>{
+\begin{tabular}{l l | c | c}
+     & $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+     $\rightarrow$ & A &  B& C\\
+     $\rightarrow$ & B &  C& D\\
+     $\rightarrow$ & C &  B& A\\
+     $\rightarrow$ & D &  B& A\\
+\end{tabular}}
+\only<4>{
+\begin{tabular}{l l | c | c}
+     & $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+     $\rightarrow$ & A &  B& C\\
+     $\rightarrow$ & B &  C& D\\
+     $\rightarrow$ & C &  B& A\\
+     $\leftarrow$ & D &  B& A\\
+\end{tabular}}
+\only<5->{
+\begin{tabular}{l l | c | c}
+     & $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+     $\rightarrow$ & A &  B& C\\
+     $\rightarrow$ & B &  C& D\\
+     $\leftarrow$ & C &  B& A\\
+     $\leftarrow$ & D &  B& A\\
+\end{tabular}}
+\end{overlayarea}
+\columnbreak
+\begin{overlayarea}{0.5\textwidth}{0.35\textheight}
+\includegraphics<3>[width=\textwidth]{alg_ex1.pdf}
+\includegraphics<4>[width=\textwidth]{alg_ex2.pdf}
+\includegraphics<5->[width=\textwidth]{alg_ex3.pdf}
+\end{overlayarea}
+\end{multicols}
+\uncover<6->{\textbf{\color{DarkGreen} That one is acyclic!}}
+
+\uncover<7->{A topological sort gives $\langle A, B, C, D \rangle$}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Finding solutions II}
+\uncover<1->{
+\begin{theorem}
+A Ninja Assassin Wonderwall problem has a solution iff there is a directed acyclic graph $G = (P,E)$ such that, for all $p \in P$, either $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
+\end{theorem}}
+
+\uncover<2->{
+\begin{idea}
+Consider the set $D$ of all digraphs $G=(P,E)$ where $E$ is constructed by taking either $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
+
+\uncover<3->{
+If one of these is acyclic, the problem has a solution.}
+\end{idea}}
+\end{frame}
+
+\begin{frame}
+\frametitle{Finding solutions II continued}
+\begin{codebox}
+\Procname{$\proc{FindOrdering}(P,n,w)$}
+\li \For $G\in D$
+\li     \Do
+        \If $G$ is acyclic
+\li         \Do
+                \Return $\proc{TopologicalSort}(G)$
+        \End
+    \End
+\li \Return None
+\end{codebox}
+\uncover<2->{How long would this take?}
+\uncover<3->{For $n$ players, $O(n \cdot 2^n)$ time.} 
+\uncover<4->{If we could check 1000 graphs a second, solving one problem would take:}
+\begin{description}
+    \item<5->[n=7] \quad 1 second
+    \item<6->[n=8] \quad 2 seconds
+    \item<7->[n=9] \quad 5 seconds
+    \item<8->[n=10] \quad 10 seconds
+    \item<9->[$\vdots$] \text{}
+    \item<10->[n=20] \quad 6 hours
+\end{description}
+\uncover<11->{This is probably too slow as well.}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Finding solutions II, refinements}
+\begin{itemize}
+    \item<1-> Don't ennumerate all the digraphs in $D$.
+    \begin{enumerate}
+        \item<2-> Start with an empty graph.
+        \item<3-> For a player $p$ whose preferences haven't been considered, add $p \leadsto \w(p) \leadsto \n(p)$.
+        \item<4-> If this leads to a cycle in the graph, try $\n(p) \leadsto \w(p) \leadsto p$.
+        \item<5-> If \emph{this} leads to a cycle, the problem is unsolvable (why?). Otherwise, goto 2.
+    \end{enumerate}
+    \item<6-> Each time we add a player's constraints, we can try to wring some more information.
+    \begin{itemize}
+        \item<7-> If we have added an edge $(a, b)$, and $(a, b, c)$ is a triplet $(a, \n(a), \n(a))$, we can infer that $(b,c)$ is also an edge.
+        \item<8-> This can dramatically reduce runtime, but not for every problem. The worst case runtime remains the same.
+    \end{itemize}
+    \item<9-> Consider players in an order to enhance the effect of those inferences.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\setlength\columnsep{-4cm}
+\setbeamercolor{alerted text}{fg=blue,bg=}
+
+\frametitle{Finding solutions II example, refined}
+\begin{multicols}{2}
+\begin{tabular}{ l | c | c}
+     $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+      \alert<2->{A} &  \alert<2->{B}& \alert<2->{C}\\
+      \alert<4->{B} &  \alert<4->{C}& \alert<4->{D}\\
+      \alert<6->{C} &  \alert<6->{B}& \alert<6->{A}\\
+      \alert<7->{D} &  \alert<7->{B}& \alert<7->{A}\\
+\end{tabular}
+
+\columnbreak
+
+\begin{itemize}
+\item<2-> Suppose $A \leadsto B \leadsto C$
+    \begin{itemize}
+    \item<4-> $B \leadsto C$, so by $B$'s constraint, $C \leadsto D$
+    \item<6-> $A \leadsto B$, so by $C$'s constraint, $B \leadsto C$
+    \item<7-> $A \leadsto B$, so by $D$'s constraint $B \leadsto D$
+    \end{itemize}
+\end{itemize}
+\end{multicols} 
+\begin{overlayarea}{\textwidth}{0.3\textheight}
+\begin{center}
+\includegraphics<3-4>[width=\textwidth]{alg2ex1.pdf}
+\includegraphics<5-7>[width=\textwidth]{alg2ex2.pdf}
+\includegraphics<8->[width=\textwidth]{alg2ex3.pdf}
+\end{center}
+\end{overlayarea}
+
+\uncover<9->{We've exhausted all the constraints, and the graph is acyclic!}
+
+\uncover<10->{Topological sort gives a valid ordering of $\langle A, B, C, D \rangle$}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Proportion of solvable games}
+If a group of $n$ people play a Ninja Assassin Wonderwall game, how likely is it that the game has a solution? 
+
+\uncover<2->{Can we enumerate all the games of a given size, and find the solvable proportion? The number of games of size $n$ is :}
+\begin{description}
+    \item<3->[n=3] 8 \quad (negligible time)
+    \item<4->[n=4] 1296 \quad (82 seconds)
+    \item<5->[n=5] 248832 \quad (11 hours)
+    \item<6->[$\vdots$] \text{}
+    \item<7->[n=10] 3743906242624487424 \quad (88 times the age of the universe)
+    \item<8->[$\vdots$] \text{}
+    \item<9->[General $n$:] $\displaystyle \left(2 \cdot \binom{n-1}{2} \right)^n $
+\end{description}
+\uncover<10->{This is too many to enumerate for practically any $n$.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Approximate proportion of solvable games}
+We can approximate the proportion using a random sample. I chose a sample size of 10000. To make a random draw from the set of $n$-player games:
+\begin{itemize}
+    \item<2-> For each player $p_i$, $1\leq i \leq n$
+    \begin{itemize}
+        \item<3-> Assign $\w(p_i)$ and $\n(p_i)$ uniformly at random from $P$.
+    \end{itemize}
+\end{itemize}
+\uncover<4->{I spun up about 1100 copies of the solver and set them to work counting how many games had solutions.}
+\vspace{12pt}
+
+\uncover<5->{Would you guess that larger games are \emph{more} or \emph{less} likely to have a solution?}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Probability of a solution}
+\begin{center}
+\includegraphics[scale=0.45]{probplot.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Future Work}
+\begin{itemize}
+    \item<1-> Determine the NP-hardness of the problem.
+    \begin{itemize}
+        \item<2-> If it \emph{is} NP-hardness, find a proof.
+        \item<3-> If it's not, find a polynomial-time algorithm.
+    \end{itemize}
+    \item<4-> Model people playing the game. How do players with incomplete knowledge find solutions?
+    \item<5-> Some games are `isomorphic'. Perhaps the number of non-isomorphic games is much smaller than the number of total games, and we could have a hope of enumerating them.
+    \begin{itemize}
+        \item<6-> For example, in the tables below the roles of $B$ and $C$ have been swapped.
+    \end{itemize}
+\end{itemize}
+\uncover<7->{
+\begin{multicols}{2}
+
+\begin{tabular}{l | c | c}
+     $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+     A &  C& B\\
+     B &  D& A\\
+     C &  D& A\\
+     D &  C& E\\
+     E &  A& B\\
+\end{tabular}
+
+
+\columnbreak
+\begin{tabular}{l | c | c}
+     $p$ & $\w(p)$ & $\n(p)$ \\
+     \hline
+     A &  B& C\\
+     B &  D& A\\
+     C &  D& A\\
+     D &  B& E\\
+     E &  A& C\\
+\end{tabular}
+\end{multicols}}
+
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\Large
+Questions?
+\end{center}
+\end{frame}
+
+\end{document}

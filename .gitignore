@@ -1,3 +1,6 @@
+.DS_Store
+*.png
+*.gif
 *.aux
 *.pyc
 *.pdf

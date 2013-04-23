@@ -202,7 +202,7 @@ The typical way to show that a problem is NP-complete is to take an arbitrary in
 If Ninja Assassin Wonderwall were an NP-complete problem, finding a polynomial time solver would be beyond the scope of this project. Unfortunately, I have been unable to either show it is NP-complete or find a polynomial time algorithm. 
 
 \section{Relation to known problems}
-A simple, though possibly inefficient, way to solve a Ninja Assassin Wonderwall problem would be to transform it into an instance of a known problem for which solvers already exist. We will transform an aribitrary Ninja Assassin Wonderwall problem into a Conjunctive Normal Form Satisfiability problem.
+A simple, though possibly inefficient, way to solve a Ninja Assassin Wonderwall problem would be to transform it into an instance of a known problem for which solvers already exist. We will transform an aribitrary Ninja Assassin Wonderwall problem into a Conjunctive Normal Form Satisfiability (CNF SAT) problem.
 
 Conjunctive Normal Form Satisfiability, or CNF Sat, is a problem whose input is a statement in propositional logic of the form
     \begin{align*} 
@@ -213,7 +213,7 @@ Conjunctive Normal Form Satisfiability, or CNF Sat, is a problem whose input is 
     \end{align*} \textcolor{red}{fix this}
 and whose output is a mapping from each atom in the statement to either true or false such that the statement as a whole is true. 
 
-Polynomial time algorithms exist to tranform any well-formed formula in propositional logic into Conjunctive Normal Form, so we will be concerned only with producing a statement that accurately reflects our problem.
+We will neglect for a moment putting our expressions into Conjunctive Normal Form. There are existing algorithms to do this work. For now, we will be concerned only with producing a statement that accurately reflects the problem.
 
 We begin with some notation. Let $x_{a,b}$ denote the truth of `player $a$ is left of player $b$'. Then for each row of a relationship table $p$, $\w(p)$, $\n(p)$, we can write
     \begin{align*}
@@ -226,6 +226,8 @@ We begin with some notation. Let $x_{a,b}$ denote the truth of `player $a$ is le
 However, this is not quite enough. In moving to simple boolean values, we have given up the transitive property. As it is now, there is nothing keeping the problem from deciding that $x_{a,b}, x_{b,c}$, and $x_{c,a}$ are all true.
 
 We will need to add constraints to ensure that we respect transitivity. For every $a,b,c \in P$, we need the condition $x_{a,b} \wedge x_{b,c} \Rightarrow x_{a,c}$. This adds quite a bit of bloat to our statement. Specifically, it adds $n(n-1)(n-2)$ expressions of that form, all $\wedge$'d together.
+
+These extra $n(n-1)(n-2)$ expressions increase the size of the problem substantially. However, there are bigger things afoot. We have neglected transforming our expressions into CNF, but we will see that it will produce exponential blowup. \textcolor{red}{FINISH THINGS HERE} 
 
 \section{Constructive algorithm}
 An instance of a Ninja Assassin Wonderwall problem is described by a set $P$ of $n$ players, and two functions $\w : P \to P, \quad \n : P \to P$, that satisfy $\w(p) \neq p$, $\n(p) \neq p$, and $\w(p) \neq \n(p)$ for all $p\in P$. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 

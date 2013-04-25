@@ -67,8 +67,8 @@ if __name__ == '__main__':
     import redis
     r = redis.Redis('newman.cs.wwu.edu')
     num_games = 10000
-    highest = 6
-    while highest < 40:
+    highest = 80
+    while highest < 100:
         print 'generating {} random games of size {}'.format(num_games, highest + 1)
         cnt = 0
         for game in (random_game(range(highest + 1)) for i in xrange(num_games)):

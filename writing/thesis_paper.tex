@@ -2,29 +2,30 @@
 
 
 
-\usepackage{clrscode3e}
+    \usepackage{clrscode3e}
 
-\usepackage[parfill]{parskip}
-\usepackage{amsmath,amsthm,amssymb}
-\usepackage{latexsym} %gives nice \leadsto
-\newtheorem*{lem}{Lemma}
-\newtheorem*{thm}{Theorem}
-\newtheorem*{definition}{Definition}
+    \usepackage[parfill]{parskip}
+    \usepackage{amsmath,amsthm,amssymb}
+    \usepackage{latexsym} %gives nice \leadsto
+    \newtheorem*{lem}{Lemma}
+    \newtheorem*{thm}{Theorem}
+    \newtheorem*{definition}{Definition}
 
-\DeclareMathOperator{\w}{w}
-\DeclareMathOperator{\n}{n}
-\DeclareMathOperator{\pairs}{pairs}
-\usepackage{moreverb}
-\usepackage{color}
+    \DeclareMathOperator{\w}{w}
+    \DeclareMathOperator{\n}{n}
+    \DeclareMathOperator{\pairs}{pairs}
+    \usepackage{moreverb}
+    \usepackage{color}
 
-\usepackage{multicol}
-\usepackage{pstricks}
-\usepackage{auto-pst-pdf}
-\usepackage[margin=1.5in]{geometry}
+    \usepackage{multicol}
+    \usepackage{pstricks}
+    \usepackage{auto-pst-pdf}
+    \usepackage[margin=1.5in]{geometry}
+    \usepackage{moreverb}
 
-\title{The Ninja Assassin Wonderwall Game}
-\author{Brian Schiller \\ { advised by Dr. Tilmann Glimm}}
-\date{Spring 2013}
+    \title{The Ninja Assassin Wonderwall Game}
+    \author{Brian Schiller \\ { advised by Dr. Tilmann Glimm}}
+    \date{Spring 2013}
 
 
 \begin{document}
@@ -33,363 +34,488 @@
 \tableofcontents
 
 \section{Introduction}
-Ninja Assassin Wonderwall is a game played at summer camps, sometimes under the name `Eclipse'. It is played with as few as 4 players, though it is better with ten or more. To play, each player chooses two other players (without indicating their choices), one to be their ninja assassin and the other to be their wonderwall. When the game starts, every player tries to keep their wonderwall between themself and their ninja assassin.
+    Ninja Assassin Wonderwall is a game played at summer camps, sometimes under the name `Eclipse'. It is played with as few as 4 players, though it is better with ten or more. To play, each player chooses two other players (without indicating their choices), one to be their ninja assassin and the other to be their wonderwall. When the game starts, every player tries to keep their wonderwall between themself and their ninja assassin.
 
-Camp counselors who organize the game can usually expect it to last until campers grow bored or it is called off. But occasionally the running players will slow down... and stop. Every player finds themselves on the safe side of their wonderwall, protected from their ninja assassin. We call this scenario a solution, which will be more precisely defined in the next section.
+    Camp counselors who organize the game can usually expect it to last until campers grow bored or it is called off. But occasionally the running players will slow down... and stop. Every player finds themselves on the safe side of their wonderwall, protected from their ninja assassin. We call this scenario a solution, which will be more precisely defined in the next section.
 
-For example, in the small example below, every player is in a position that satisfies their constraints--they are on a line with their ninja assassin and wonderwall with the wonderwall in the middle. The player's choices are displayed in a relationship table. Each row of the table shows a player, that player's wonderwall, and that player's ninja assassin.
+    For example, in the small example below, every player is in a position that satisfies their constraints--they are on a line with their ninja assassin and wonderwall with the wonderwall in the middle. The player's choices are displayed in a relationship table. Each row of the table shows a player, that player's wonderwall, and that player's ninja assassin.
 
-\begin{center} %6 player example game
-    \begin{multicols}{2}
-        \begin{pspicture}(0,0)(10,10)
-            \qdisk(0,1){2pt}
-            \uput[u](0,1){C}
+    \begin{center} %6 player example game
+        \begin{multicols}{2}
+            \begin{pspicture}(0,0)(10,10)
+                \qdisk(0,1){2pt}
+                \uput[u](0,1){C}
 
-            \qdisk(-0.4,2){2pt}
-            \uput[u](-0.4,2){E}
+                \qdisk(-0.4,2){2pt}
+                \uput[u](-0.4,2){E}
 
-            \qdisk(1,2){2pt}
-            \uput[u](1,2){B}
+                \qdisk(1,2){2pt}
+                \uput[u](1,2){B}
 
-            \qdisk(2,3){2pt}
-            \uput[u](2,3){A}
+                \qdisk(2,3){2pt}
+                \uput[u](2,3){A}
 
-            \qdisk(2.4,2){2pt}
-            \uput[u](2.4,2){D}
+                \qdisk(2.4,2){2pt}
+                \uput[u](2.4,2){D}
 
-            \qdisk(3.5,2){2pt}
-            \uput[u](3.5,2){F}
-        \end{pspicture}
+                \qdisk(3.5,2){2pt}
+                \uput[u](3.5,2){F}
+            \end{pspicture}
 
-        \columnbreak
+            \columnbreak
 
-        \begin{tabular}{l | c | c}
-            $p$ & $\w(p)$ & $\n(p)$ \\
-            \hline
-            A &  B& C\\
-            B &  D& F\\
-            C &  B& A\\
-            D &  B& E\\
-            E &  D& F\\
-            F &  D& B
-        \end{tabular}
-     \end{multicols}
-\end{center}
+            \begin{tabular}{l | c | c}
+                $p$ & $\w(p)$ & $\n(p)$ \\
+                \hline
+                A &  B& C\\
+                B &  D& F\\
+                C &  B& A\\
+                D &  B& E\\
+                E &  D& F\\
+                F &  D& B
+            \end{tabular}
+         \end{multicols}
+    \end{center}
 
-Looking at that solution, it appears that we could grab players $A$ and $C$ and just \emph{twist} them into position, putting all the players on a line. But is this always the case? It seems like the extra freedom in higher dimensions might produce new solutions that don't appear on the real line. 
+    Looking at that solution, it appears that we could grab players $A$ and $C$ and just \emph{twist} them into position, putting all the players on a line. But is this always the case? It seems like the extra freedom in higher dimensions might produce new solutions that don't appear on the real line. 
 
-In fact, we will see that if a game has a solution in $\mathbb{R}^n$ it must also have a solution on the real line. This means that campers need not dig holes and climb trees in order to produce a solution. The result also says that in searching for solutions we can restrict our search to linear orderings of the players.
+    In fact, we will see that if a game has a solution in $\mathbb{R}^n$ it must also have a solution on the real line. This means that campers need not dig holes and climb trees in order to produce a solution. The result also says that in searching for solutions we can restrict our search to linear orderings of the players.
 
-Not every game has a solution. Below are two four-player games, one with a solution and one without.
-\begin{center} %4 player games
-    \begin{multicols}{2} %solved game
-        \begin{pspicture}(-5,-5)(5,5)
-            \qdisk(0,0){2pt}
-            \uput[u](0,0){A}
+    Not every game has a solution. Below are two four-player games, one with a solution and one without.
+    \begin{center} %4 player games
+        \begin{multicols}{2} %solved game
+            \begin{pspicture}(-5,-5)(5,5)
+                \qdisk(0,0){2pt}
+                \uput[u](0,0){A}
 
-            \qdisk(1,0){2pt}
-            \uput[u](1,0){B}
+                \qdisk(1,0){2pt}
+                \uput[u](1,0){B}
 
-            \qdisk(2,0){2pt}
-            \uput[u](2,0){C}
+                \qdisk(2,0){2pt}
+                \uput[u](2,0){C}
 
-            \qdisk(3,0){2pt}
-            \uput[u](3,0){D}
-        \end{pspicture} 
+                \qdisk(3,0){2pt}
+                \uput[u](3,0){D}
+            \end{pspicture} 
 
-        \columnbreak
+            \columnbreak
 
-        \begin{tabular}{ l | c | c}
-             $p$ & $\w(p)$ & $\n(p)$ \\
-             \hline
-              A &  B& C\\
-              B &  C& D\\
-              C &  B& A\\
-              D &  B& A\\
-        \end{tabular}
-    \end{multicols}
+            \begin{tabular}{ l | c | c}
+                 $p$ & $\w(p)$ & $\n(p)$ \\
+                 \hline
+                  A &  B& C\\
+                  B &  C& D\\
+                  C &  B& A\\
+                  D &  B& A\\
+            \end{tabular}
+        \end{multicols}
 
-    \vspace{24pt}
+        \vspace{24pt}
 
-    \begin{multicols}{2} %unsolvable game
-        \begin{pspicture}(-5,-5)(5,5)
-            \qdisk(-1,0){2pt}
-            \uput[u](-1,0){A}
+        \begin{multicols}{2} %unsolvable game
+            \begin{pspicture}(-5,-5)(5,5)
+                \qdisk(-1,0){2pt}
+                \uput[u](-1,0){A}
 
-            \qdisk(1,0){2pt}
-            \uput[u](1,0){C}
+                \qdisk(1,0){2pt}
+                \uput[u](1,0){C}
 
-            \qdisk(0,1){2pt}
-            \uput[u](0,1){B}
+                \qdisk(0,1){2pt}
+                \uput[u](0,1){B}
 
-            \qdisk(0,-1){2pt}
-            \uput[u](0,-1){D}
-        \end{pspicture}
-        
-        \columnbreak
+                \qdisk(0,-1){2pt}
+                \uput[u](0,-1){D}
+            \end{pspicture}
+            
+            \columnbreak
 
-        \begin{tabular}{l | c | c}
-            $p$ & $\w(p)$ & $\n(p)$ \\
-            \hline
-            A & B& C\\
-            B & D& A\\
-            C & B& A\\
-            D & B& A
-        \end{tabular}
-    \end{multicols}
-\end{center}
+            \begin{tabular}{l | c | c}
+                $p$ & $\w(p)$ & $\n(p)$ \\
+                \hline
+                A & B& C\\
+                B & D& A\\
+                C & B& A\\
+                D & B& A
+            \end{tabular}
+        \end{multicols}
+    \end{center}
 
-How can we tell from the relationship table whether or not a game has a solution? Since it is sufficient to search the orderings of players, we could simply try every permutation of the players. This proves to be too computationally expensive. We will explore another algorithm, based on finding cycles in directed graphs, that will be considerably faster. We will also give a recipe for transforming an instance of a ninja assassin wonderwall game into an instance of a known problem. \textcolor{red}{TODO: which problem?}
+    How can we tell from the relationship table whether or not a game has a solution? Since it is sufficient to search the orderings of players, we could simply try every permutation of the players. This proves to be too computationally expensive. We will explore another algorithm, based on finding cycles in directed graphs, that will be considerably faster. We will also give a recipe for transforming an instance of a ninja assassin wonderwall game into an instance of a Boolean Satisfiability problem.
 
 
 \section{Definitions}
 
-\begin{definition}
-A \emph{Ninja Assassin Wonderwall problem} is a set $P$ together with two functions $\w:P\to P, \quad \n: P\to P$ that satisfy $\w(p) \neq p, \n(p) \neq p, \text{ and } \w(p) \neq \n(p)$ for all $p \in P$.
-\end{definition}
+    \begin{definition}
+    A \emph{Ninja Assassin Wonderwall problem} is a set $P$ together with two functions $\w:P\to P, \quad \n: P\to P$ that satisfy $\w(p) \neq p, \n(p) \neq p, \text{ and } \w(p) \neq \n(p)$ for all $p \in P$.
+    \end{definition}
 
-Here, the $\w(p)$ and $\n(p)$ represent the wonderwall and ninja assassin, respectively, of a player $p$. The restrictions on the functions ensure that no player may choose themselves as either role or choose the same person for both roles. 
+    Here, the $\w(p)$ and $\n(p)$ represent the wonderwall and ninja assassin, respectively, of a player $p$. The restrictions on the functions ensure that no player may choose themselves as either role or choose the same person for both roles. 
 
-\begin{definition}
-A \emph{solution} to a Ninja Assassin Wonderwall problem is a function $S: P\to R^{n}$ such that:
-    \begin{itemize}
-    \item $S$ is one-to-one (two players may not occupy the same space)
-    \item For each $p \in P$, $\w(p)$ lies on the line segment between $p$ and $\n(p)$.
-    \end{itemize}
-\end{definition}
+    \begin{definition}
+    A \emph{solution} to a Ninja Assassin Wonderwall problem is a function $S: P\to R^{n}$ such that:
+        \begin{itemize}
+        \item $S$ is one-to-one (two players may not occupy the same space)
+        \item For each $p \in P$, $\w(p)$ lies on the line segment between $p$ and $\n(p)$.
+        \end{itemize}
+    \end{definition}
 
 
 \section{Reduction to one dimension}
 
-It seems as though the extra freedom in higher dimensions might allow solutions to games that are unsolvable on the real line. A camp counselor might be tempted to have campers climb trees or stand on one another's shoulders in search of a solution. Perhaps surprisingly, this is unnecessary. Any game that is solvable in $\mathbb{R}^n$ is solvable in $\mathbb{R}$.
+    It seems as though the extra freedom in higher dimensions might allow solutions to games that are unsolvable on the real line. A camp counselor might be tempted to have campers climb trees or stand on one another's shoulders in search of a solution. Perhaps surprisingly, this is unnecessary. Any game that is solvable in $\mathbb{R}^n$ is solvable in $\mathbb{R}$.
 
-\begin{thm}
-Any Ninja Assassin Wonderwall game which has a solution in $n$ dimensions ($n > 1$) has a solution in $n-1$ dimensions.
-\end{thm}
-\begin{proof}
-Suppose we have a game that has a solution in $\mathbb{R}^n$. That is, we have a one-to-one function $S: P \to \mathbb{R}^n$ such that for each $p \in P$, $p$'s wonderwall lies on the line segment between $p$'s ninja assassin and $p$. 
+    \begin{thm}
+    Any Ninja Assassin Wonderwall game which has a solution in $n$ dimensions ($n > 1$) has a solution in $n-1$ dimensions.
+    \end{thm}
+    \begin{proof}
+    Suppose we have a game that has a solution in $\mathbb{R}^n$. That is, we have a one-to-one function $S: P \to \mathbb{R}^n$ such that for each $p \in P$, $p$'s wonderwall lies on the line segment between $p$'s ninja assassin and $p$. 
 
-Consider the set $L$ of all lines in $\mathbb{R}^n$ which go through two or more points in the image of $P$ under $S$. Since there are $\lvert P \rvert$ points, there are no more than $\binom{ \lvert P \rvert}{2}$ such lines. 
+    Consider the set $L$ of all lines in $\mathbb{R}^n$ which go through two or more points in the image of $P$ under $S$. Since there are $\lvert P \rvert$ points, there are no more than $\binom{ \lvert P \rvert}{2}$ such lines. 
 
-We want an $n-1$ dimensional hyperplane through the origin that is not perpendicular to any line in $L$. Since each line is perpendicular to exactly one hyperplane, and $\lvert L \rvert \leq \binom{\lvert P \rvert}{2}$, which is finite, such a hyperplane exists. (There are uncountably many hyperplanes through the origin of $n-1$ dimensions).
+    We want an $n-1$ dimensional hyperplane through the origin that is not perpendicular to any line in $L$. Since each line is perpendicular to exactly one hyperplane, and $\lvert L \rvert \leq \binom{\lvert P \rvert}{2}$, which is finite, such a hyperplane exists. (There are uncountably many hyperplanes through the origin of $n-1$ dimensions).
 
-Form a new solution, $S'$ by mapping each player $p\in P$ to the projection onto the hyperplane of $S(p)$. Since we chose our hyperplane to be not perpendicular to any line in $L$, each player's position is distinct. Since projection onto a plane through the origin is a linear transformation, linear relationships are preserved. In particular, the linear relationships which put every player's wonderwall on the line segment between that player and their ninja assassin. So $S'$ is a solution in $n-1$ dimensions.
-\end{proof}
+    Form a new solution, $S'$ by mapping each player $p\in P$ to the projection onto the hyperplane of $S(p)$. Since we chose our hyperplane to be not perpendicular to any line in $L$, each player's position is distinct. Since projection onto a plane through the origin is a linear transformation, linear relationships are preserved. In particular, the linear relationships which put every player's wonderwall on the line segment between that player and their ninja assassin. So $S'$ is a solution in $n-1$ dimensions.
+    \end{proof}
 
-This theorem, repeated as necessary, shows that if a solution exists in $n>1$ dimensions, a solution exists in one dimension. Thus, if we are looking for solutions, it is enough to consider orderings of players on a line.
+    This theorem, repeated as necessary, shows that if a solution exists in $n>1$ dimensions, a solution exists in one dimension. Thus, if we are looking for solutions, it is enough to consider orderings of players on a line.
 
 \section{Overview: P vs NP}
-Simply put, P is the set of all problems that can be solved in polynomial time. NP is the set of all problems whose solutions can be \emph{verified} in polynomial time. 
+    Simply put, P is the set of all problems that can be solved in polynomial time. NP is the set of all problems whose solutions can be \emph{verified} in polynomial time. 
 
-Often we are a bit cavalier about the distinction between a problem and an \emph{instance} of a problem. However, the difference is important in discussing P vs NP. A problem describes the form of the input and desired output. An instance of a problem is a \emph{specific} input of the form described. 
+    Often we are a bit cavalier about the distinction between a problem and an \emph{instance} of a problem. However, the difference is important in discussing P vs NP. A problem describes the form of the input and desired output. An instance of a problem is a \emph{specific} input of the form described. 
 
-It is an open question whether or not the two classes are distinct. That is, does every problem with a polynomial verifier have a polynomial solver? This is known as the P=NP problem.
+    It is an open question whether or not the two classes are distinct. That is, does every problem with a polynomial verifier have a polynomial solver? This is known as the P=NP problem.
 
-For a simple example, consider the problem of sorting.  Sorting takes a set of $n$ objects for which a total order, $<$ is defined and produces a permutation of those objects $x_1 x_2 x_3 \ldots x_n$ such that $x_i < x_j$ whenever $i < j$. An instance of sorting is `sort the set $\{4, 2 ,1, 5, 8\}$', which would have the solution $\langle 1, 2, 4, 5, 8 \rangle$. 
+    For a simple example, consider the problem of sorting.  Sorting takes a set of $n$ objects for which a total order, $<$ is defined and produces a permutation of those objects $x_1 x_2 x_3 \ldots x_n$ such that $x_i < x_j$ whenever $i < j$. An instance of sorting is `sort the set $\{4, 2 ,1, 5, 8\}$', which would have the solution $\langle 1, 2, 4, 5, 8 \rangle$. 
 
-To continue the example, one way to solve an instance of a sorting problem is to try every permutation of the $n$ objects, checking each to see whether it is in sorted order. This algorithm would require $O(n\cdot n!)$ time, since there is only one permutation that is in sorted order. This running time is larger than any polynomial, but this does \emph{not} mean that the problem of sorting is not in P. We have merely failed to show that is in P; we haven't shown that is is \emph{not} in P. In fact, there are algorithms that solve instances of sorting in $O(n \lg n)$, which is bounded by the polynomial $n^2$, so Sorting belongs in P. 
+    To continue the example, one way to solve an instance of a sorting problem is to try every permutation of the $n$ objects, checking each to see whether it is in sorted order. This algorithm would require $O(n\cdot n!)$ time, since there is only one permutation that is in sorted order. This running time is larger than any polynomial, but this does \emph{not} mean that the problem of sorting is not in P. We have merely failed to show that is in P; we haven't shown that is is \emph{not} in P. In fact, there are algorithms that solve instances of sorting in $O(n \lg n)$, which is bounded by the polynomial $n^2$, so Sorting belongs in P. 
 
-It is also in NP, since a candidate solution could be verified (or refuted) in polynomial time. One way to verify would be to check that for every pair $x_i, x_{i+1}$, $x_i < x_{i+1}$. Another way would be to just sort the set again (using a polynomial-time algorithm) and check that the new solution matches the candidate. 
+    It is also in NP, since a candidate solution could be verified (or refuted) in polynomial time. One way to verify would be to check that for every pair $x_i, x_{i+1}$, $x_i < x_{i+1}$. Another way would be to just sort the set again (using a polynomial-time algorithm) and check that the new solution matches the candidate. 
 
-There is a related class of problems, called NP-hard. A problem $Q$is in NP-hard is every problem in NP is polynomial reducible to $Q$. That is, given an instance of some problem in NP, we can transform that instance in a polynomial number of steps into an instance of $Q$. We also require that a solution to this new instance of $Q$ produces a solution to the original instance in polynomial time.
+    There is a related class of problems, called NP-hard. A problem $Q$is in NP-hard is every problem in NP is polynomial reducible to $Q$. That is, given an instance of some problem in NP, we can transform that instance in a polynomial number of steps into an instance of $Q$. We also require that a solution to this new instance of $Q$ produces a solution to the original instance in polynomial time.
 
-There are a number of problems in NP which are also in NP-hard. These problems comprise a class called NP-complete. For instance, the Travelling Salesman Problem, the Knapsack Problem, Subset-Sum, and 3-CNF Satisfiablilty are all in NP-complete. This means that we can take an instance of, say, The Knapsack Problem, transform it into Subset-Sum in such a way that the new instance has a solution if and only if the old one did. \textcolor{red}{Should mention decision problems earlier.}
+    There are a number of problems in NP which are also in NP-hard. These problems comprise a class called NP-complete. For instance, the Travelling Salesman Problem, the Knapsack Problem, Subset-Sum, and 3-CNF Satisfiablilty are all in NP-complete. This means that we can take an instance of, say, The Knapsack Problem, transform it into Subset-Sum in such a way that the new instance has a solution if and only if the old one did. \textcolor{red}{Should mention decision problems earlier.}
 
-Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them. (If a polynomial-time solver was found for, say Subset-Sum, we could transform and instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
+    Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them. (If a polynomial-time solver was found for, say Subset-Sum, we could transform and instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
 
-The typical way to show that a problem is NP-complete is to take an arbitrary instance of a problem that is known to be NP-complete and give a polynomial time recipe to transform that instance into an instance of the problem at hand. Then if a polynomial algorithm exists for the problem at hand, we have created one for the NP-complete problem. 
+    The typical way to show that a problem is NP-complete is to take an arbitrary instance of a problem that is known to be NP-complete and give a polynomial time recipe to transform that instance into an instance of the problem at hand. Then if a polynomial algorithm exists for the problem at hand, we have created one for the NP-complete problem. 
 
-If Ninja Assassin Wonderwall were an NP-complete problem, finding a polynomial time solver would be beyond the scope of this project. Unfortunately, I have been unable to either show it is NP-complete or find a polynomial time algorithm. 
+    If Ninja Assassin Wonderwall were an NP-complete problem, finding a polynomial time solver would be beyond the scope of this project. Unfortunately, I have been unable to either show it is NP-complete or find a polynomial time algorithm. 
 
 \section{Relation to known problems}
-A simple, though possibly inefficient, way to solve a Ninja Assassin Wonderwall problem would be to transform it into an instance of a known problem for which solvers already exist. We will transform an aribitrary Ninja Assassin Wonderwall problem into a Conjunctive Normal Form Satisfiability (CNF SAT) problem.
+    A simple, though possibly inefficient, way to solve a Ninja Assassin Wonderwall problem would be to transform it into an instance of a known problem for which solvers already exist. We will transform an aribitrary Ninja Assassin Wonderwall problem into a Conjunctive Normal Form Satisfiability (CNF SAT) problem.
 
-Conjunctive Normal Form Satisfiability, or CNF Sat, is a problem whose input is a statement in propositional logic of the form
-    \begin{align*} 
-                & (a_1 \vee a_2 \vee \ldots \vee a_{n_a}) \\
-        \wedge  & (b_1 \vee b_2 \vee \ldots \vee b_{n_b})\\
-        \vdots  &\\
-        \wedge  & (x_1 \vee x_2 \vee \ldots \vee x_{n_x})
-    \end{align*} \textcolor{red}{fix this}
-and whose output is a mapping from each atom in the statement to either true or false such that the statement as a whole is true. 
+    Conjunctive Normal Form Satisfiability, or CNF Sat, is a problem whose input is a statement in propositional logic of the form
+        \begin{align*} 
+                    & (a_1 \vee a_2 \vee \ldots \vee a_{n_a}) \\
+            \wedge  & (b_1 \vee b_2 \vee \ldots \vee b_{n_b})\\
+            \vdots  &\\
+            \wedge  & (x_1 \vee x_2 \vee \ldots \vee x_{n_x})
+        \end{align*} \textcolor{red}{fix this}
+    and whose output is a mapping from each atom in the statement to either true or false such that the statement as a whole is true. 
 
-We will neglect for a moment putting our expressions into Conjunctive Normal Form. There are existing algorithms to do this work. For now, we will be concerned only with producing a statement that accurately reflects the problem.
+    We begin with some notation. Let $x_{a,b}$ denote the truth of `player $a$ is left of player $b$'. Then for each row of a relationship table $p$, $\w(p)$, $\n(p)$, we can write
+        \begin{align*}
+                    & (x_{p_1, \w(p_1)} \Leftrightarrow x_{p_1, \n(p_1)})\\
+            \wedge  & (x_{p_2, \w(p_2)} \Leftrightarrow x_{p_2, \n(p_2)})\\
+            \vdots  &\\
+            \wedge  & (x_{p_n, \w(p_n)} \Leftrightarrow x_{p_n, \n(p_n)})
+        \end{align*}
 
-We begin with some notation. Let $x_{a,b}$ denote the truth of `player $a$ is left of player $b$'. Then for each row of a relationship table $p$, $\w(p)$, $\n(p)$, we can write
+    In order to put our statement in CNF, we will need to convert each of those clauses. For player $i$, we will have 
+        \begin{align*}
+            & (x_{p_i, \w(p_i)} \Leftrightarrow x_{p_i, \n(p_i)})\\
+            \Leftrightarrow & (\lnot x_{p_i, \w(p_i)} \vee x_{p_i, \n(p_i)}) \wedge (x_{p_i, \w(p_i)} \vee \lnot x_{p_i, \n(p_i)})
+        \end{align*}
+
+    What we haven't mentioned yet is that there is a big difference between a CNF SAT problem with two variables to a clause (2-SAT), and one with three variables to a clause (3-SAT). Surprisingly, 2-SAT can be solved in linear time but 3-SAT is an NP-Complete problem. That is, no one has found an algorithm that will solve it in polynomial time (and the general sentiment is that none exists).
+
+    So far, so good: we only have two variables to a clause. This looks like it is leading us to a linear time solution. (Actually, since our variables are $x_{p_i, p_j}$, this would be an $O(n^2)$ solution). 
+
+    However, this is not quite enough. In moving to simple boolean values, we have given up the transitive property. As it is now, there is nothing keeping the problem from deciding that $x_{a,b}, x_{b,c}$, and $x_{c,a}$ are all true. 
+
+    We will need to add constraints to ensure that we respect transitivity. For every $a,b,c \in P$, we need the condition $(x_{a,b} \wedge x_{b,c}) \Rightarrow x_{a,c}$. This adds quite a bit of bloat to our statement. Specifically, it adds $n(n-1)(n-2)$ expressions of that form, all $\wedge$'d together.
+
+    More important that just increasing the size of our statement, each of these new clauses will contain three variables:
     \begin{align*}
-                & (x_{p_1, \w(p_1)} \Leftrightarrow x_{p_1, \n(p_1)})\\
-        \wedge  & (x_{p_2, \w(p_2)} \Leftrightarrow x_{p_2, \n(p_2)})\\
-        \vdots  &\\
-        \wedge  & (x_{p_n, \w(p_n)} \Leftrightarrow x_{p_n, \n(p_n)})
+        &(x_{a,b} \wedge x_{b,c}) \Rightarrow x_{a,c} \\
+        \Leftrightarrow & (\lnot x_{a,b} \vee \lnot x_{b,c} \vee x_{a,c})
     \end{align*}
 
-However, this is not quite enough. In moving to simple boolean values, we have given up the transitive property. As it is now, there is nothing keeping the problem from deciding that $x_{a,b}, x_{b,c}$, and $x_{c,a}$ are all true.
+    This pushes us squarely into the realm of 3-SAT, where we don't expect to find a polynomial time algorithm to save us. 
 
-We will need to add constraints to ensure that we respect transitivity. For every $a,b,c \in P$, we need the condition $x_{a,b} \wedge x_{b,c} \Rightarrow x_{a,c}$. This adds quite a bit of bloat to our statement. Specifically, it adds $n(n-1)(n-2)$ expressions of that form, all $\wedge$'d together.
+    Still, this is a possible way to solve Ninja Assassin Wonderwall problems. Another option would be to stop with the 2-SAT problem created by ignoring transitivity constraints. From there, we could ennumerate all solutions (\textcolor{red}{an article describing how to do this has been requested from ILLIAD}), searching for one that respected transitivity.
 
-These extra $n(n-1)(n-2)$ expressions increase the size of the problem substantially. However, there are bigger things afoot. We have neglected transforming our expressions into CNF, but we will see that it will produce exponential blowup. \textcolor{red}{FINISH THINGS HERE} 
+    This is very similar to the algorithm explained below, which approaches the problem directly rather than first turning an instance into a CNF problem.
 
 \section{Constructive algorithm}
-An instance of a Ninja Assassin Wonderwall problem is described by a set $P$ of $n$ players, and two functions $\w : P \to P, \quad \n : P \to P$, that satisfy $\w(p) \neq p$, $\n(p) \neq p$, and $\w(p) \neq \n(p)$ for all $p\in P$. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 
+    An instance of a Ninja Assassin Wonderwall problem is described by a set $P$ of $n$ players, and two functions $\w : P \to P, \quad \n : P \to P$, that satisfy $\w(p) \neq p$, $\n(p) \neq p$, and $\w(p) \neq \n(p)$ for all $p\in P$. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 
 
-This says, transitively, that if there is a path from $a$ to $b$, then $a$ is to the left of $b$ (we will use $a \leadsto b$ to denote both of these). Notice that if these graphs actually represent an ordering of players, they should not contain cycles. For example, when both $(a,b)$ and $(b,a)$ are in $E$, this says $a \leadsto b$ and $b \leadsto a$, which is a contradiction. 
+    This says, transitively, that if there is a path from $a$ to $b$, then $a$ is to the left of $b$ (we will use $a \leadsto b$ to denote both of these). Notice that if these graphs actually represent an ordering of players, they should not contain cycles. For example, when both $(a,b)$ and $(b,a)$ are in $E$, this says $a \leadsto b$ and $b \leadsto a$, which is a contradiction. 
 
-\begin{thm}
-A Ninja Assassin Wonderwall problem has a solution iff there is a directed acyclic graph $G=(P,E)$ such that, for all $p\in P$, either  $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
-\end{thm}
-\begin{proof} \mbox{}
+    \begin{thm}
+    A Ninja Assassin Wonderwall problem has a solution iff there is a directed acyclic graph $G=(P,E)$ such that, for all $p\in P$, either  $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
+    \end{thm}
+    \begin{proof} \mbox{}
 
-\begin{description}
-\item[$(\Rightarrow)$] Let $\phi: P \to \mathbb{R}$ be a solution to a Ninja Assassin Wonderwall problem. Construct a graph $G$ with an edge $(p,q)$ whenever $\phi(p)<\phi(q)$. By construction, $G$ is acyclic (in fact it is an ordered graph).
+    \begin{description}
+    \item[$(\Rightarrow)$] Let $\phi: P \to \mathbb{R}$ be a solution to a Ninja Assassin Wonderwall problem. Construct a graph $G$ with an edge $(p,q)$ whenever $\phi(p)<\phi(q)$. By construction, $G$ is acyclic (in fact it is an ordered graph).
 
-Consider an arbitrary player $p$. Since $\phi$ is a solution, $\phi(\w(p))$ must be between $\phi(p)$ and $\phi(\n(p))$. So either $\phi(p) < \phi(\w(p)) < \phi(\n(p))$ or $\phi(\n(p)) < \phi(\w(p)) < \phi(p)$. Then either $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
+    Consider an arbitrary player $p$. Since $\phi$ is a solution, $\phi(\w(p))$ must be between $\phi(p)$ and $\phi(\n(p))$. So either $\phi(p) < \phi(\w(p)) < \phi(\n(p))$ or $\phi(\n(p)) < \phi(\w(p)) < \phi(p)$. Then either $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
 
-\item[$(\Leftarrow)$] Let $G$ be such a graph. Let $\{p_i\}$ be a topological ordering of $G$. Define $\phi(p_i) = i$. 
+    \item[$(\Leftarrow)$] Let $G$ be such a graph. Let $\{p_i\}$ be a topological ordering of $G$. Define $\phi(p_i) = i$. 
 
-Let $p_i$ be an arbitrary player. By assumption, either $p_i \leadsto \w(p_i) \leadsto \n(p_i)$ or $\n(p_i) \leadsto \w(p_i) \leadsto p_i$. Without loss of generality, $p_i \leadsto \w(p_i) \leadsto \n(p_i)$. Since $\{p_i\}$ is a topological sort on $G$, $p_i$ must come before $\w(p_i)$, which must come before $\n(p_i)$. So $\phi(p_i) < \phi(\w(p_i)) < \phi(\n(p_i))$. Thus, $\phi$ is a solution to a Ninja Assassin Wonderwall problem.
-\end{description}
-\end{proof}
+    Let $p_i$ be an arbitrary player. By assumption, either $p_i \leadsto \w(p_i) \leadsto \n(p_i)$ or $\n(p_i) \leadsto \w(p_i) \leadsto p_i$. Without loss of generality, $p_i \leadsto \w(p_i) \leadsto \n(p_i)$. Since $\{p_i\}$ is a topological sort on $G$, $p_i$ must come before $\w(p_i)$, which must come before $\n(p_i)$. So $\phi(p_i) < \phi(\w(p_i)) < \phi(\n(p_i))$. Thus, $\phi$ is a solution to a Ninja Assassin Wonderwall problem.
+    \end{description}
+    \end{proof}
 
-This proof leads to an algorithm for constructing solutions. Consider the set $D$ of all digraphs $G=(P,E)$, where $E$ is constructed by taking, for all $p \in P$, either  $(p,\w(p)), (\w(p),\n(p))$ or $(\n(p),\w(p)),(\w(p),p)$. There are $2^n$ such graphs, and if a NAWW problem has a solution, one of them must be acyclic.
+    This proof leads to an algorithm for constructing solutions. Consider the set $D$ of all digraphs $G=(P,E)$, where $E$ is constructed by taking, for all $p \in P$, either  $(p,\w(p)), (\w(p),\n(p))$ or $(\n(p),\w(p)),(\w(p),p)$. There are $2^n$ such graphs, and if a NAWW problem has a solution, one of them must be acyclic.
 
-\begin{codebox}
-\Procname{$\proc{FindOrdering}(P,n,w)$}
-\li \For $G\in D$
-\li     \Do
-        \If $G$ is acyclic
-\li         \Do
-                \Return $\proc{TopologicalSort}(G)$
-        \End
-    \End
-\li \Return None
-\end{codebox}
-    
-There are many small efficiencies we can add to this algorithm. We can avoid enumerating all the elements of $D$ by trying to construct our graph from scratch. We will start with an empty graph $G$. Then we will choose a $p \in P$, add the edges $(p,\w(p))$ and $(\w(p),\n(p))$ and recurse. If this leads to a cyclic graph, we will try the opposite edges and recurse. If \emph{this} leads to a cyclic graph, then neither $p \leadsto \w(p) \leadsto \n(p)$ nor $\n(p) \leadsto \w(p) \leadsto p$ is consitent with the graph, and so there is no solution.
-
-\begin{codebox}
-\Procname{$\proc{FindOrdering}(P,n,w)$}
-\li $G \gets (\emptyset, \emptyset)$
-\li $S \gets P$
-\li $G \gets \proc{MakeAssumption}(G,S,n,w)$
-\li \If $G$ is acyclic
-\li     \Do
-        \Return $\proc{TopologicalSort}(G)$
-    \End
-\li \Return None
-\end{codebox}
-
-
-\begin{codebox}
-\Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
-\li \If $S \isequal \emptyset$
-\li     \Then
-        \Return $G$ \Comment Success!
-    \End
-\li \If $G$ contains a cycle
-\li     \Then
-        \Return $G$ \Comment Failure case
-    \End
-\li Let $p \in S$
-\li $F \gets G$
-\li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(p,\w(p)), (\w(p),\n(p))\}$
-\li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
-\li \If $F$ is acyclic
-\li     \Do
-        \Return $F$ \Comment Success!
-    \End
-\li $F \gets G$ \Comment That didn't work, try the other way.
-\li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(\n(p), \w(p)), (\w(p),p)\}$
-\li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
-\end{codebox}
-
-We can make another small improvement by noticing that if $a \leadsto b$ where $a,b \in \{p, \w(p), \n(p)\}$ for some $p$, is already in the graph, then we can add the third element of $\{p, \w(p), \n(p)\}$ immediately. For example if $p \leadsto \n(p)$, then if $G$ is a subgraph of the acyclic graph in the theorem, $p \leadsto \w(p)$ and $\w(p) \leadsto \n(p)$. We will use the same definition of $\proc{FindOrdering}$.
-
-\begin{codebox}
-\Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
-\li \If $S = \emptyset$
-\li \Do \Return $G$ \Comment Success!
-    \End
-\li \If $G$ contains a cycle
-\li     \Then
-        \Return $G$ \Comment Failure case
-    \End
-\li Let $p \in S$.  			\label{li:choose-p}
-\li $F \gets G$
-\li $F \gets \proc{AddImpliedEdges}(F, (p,\w(p)), S,\n,\w)$
-\li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
-\li \If $F$ is acyclic
-\li     \Do
-        \Return $F$ \Comment Success!
-    \End
-\li $F \gets G$ \Comment That didn't work, try the other way.
-\li $F \gets \proc{AddImpliedEdges}(F, (\w(p), p), S, \n, \w)$
-\li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
-\end{codebox}
-
-
-\begin{codebox}
-\Procname{$\proc{AddImpliedEdges}(F,(a,b),S,\n,\w)$}
-\li $Q \gets \emptyset$
-\li $\proc{Enqueue}(Q,(a,b))$
-\li \While $Q$ is not empty
-\li     \Do
-        $(r,s) \gets \proc{Dequeue}(Q)$
-\li     $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(r,s)\}$
-\li     \For $(t,u) \in \proc{ImpliedEdges}((r,s),S,\n,\w)$
-\li         \Do
-            \If $(t,u) \notin \attrib{F}{E}$
-\li             \Do
-                $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(t,u)\}$
-\li             $\proc{Enqueue}(Q,(t,u))$
+    \begin{codebox}
+    \Procname{$\proc{FindOrdering}(P,n,w)$}
+    \li \For $G\in D$
+    \li     \Do
+            \If $G$ is acyclic
+    \li         \Do
+                    \Return $\proc{TopologicalSort}(G)$
             \End
         \End
-    \End
-\li \Return $F$
-\end{codebox}
+    \li \Return None
+    \end{codebox}
+        
+    There are many small efficiencies we can add to this algorithm. We can avoid enumerating all the elements of $D$ by trying to construct our graph from scratch. We will start with an empty graph $G$. Then we will choose a $p \in P$, add the edges $(p,\w(p))$ and $(\w(p),\n(p))$ and recurse. If this leads to a cyclic graph, we will try the opposite edges and recurse. If \emph{this} leads to a cyclic graph, then neither $p \leadsto \w(p) \leadsto \n(p)$ nor $\n(p) \leadsto \w(p) \leadsto p$ is consistent with the graph, and so there is no solution.
 
-
-
-\begin{codebox}
-\Procname{$\proc{ImpliedEdges}((r,s),S,\n,\w)$}
-\li $E \gets \emptyset$
-\li \For $t \in S$
-\li     \Do
-        \If $(r,s) \isequal (t, \w(t))$
-\li         \Do
-            $E \gets E \cup \{(\w(t),\n(t)), (t, \n(t))\}$
-\li     \ElseIf $(r,s) \isequal (\w(t), t)$
-\li         \Do
-            $E \gets E \cup \{(\n(t),\w(t)), (\n(t), t)\}$ 
-\li     \ElseIf $(r,s) \isequal (t, \n(t))$
-\li         \Do
-            $E \gets E \cup \{(t,\w(t)), (\w(t), \n(t))\}$
-\li     \ElseIf $(r,s) \isequal (\n(t), t)$
-\li         \Do
-            $E \gets E \cup \{(\w(t), t), (\n(t), \w(t))\}$
-\li     \ElseIf $(r,s) \isequal (\w(t), \n(t))$
-\li         \Do
-            $E \gets E \cup \{(t,\w(t)), (t, \n(t))\}$
-\li     \ElseIf $(r,s) \isequal (\n(t), \w(t))$
-\li         \Do
-            $E \gets E \cup \{(\w(t), t), (\n(t), t)\}$
+    \begin{codebox}
+    \Procname{$\proc{FindOrdering}(P,n,w)$}
+    \li $G \gets (\emptyset, \emptyset)$
+    \li $S \gets P$
+    \li $G \gets \proc{MakeAssumption}(G,S,n,w)$
+    \li \If $G$ is acyclic
+    \li     \Do
+            \Return $\proc{TopologicalSort}(G)$
         \End
-    \End
-\li \Return $E$
-\end{codebox}
+    \li \Return None
+    \end{codebox}
 
-Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. We accomplish this by choosing our $p\in S$ on line~\ref{li:choose-p} such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible.
+
+    \begin{codebox}
+    \Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
+    \li \If $S \isequal \emptyset$
+    \li     \Then
+            \Return $G$ \Comment Success!
+        \End
+    \li \If $G$ contains a cycle
+    \li     \Then
+            \Return $G$ \Comment Failure case
+        \End
+    \li Let $p \in S$
+    \li $F \gets G$
+    \li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(p,\w(p)), (\w(p),\n(p))\}$
+    \li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
+    \li \If $F$ is acyclic
+    \li     \Do
+            \Return $F$ \Comment Success!
+        \End
+    \li $F \gets G$ \Comment That didn't work, try the other way.
+    \li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(\n(p), \w(p)), (\w(p),p)\}$
+    \li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
+    \end{codebox}
+
+    We can make another small improvement by noticing that if $a \leadsto b$ where $a,b \in \{p, \w(p), \n(p)\}$ for some $p$, is already in the graph, then we can add the third element of $\{p, \w(p), \n(p)\}$ immediately. For example if $p \leadsto \n(p)$, then if $G$ is a subgraph of the acyclic graph in the theorem, $p \leadsto \w(p)$ and $\w(p) \leadsto \n(p)$. We will use the same definition of $\proc{FindOrdering}$.
+
+    \begin{codebox}
+    \Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
+    \li \If $S = \emptyset$
+    \li \Do \Return $G$ \Comment Success!
+        \End
+    \li \If $G$ contains a cycle
+    \li     \Then
+            \Return $G$ \Comment Failure case
+        \End
+    \li Let $p \in S$.  			\label{li:choose-p}
+    \li $F \gets G$
+    \li $F \gets \proc{AddImpliedEdges}(F, (p,\w(p)), S,\n,\w)$
+    \li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
+    \li \If $F$ is acyclic
+    \li     \Do
+            \Return $F$ \Comment Success!
+        \End
+    \li $F \gets G$ \Comment That didn't work, try the other way.
+    \li $F \gets \proc{AddImpliedEdges}(F, (\w(p), p), S, \n, \w)$
+    \li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
+    \end{codebox}
+
+
+    \begin{codebox}
+    \Procname{$\proc{AddImpliedEdges}(F,(a,b),S,\n,\w)$}
+    \li $Q \gets \emptyset$
+    \li $\proc{Enqueue}(Q,(a,b))$
+    \li \While $Q$ is not empty
+    \li     \Do
+            $(r,s) \gets \proc{Dequeue}(Q)$
+    \li     $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(r,s)\}$
+    \li     \For $(t,u) \in \proc{ImpliedEdges}((r,s),S,\n,\w)$
+    \li         \Do
+                \If $(t,u) \notin \attrib{F}{E}$
+    \li             \Do
+                    $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(t,u)\}$
+    \li             $\proc{Enqueue}(Q,(t,u))$
+                \End
+            \End
+        \End
+    \li \Return $F$
+    \end{codebox}
+
+
+
+    \begin{codebox}
+    \Procname{$\proc{ImpliedEdges}((r,s),S,\n,\w)$}
+    \li $E \gets \emptyset$
+    \li \For $t \in S$
+    \li     \Do
+            \If $(r,s) \isequal (t, \w(t))$
+    \li         \Do
+                $E \gets E \cup \{(\w(t),\n(t)), (t, \n(t))\}$
+    \li     \ElseIf $(r,s) \isequal (\w(t), t)$
+    \li         \Do
+                $E \gets E \cup \{(\n(t),\w(t)), (\n(t), t)\}$ 
+    \li     \ElseIf $(r,s) \isequal (t, \n(t))$
+    \li         \Do
+                $E \gets E \cup \{(t,\w(t)), (\w(t), \n(t))\}$
+    \li     \ElseIf $(r,s) \isequal (\n(t), t)$
+    \li         \Do
+                $E \gets E \cup \{(\w(t), t), (\n(t), \w(t))\}$
+    \li     \ElseIf $(r,s) \isequal (\w(t), \n(t))$
+    \li         \Do
+                $E \gets E \cup \{(t,\w(t)), (t, \n(t))\}$
+    \li     \ElseIf $(r,s) \isequal (\n(t), \w(t))$
+    \li         \Do
+                $E \gets E \cup \{(\w(t), t), (\n(t), t)\}$
+            \End
+        \End
+    \li \Return $E$
+    \end{codebox}
+
+    Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. We accomplish this by choosing our $p\in S$ on line~\ref{li:choose-p} such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible.
 
 \section{Running time of algorithm}
-    Go over the `trap' we set for the algorithm.
-    
+    The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players, the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 
 
+    So what is $\lvert D \rvert$? We're constructing the edgeset by taking each row $(p, \w(p), \n(p))$ and directing it to the left or right. So an element of $D$ for a particular relationship table is uniquely identified by a bitstring of length $n$, $01011\ldots$, where a $0$ in the $i^{\text{th}}$ row indicates direction to left and a $1$ indicates direction to the right. There are $2^n$ such bitstrings, so $\lvert D \rvert = 2^n$. This first algorithm then, takes $O(n \cdot 2^n)$ time in the worst case. 
+
+    It is not immediately clear what the running time of the heuristic algorithm is. The average case running time would be very hard to justify, as the heuristic muddies the water a fair bit. However, we will see that the worst case running time remains exponential.
+
+    We will set a trap for the algorithm, a class of problem designed to afford no leverage to the heuristic. We will seek to confound the main improvement of the heuristic algorithm: extrapolating extra edge information each time it directs a pair. 
+
+    The following could be considered a template for a relationship table, where we would want to replace each of $a, b, c, \text{ and }d$ with actual player names.
+
+    \begin{center}
+        \begin{tabular}{c | c | c}
+            $p$ & $\w(p)$ & $\n(p)$\\
+            \hline
+            $a$ & $b$ & $c$\\
+            $b$ & $c$ & $d$\\
+            $c$ & $b$ & $a$\\
+            $d$ & \_ & \_
+        \end{tabular}
+    \end{center}
+
+    We could repeat this pattern indefinitely, making an arbitrarily large game. The very last instance of the template would replace $d \quad \_ \quad \_$ with $d \quad a \quad b$, ensuring a contradiction within that group. For example, here is a game with three copies of that structure:
+
+    \begin{center}
+        \begin{tabular}{c | c | c}
+            $p$ & $\w(p)$ & $\n(p)$\\
+            \hline
+            $A$ & $B$ & $C$\\
+            $B$ & $C$ & $D$\\
+            $C$ & $B$ & $A$\\
+            \hline
+            $D$ & $E$ & $F$\\
+            $E$ & $F$ & $G$\\
+            $F$ & $E$ & $D$\\
+            \hline
+            $G$ & $H$ & $I$\\
+            $H$ & $I$ & $J$\\
+            $I$ & $H$ & $G$\\
+            $J$ & $G$ & $H$
+        \end{tabular}
+    \end{center}
+
+    Notice how each group of four players is `self-contained'. Players $A,B,C$ make no choices other than $A,B,C, \text{ and } D$; players $D, E, F$ make no choices other than $D, E, F, \text{ and } G$. The overlap is just enough so that the games are not independent. This means that any leverage gained via the heuristic will not escape the four player group.
+
+    For example, if the algorithm assumes that $A \leadsto D$, this information is useless as soon as we're addressing players other than $A,B,C,D$.
+
+    Here is an example trace of the program, applied to the small example above:
+    \begin{verbatimtab}
+Suppose B -> C:
+    We know B->C, and (A,B,C) is a triplet, so A->B, A->C.
+    We know B->C, and (B,C,D) is a triplet, so C->D, B->D.
+    Suppose E->F:
+        We know E->F, and (D,E,F) is a triplet, so D->E, D->F.
+        We know E->F, and (E,F,G) is a triplet, so F->G, E->G.
+        Suppose H->I:
+            We know H->I, and (G,H,I) is a triplet, so G->H, G->I.
+            We know H->I, and (H,I,J) is a triplet, so I->J, H->J.
+            We know G->H, and (J,G,H) is a triplet, so J->G, J->H.
+            H->J and J->H form a cycle, so our assumption was wrong.
+        Suppose I->H:
+            We know I->H, and (G,H,I) is a triplet, so H->G, I->G.
+            We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
+            We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
+            H->J and J->H form a cycle, so our assumption was wrong.
+    Suppose F->E:
+        We know F->E, and (D,E,F) is a triplet, so E->D, F->D.
+        We know F->E, and (E,F,G) is a triplet, so G->F, G->E.
+        Suppose H->I:
+            We know H->I, and (G,H,I) is a triplet, so G->H, G->I.
+            We know H->I, and (H,I,J) is a triplet, so I->J, H->J.
+            We know G->H, and (J,G,H) is a triplet, so J->G, J->H.
+            H->J and J->H form a cycle, so our assumption was wrong.
+        Suppose I->H:
+            We know I->H, and (G,H,I) is a triplet, so H->G, I->G.
+            We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
+            We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
+            H->J and J->H form a cycle, so our assumption was wrong.
+Suppose C->B:
+    We know C->B, and (A,B,C) is a triplet, so B->A, C->A.
+    We know C->B, and (B,C,D) is a triplet, so D->C, D->B.
+    Suppose E->F:
+        We know E->F, and (D,E,F) is a triplet, so D->E, D->F.
+        We know E->F, and (E,F,G) is a triplet, so F->G, E->G.
+        Suppose H->I:
+            We know H->I, and (G,H,I) is a triplet, so G->H, G->I.
+            We know H->I, and (H,I,J) is a triplet, so I->J, H->J.
+            We know G->H, and (J,G,H) is a triplet, so J->G, J->H.
+            H->J and J->H form a cycle, so our assumption was wrong.
+        Suppose I->H:
+            We know I->H, and (G,H,I) is a triplet, so H->G, I->G.
+            We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
+            We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
+            H->J and J->H form a cycle, so our assumption was wrong.
+    Suppose F->E:
+        We know F->E, and (D,E,F) is a triplet, so E->D, F->D.
+        We know F->E, and (E,F,G) is a triplet, so G->F, G->E.
+        Suppose H->I:
+            We know H->I, and (G,H,I) is a triplet, so G->H, G->I.
+            We know H->I, and (H,I,J) is a triplet, so I->J, H->J.
+            We know G->H, and (J,G,H) is a triplet, so J->G, J->H.
+            H->J and J->H form a cycle, so our assumption was wrong.
+        Suppose I->H:
+            We know I->H, and (G,H,I) is a triplet, so H->G, I->G.
+            We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
+            We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
+            H->J and J->H form a cycle, so our assumption was wrong.
+    \end{verbatimtab}
+
+    This demonstrates the fact that the algorithm will have to backtrack and reverse each assumption it makes upon reaching the cycle at the end. Since it will make one assumption for each group of three players, the running time will be $O(n \cdot 2^{n/3}) = O(n \cdot (2^{1/3})^n)$, which is still exponential. 
+
+    This is a worst case analysis, and in practice the running times are often much better than this. We have presented a pathological case in order to show that this algorithm has not beaten the exponential bound.
 
 \section{Overview: Steiner Triple Systems}
     Definition, examples
     discuss how the number of pairs dominates the number of players
     (this defeats our heuristic)
     A slightly better algorithm could `outsmart' our trap from the previous section, but the existence of Steiner Triple Systems shows that we can have so few repeated pairs as to render the heuristic useless. STS shows that this is a systemic problem. 
-
 
 
 \section{Probability of a solution}

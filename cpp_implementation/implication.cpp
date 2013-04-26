@@ -125,7 +125,8 @@ ImpliedEdges(Edge guess, const vector<player_t>& players, unsigned short depth){
             OUTPUT(("used player %d\n",players[ii].p));
             used_players.push_back(players[ii]);
             if (verbose){
-                auto new_edge = impl_edges.end()--;
+                auto new_edge = impl_edges.end();
+                new_edge--;
                 printf("%*s%d -> %d is given, so player %d's choices give %d -> %d\n",
                         (depth+1)*2, " ", guess.first, guess.second, players[ii].p, new_edge->first, new_edge->second);
                 new_edge--;
@@ -338,6 +339,24 @@ int main(int argc, char* argv[])
 {
     if (argc > 1 && (!strcmp(argv[1],"-v") || !strcmp(argv[1],"--verbose"))){
         verbose = true;
+    } else if (argc > 1 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))){
+        printf("%s [-v] [-h]\n",argv[0]);
+        printf("-v : verbose flag. Gives insight into assumptions and choices\n");
+        printf("  (can also use '--verbose')\n");
+        printf("-h : help flag. Display this message and quit\n");
+        printf("  (can also use '--help').\n");
+        printf("Note: only the first flag supplied will be used. It does not make sense to get verbose help.\n");
+        printf("Give the Ninja Assassin Wonderwall problem as standard in formatted in the following way:\n");
+        printf("  number_players\n");
+        printf("  0 w_0 n_0\n");
+        printf("  1 w_1 n_1\n");
+        printf("  .\n");
+        printf("  .\n");
+        printf("  .\n");
+        printf("  number_players-1 w_(number_players-1) n_(number_players-1)\n");
+        printf("where w_i, n_i are player i's wonderwall and ninja assassin, respectively\n");
+        printf("If a solution to the Ninja Assassin Wonderwall problem exists, the output will give an ordering that is a solution. Otherwise, there will be no output.\n");
+       exit(0); 
     }
 #ifdef DEBUG
     verbose = true;

@@ -14,14 +14,6 @@ using namespace boost;
 using namespace std;
 
 
-#ifdef DEBUG
-#define SPACES(x) for(int ii=0; ii<2*x; ii++) printf(" ");
-#define OUTPUT(x) printf x
-#else
-#define SPACES(x) 
-#define OUTPUT(x) 
-#endif
-
 #define max(x,y) x > y ? x : y
 
 //typedef so that we can change this later
@@ -68,7 +60,6 @@ bool is_acyclic(const graph_t& G)
 vector<int> FindOrdering(vector<player_t> players){
     graph_t order_g;
     bool acyclic;
-    OUTPUT(("inside FindOrdering\n"));
     add_edge(1,2,order_g);      //BGL causes a segfault if we ask edge() on an empty group
     remove_edge(1,2,order_g);   //(2nd part of hack)
     sort_on_pair_count(players);
@@ -94,7 +85,6 @@ ImpliedEdges(Edge guess, const vector<player_t>& players, unsigned short depth){
         int tt = players[ii].p;
         int ww = players[ii].w;
         int nn = players[ii].n;
-        OUTPUT(("testing player %d\n",players[ii].p));
         bool used_this_player = false;
         if (rr == tt && ss == ww){
             impl_edges.push_back(make_pair(ww,nn));
@@ -122,7 +112,6 @@ ImpliedEdges(Edge guess, const vector<player_t>& players, unsigned short depth){
             used_this_player = true;
         }
         if (used_this_player){
-            OUTPUT(("used player %d\n",players[ii].p));
             used_players.push_back(players[ii]);
             if (verbose){
                 auto new_edge = impl_edges.end();
@@ -165,12 +154,6 @@ void order_triplet(int& a, int& b, int& c){
         swap(b,c);
         swap(a,c);
     }
-#ifdef DEBUG
-    if (! ( a<b && b < c)){
-        OUTPUT(("Uh oh, order triplet failed.\n"));
-        exit(127);
-    }
-#endif
 }
 
 template <typename T>
@@ -210,70 +193,40 @@ void sort_on_pair_count(vector<player_t>& players){
     //we want to sort players based on the values in player_scores,
     //so we sort the indices of player_score and reorder players according
     //to that permutation on the indices.
-#ifdef DEBUG
-    OUTPUT(("scores are \n"));
-    for(int s: player_scores){
-        OUTPUT(("%d ",s));
-    }
-    OUTPUT(("\n"));
-#endif
     vector<size_t> perm = sort_indices(player_scores);
-#ifdef DEBUG
-    OUTPUT(("perms is \n"));
-    for (size_t p: perm){
-        OUTPUT(("%zu ",p));
-    }
-    OUTPUT(("\n"));
-#endif
     vector<player_t> temp_players(players.size());
     for (size_t i = 0; i < perm.size(); i++){
         temp_players[i] = players[perm[i]];
     }
     players = temp_players;
-#ifdef DEBUG
-    OUTPUT(("sorted order:\n"));
-    for (player_t p: players){
-        OUTPUT(("%d ",p.p));
-    }
-    OUTPUT(("\n"));
-#endif
 }
 
 void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned short depth){
     queue<Edge> Q;
     Q.push(guess);
     int rr, ss;
-    SPACES(depth);
-    OUTPUT(("guessing %d -> %d\n",guess.first, guess.second));
     while (! Q.empty()){
         Edge next = Q.front(); Q.pop();
         rr = next.first;
         ss = next.second;
-        SPACES(depth);
-        OUTPUT(("%d -> %d is an edge\n",rr,ss));
         add_edge(rr,ss,F);
         vector<Edge> impl_edges;
         vector<player_t> used_players;
         tie(impl_edges, used_players) = ImpliedEdges(next, players, depth);
         for (Edge new_edge : impl_edges){
-            OUTPUT(("adding %d -> %d\n",new_edge.first, new_edge.second));
             if (add_edge(new_edge.first, new_edge.second, F).second){
                 //add_edge.second is True if the edges did not already exist
                 Q.push(new_edge);
             }
             else {
-                OUTPUT(("%d -> %d exists already\n",new_edge.first, new_edge.second));
             }
         }
         for (size_t ii = 0; ii < players.size(); ++ii){
             if (std::find(used_players.begin(), used_players.end(),
                         players[ii]) != used_players.end()){
-                OUTPUT(("erasing %d\n",players[ii].p));
                 players.erase(players.begin() + ii);
             }
         }
-        OUTPUT(("here in AIE, we see %zu players\n",players.size()));
-
     }
 }
 /* MakeAssumption(G, players)
@@ -282,17 +235,6 @@ void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned
  *      G contains a cycle -- this says we made a mistake and must backtrack (failure case)
  */
 pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t player_count, unsigned short depth){
-    SPACES(depth);
-    OUTPUT(("top of MakeAssumption\n"));
-    SPACES(depth);
-    OUTPUT(("still %d players left in list\n", (int) players.size()));
-#ifdef DEBUG
-    OUTPUT(("player is\n"));
-    for (player_t p : players){
-        OUTPUT(("%d ",p.p));
-    }
-    OUTPUT(("\n"));
-#endif
     if (! is_acyclic(G)){ //we don't have to go any farther -- already a contradiction
         if (verbose){
             printf("%*sG is cyclic! we must have assumed wrong...\n",depth*2, " ");
@@ -304,12 +246,6 @@ pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t p
         if (verbose){
             printf("%*sNo more players to try, and G is acyclic: Success!\n",depth*2, " ");
         }
-        SPACES(depth);
-        OUTPUT(("graph contains\n"));
-        for (auto vp = vertices(G); vp.first != vp.second; ++vp.first){
-              OUTPUT(("%zu ",*vp.first));
-        }
-        OUTPUT(("\n"));
         return make_pair(true,G); //base case!
     }
     
@@ -317,8 +253,6 @@ pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t p
     player_t player = players.back(); //don't forget to pop_back before recursing.
     //(we don't want to pop_back yet because AddImpliedEdges needs to add edge (player.w, player.n)
     //AddImpliedEdges will remove the players it uses
-    SPACES(depth);
-    OUTPUT(("Assuming %d -> %d\n",player.p,player.w));
     if (verbose){
         printf("%*sAssume %d -> %d\n", depth*2, " ", player.p, player.w);
     }
@@ -329,8 +263,9 @@ pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t p
         return result;
     }
     F = G; //that didn't work... try the other way
-    SPACES(depth);
-    OUTPUT(("Assuming %d -> %d\n",player.w,player.p));
+    if (verbose){
+        printf("%*sAssume %d -> %d\n", depth*2, " ", player.w, player.p);
+    }
     AddImpliedEdges(F, make_pair(player.w, player.p), players_backup, depth);
     return MakeAssumption(F, players_backup, player_count, depth+1); //Success or failure, this is our last shot.
 }
@@ -358,9 +293,6 @@ int main(int argc, char* argv[])
         printf("If a solution to the Ninja Assassin Wonderwall problem exists, the output will give an ordering that is a solution. Otherwise, there will be no output.\n");
        exit(0); 
     }
-#ifdef DEBUG
-    verbose = true;
-#endif
     int n;
     cin >> n;
     vector<player_t> players(n);

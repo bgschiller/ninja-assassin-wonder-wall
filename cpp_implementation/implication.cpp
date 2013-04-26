@@ -13,6 +13,7 @@
 using namespace boost;
 using namespace std;
 
+
 #ifdef DEBUG
 #define SPACES(x) for(int ii=0; ii<2*x; ii++) printf(" ");
 #define OUTPUT(x) printf x
@@ -36,9 +37,11 @@ bool operator== (const player_t& p1, const player_t& p2){
 
 typedef pair<int,int> Edge;
 
+bool verbose = false;
+
 /* function prototypes */
 pair< vector<Edge>, vector<player_t> >
-ImpliedEdges(Edge guess, const vector<player_t>& players);
+ImpliedEdges(Edge guess, const vector<player_t>& players, unsigned short depth);
 void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned short depth);
 pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t player_count, unsigned short depth=0);
 void sort_on_pair_count(vector<player_t>& players);
@@ -78,7 +81,7 @@ vector<int> FindOrdering(vector<player_t> players){
 }
 
 pair< vector<Edge>, vector<player_t> >
-ImpliedEdges(Edge guess, const vector<player_t>& players){
+ImpliedEdges(Edge guess, const vector<player_t>& players, unsigned short depth){
 //returns a pair, .first is the edges to add
 //.second is the players from which those edges are drawn
 // (this is necessary because we need to evict those players
@@ -121,6 +124,15 @@ ImpliedEdges(Edge guess, const vector<player_t>& players){
         if (used_this_player){
             OUTPUT(("used player %d\n",players[ii].p));
             used_players.push_back(players[ii]);
+            if (verbose){
+                auto new_edge = impl_edges.end()--;
+                printf("%*s%d -> %d is given, so player %d's choices give %d -> %d\n",
+                        (depth+1)*2, " ", guess.first, guess.second, players[ii].p, new_edge->first, new_edge->second);
+                new_edge--;
+                printf("%*s%d -> %d is given, so player %d's choices give %d -> %d\n",
+                        (depth+1)*2, " ", guess.first, guess.second, players[ii].p, new_edge->first, new_edge->second);
+
+            }
         }
     }
     return make_pair( impl_edges, used_players);
@@ -178,13 +190,6 @@ void sort_on_pair_count(vector<player_t>& players){
     int counts[players.size()][players.size()] ;
     memset(counts, 0, sizeof(counts[0][0]) * players.size() *players.size());
     //counts will always be indexed on [a][b] such that a < b.
-#ifdef DEBUG
-    for (size_t i=0; i < players.size(); i++){
-        for (size_t j=0; j < players.size(); j++){
-            if (counts[i][j] != 0) OUTPUT(("uninitialized counts!!\n"));
-        }
-    }
-#endif
     for(size_t i=0; i < players.size(); i++){ // count up all pairs
         player_t pp = players[i];//we need to make a copy because order_triplet screws with the values
         order_triplet(pp.p,pp.w,pp.n);
@@ -248,7 +253,7 @@ void AddImpliedEdges(graph_t& F, Edge guess, vector<player_t>& players, unsigned
         add_edge(rr,ss,F);
         vector<Edge> impl_edges;
         vector<player_t> used_players;
-        tie(impl_edges, used_players) = ImpliedEdges(next, players);
+        tie(impl_edges, used_players) = ImpliedEdges(next, players, depth);
         for (Edge new_edge : impl_edges){
             OUTPUT(("adding %d -> %d\n",new_edge.first, new_edge.second));
             if (add_edge(new_edge.first, new_edge.second, F).second){
@@ -287,28 +292,35 @@ pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t p
     }
     OUTPUT(("\n"));
 #endif
+    if (! is_acyclic(G)){ //we don't have to go any farther -- already a contradiction
+        if (verbose){
+            printf("%*sG is cyclic! we must have assumed wrong...\n",depth*2, " ");
+        }
+        return make_pair(false, G);
+    }
+    //G must be acyclic at this point
     if (players.size() == 0 || num_vertices(G) == player_count){
+        if (verbose){
+            printf("%*sNo more players to try, and G is acyclic: Success!\n",depth*2, " ");
+        }
+        SPACES(depth);
         OUTPUT(("graph contains\n"));
         for (auto vp = vertices(G); vp.first != vp.second; ++vp.first){
               OUTPUT(("%zu ",*vp.first));
         }
         OUTPUT(("\n"));
-        auto ret_val = make_pair(is_acyclic(G), G);
-        SPACES(depth);
-        OUTPUT(("G is %scyclic\n",ret_val.first ? "a" : ""));
-        return ret_val; //base case!
+        return make_pair(true,G); //base case!
     }
-    if (! is_acyclic(G)){ //we don't have to go any farther -- already a contradiction
-        SPACES(depth);
-        OUTPUT(("G is cyclic!\n"));
-        return make_pair(false, G);
-    }
+    
     vector<player_t> players_backup = players; //make a copy in case this guess is wrong
     player_t player = players.back(); //don't forget to pop_back before recursing.
     //(we don't want to pop_back yet because AddImpliedEdges needs to add edge (player.w, player.n)
     //AddImpliedEdges will remove the players it uses
     SPACES(depth);
     OUTPUT(("Assuming %d -> %d\n",player.p,player.w));
+    if (verbose){
+        printf("%*sAssume %d -> %d\n", depth*2, " ", player.p, player.w);
+    }
     graph_t F = G; //make a copy so as to not mess up the original if this guess is wrong
     AddImpliedEdges(F, make_pair(player.p, player.w), players, depth);
     pair<bool, graph_t> result = MakeAssumption(F, players, player_count, depth+1);
@@ -322,8 +334,14 @@ pair<bool,graph_t> MakeAssumption(graph_t& G, vector<player_t> players, size_t p
     return MakeAssumption(F, players_backup, player_count, depth+1); //Success or failure, this is our last shot.
 }
 
-int main()  
+int main(int argc, char* argv[])  
 {
+    if (argc > 1 && (!strcmp(argv[1],"-v") || !strcmp(argv[1],"--verbose"))){
+        verbose = true;
+    }
+#ifdef DEBUG
+    verbose = true;
+#endif
     int n;
     cin >> n;
     vector<player_t> players(n);

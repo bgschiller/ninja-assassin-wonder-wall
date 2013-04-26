@@ -334,7 +334,8 @@ pair<bool,graph_t> MakeAssumption(
             make_pair(player.w, player.p), 
             players_backup, 
             depth);
-    return MakeAssumption(F, players_backup, player_count, depth+1); //Success or failure, this is our last shot.
+    return MakeAssumption(F, players_backup, player_count, depth+1);
+    //Success or failure, this is our last shot.
 }
 
 int main(int argc, char* argv[])  

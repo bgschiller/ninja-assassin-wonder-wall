@@ -1,7 +1,5 @@
 #!/home/schillb/Research/ninja-assassin-wonder-wall/mypy/bin/python
-'''designed to be called over ssh by naww_master.py
-should pass along as command line parameters the location of a redis instance
-and the number of children to maintain at a time.
+'''
 The redis instance will include a list 'jobs', each entry of which will be of the form
 n p1 w1 a1 p2 w2 a2 ...
 where n is the number of players,
@@ -9,17 +7,14 @@ pi is the ith player
 wi is the ith player's wonderwall
 ai is the ith player's ninja assassin.
 These are to be fed as input to the c++ implementation.
-If there is a solution, it should be set as the value for key 
-n p1 w1 a1 p2 w2 a2 ...
-and the key should added to 'solved:n' (for appropriate n).
-If there is no solution, add the key to 'unsolvable:n' (for appropriate n).'''
-
+If there is a solution, increase 'solveable_count:n' (for appropriate n).
+If there is no solution, increase 'unsolvable_count:n' (for appropriate n).
+In either case, increase 'n_total:n' (for appropriate n).'''
 
 import multiprocessing
 import itertools
 import subprocess
 import redis
-
 
 def find_solution(problem):
     '''solve a single problem, presented as a string:

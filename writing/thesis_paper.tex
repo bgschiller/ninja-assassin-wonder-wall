@@ -22,6 +22,13 @@
     \usepackage{auto-pst-pdf}
     \usepackage[margin=1.5in]{geometry}
     \usepackage{moreverb}
+    \usepackage{listings}
+    \usepackage{color}
+
+    \definecolor{mygreen}{rgb}{0,0.6,0}
+    \definecolor{mygray}{rgb}{0.5,0.5,0.5}
+    \definecolor{mymauve}{rgb}{0.58,0,0.82}
+
 
     \title{The Ninja Assassin Wonderwall Game}
     \author{Brian Schiller \\ { advised by Dr. Tilmann Glimm}}
@@ -249,6 +256,7 @@
     This is very similar to the algorithm explained below, which approaches the problem directly rather than first turning an instance into a CNF problem.
 
 \section{Constructive algorithm}
+    \label{sec:algorithm}
     An instance of a Ninja Assassin Wonderwall problem is described by a set $P$ of $n$ players, and two functions $\w : P \to P, \quad \n : P \to P$, that satisfy $\w(p) \neq p$, $\n(p) \neq p$, and $\w(p) \neq \n(p)$ for all $p\in P$. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 
 
     This says, transitively, that if there is a path from $a$ to $b$, then $a$ is to the left of $b$ (we will use $a \leadsto b$ to denote both of these). Notice that if these graphs actually represent an ordering of players, they should not contain cycles. For example, when both $(a,b)$ and $(b,a)$ are in $E$, this says $a \leadsto b$ and $b \leadsto a$, which is a contradiction. 
@@ -507,21 +515,60 @@ Suppose C->B:
             H->J and J->H form a cycle, so our assumption was wrong.
     \end{verbatimtab}
 
-    This demonstrates the fact that the algorithm will have to backtrack and reverse each assumption it makes upon reaching the cycle at the end. Since it will make one assumption for each group of three players, the running time will be $O(n \cdot 2^{n/3}) = O(n \cdot (2^{1/3})^n)$, which is still exponential. 
+    This demonstrates the fact that the algorithm will have to backtrack and reverse each assumption it makes upon reaching the cycle at the end. Since it will make one assumption for each group of three players, the running time will be $O(n \cdot 2^{n/3}) = O(n \cdot (2^{1/3})^n)$, which is exponential. 
 
     This is a worst case analysis, and in practice the running times are often much better than this. We have presented a pathological case in order to show that this algorithm has not beaten the exponential bound.
 
+\begin{comment}
 \section{Overview: Steiner Triple Systems}
     Definition, examples
     discuss how the number of pairs dominates the number of players
     (this defeats our heuristic)
     A slightly better algorithm could `outsmart' our trap from the previous section, but the existence of Steiner Triple Systems shows that we can have so few repeated pairs as to render the heuristic useless. STS shows that this is a systemic problem. 
+\end{comment}
 
+\section{Proportion of solvable games}
+    We are curious about, for a fixed $n$, what proportion of Ninja Assassin Wonderwall game have a solution. 
 
-\section{Probability of a solution}
+    First, how many games exist of a given size? A game depends on the independent choices of all $n$ players. Each player chooses a wonderwall and a ninja assassin from the other $n-1$ players. This means each player can has $2\cdot \binom{n-1}{2}$ ways to assign these roles. So the total number of games is $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$. This grows almost unimaginably quickly. 
+
+    \begin{tabular}{l | r}
+    $n$ & $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$\\
+    \hline
+    3 & 8\\
+    4 & 1296 \\
+    5 & 248832 \\
+    6 & 64000000\\
+    $\vdots$ & \\
+    10 & 3743906242624487424
+    \end{tabular}
+
+    This probably too many to enumerate for anything over $n=6$, so we will approximate the proportion with a random sample.
+
+    Using the algorithm described in section \ref{sec:algorithm}, 
 
 \section{Future work}
 
 \section{Appendix: code}
+    \renewcommand{\ttdefault}{pcr}
+    \lstset{basicstyle=\footnotesize\ttfamily,
+        commentstyle=\color{mygreen},
+        keywordstyle=\bfseries\color{blue},
+        numbers=left,
+        numbersep=5pt,
+        numberstyle=\tiny\color{mygray},
+        stepnumber=5,
+        stringstyle=\color{mymauve},
+        showstringspaces=false,
+        tabsize=2}
+    \subsection{Python implementation}
+        \lstinputlisting[language=Python,
+        breakatwhitespace=false,
+        breaklines=true]{../implication.py}
+    \subsection{C++ implementation}
+        \lstinputlisting[language=C++]{../cpp_implementation/implication.cpp}
+    \subsection{Python driver}
+        \lstinputlisting[language=Python, breakatwhitespace=false,
+        breaklines=true]{../cpp_implementation/naww_client.py}
 
 \end{document}

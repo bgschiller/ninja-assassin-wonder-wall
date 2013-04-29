@@ -406,6 +406,38 @@
 
     Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. We accomplish this by choosing our $p\in S$ on line~\ref{li:choose-p} such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible.
 
+\section{Example trace of algorithm}
+    We will walk through the logic of the algorithm for a small game:
+
+    \begin{center}
+        \begin{tabular}{ l | c | c}
+         $p$ & $\w(p)$ & $\n(p)$ \\
+         \hline
+          A &  B& C\\
+          B &  C& D\\
+          C &  B& A\\
+          D &  B& A\\
+        \end{tabular}
+    \end{center}
+
+    First, suppose $A \leadsto B$. We choose the pair $A$ and $B$ because that pair is tied (with $B$ and $C$) for the most common pair among all unordered pairs appearing the the triplets $(p, \w(p), \n(p))$. Immediately, we can use player $A$'s choice to infer more information. Since we have assumed $A$ is to the left of $B$, then $B$ must be to the left of $C$ or else $A$'s constraints won't be satisfied. This produces the graph below.
+    \begin{center}
+    \includegraphics[width=\textwidth]{alg2ex1.pdf}
+    \end{center}
+    Now, we can use the relationship table to make inferences of the same flavor. 
+    \begin{itemize}
+        \item We know $B \leadsto C$, so $B$'s constraint imposes that $C \leadsto D$.
+        \item We know $A \leadsto B$, so by $C$'s constraint, $B \leadsto C$ (which we already knew).
+        \item We know $A \leadsto B$, so by $D$'s constraint, $B \leadsto D$.
+    \end{itemize}
+    This produces the graph below.
+    \begin{center}
+    \includegraphics[width=\textwidth]{alg2ex3.pdf}
+    \end{center}
+    Now we've exhausted all the player constraints, and the graph is acyclic! A topological sort will give a valid ordering of $\langle A, B, C, D \rangle$.
+
+    An example of a game without a solution is given in the next section.
+
 \section{Running time of algorithm}
     The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players, the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 
 
@@ -528,26 +560,76 @@ Suppose C->B:
 \end{comment}
 
 \section{Proportion of solvable games}
+    \label{sec:prob}
     We are curious about, for a fixed $n$, what proportion of Ninja Assassin Wonderwall game have a solution. 
 
     First, how many games exist of a given size? A game depends on the independent choices of all $n$ players. Each player chooses a wonderwall and a ninja assassin from the other $n-1$ players. This means each player can has $2\cdot \binom{n-1}{2}$ ways to assign these roles. So the total number of games is $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$. This grows almost unimaginably quickly. 
+    \begin{center}
+        \begin{tabular}{l | r}
+        $n$ & $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$\\
+        \hline
+        3 & 8\\
+        4 & 1296 \\
+        5 & 248832 \\
+        6 & 64000000\\
+        $\vdots$ & \\
+        10 & 3743906242624487424
+        \end{tabular}
+    \end{center}
+    This probably too many to enumerate for anything over $n=6$, so we will approximate the proportion with a random sample. Even so, we've seen that our algorithm is $O(n\cdot 2^n)$, if only in pathological cases. Running, say, 10000 trials for a number different sizes of game would take a long time.
 
-    \begin{tabular}{l | r}
-    $n$ & $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$\\
-    \hline
-    3 & 8\\
-    4 & 1296 \\
-    5 & 248832 \\
-    6 & 64000000\\
-    $\vdots$ & \\
-    10 & 3743906242624487424
-    \end{tabular}
+    We can cheat a bit using distributed computing. I randomly drew a 10000 game sample for each size from 4 to 100, putting them all in a job queue. I wrote a python script to pull problems out of the queue and pass them to a C++ implementation of the algorithm described in section \ref{sec:algorithm}. The results -- solvable or not -- where pushed to a central server. 
 
-    This probably too many to enumerate for anything over $n=6$, so we will approximate the proportion with a random sample.
+    I spun up this python script on about 130 computers, each with between 8-24 threads each, and obtained the results below. I was doing this over spring break, when the computers were mostly not in use.
 
-    Using the algorithm described in section \ref{sec:algorithm}, 
+    \begin{center}
+    \includegraphics[width=0.8\textwidth]{probplot.png}
+    \end{center}
+
+    It seems like the likelihood a game having a solution increases very quickly in the number of players.
+
+    We didn't get quite all the way to $n=100$. Around $n=90$ the processes start to really drag. Also, spring break had ended and I needed to give back some computing resources. I recieved a message from Matthew Mooney, a student in the Computer Science department:
+    \begin{quote}
+    Hey, did you know you have a process running on cf416-14 that's using 99\% of the CPU? Not a big deal as I can just switch PCs, but thought you might want to know.
+    \end{quote}
+    And then, a few minutes later:
+    \begin{quote}
+    k I take that back. On my end at least, it looks like that process is running on multiple computers (maybe all? I've checked 3). Any idea what's up?
+    \end{quote}
+
+    It seemed polite to stop the simulation at this point.
 
 \section{Future work}
+    We have danced around the question of NP-Completeness in this paper. It would be good to determine whether or not Ninja Assassin Wonderwall is NP-Complete. If it is, we should provide a proof. If not, perhaps we can find a polynomial time algorithm.
+
+    The algorithm depends on knowing all of the relationships of the players. It would be interesting to model the way people play the game. How can players with incomplete knowledge find solutions?
+
+    Some games are `isomorphic'. It is possible that the number of non-isomorphic games is much smaller than the number of total games. and we could have a hope of enumerating them. For example, in the tables below the roles of $B$ and $C$ have been swapped. These two games will behave identically-- if one is solvable then the other is as well. A solution for one can be used to create a solution for the other just by swapping $B$ and $C$.
+
+    \begin{multicols}{2}
+        \begin{tabular}{l | c | c}
+             $p$ & $\w(p)$ & $\n(p)$ \\
+             \hline
+             A &  C& B\\
+             B &  D& A\\
+             C &  D& A\\
+             D &  C& E\\
+             E &  A& B\\
+        \end{tabular}
+
+
+        \columnbreak
+        \begin{tabular}{l | c | c}
+             $p$ & $\w(p)$ & $\n(p)$ \\
+             \hline
+             A &  B& C\\
+             B &  D& A\\
+             C &  D& A\\
+             D &  B& E\\
+             E &  A& C\\
+        \end{tabular}
+    \end{multicols}
+
 
 \section{Appendix: code}
     \renewcommand{\ttdefault}{pcr}
@@ -561,13 +643,19 @@ Suppose C->B:
         stringstyle=\color{mymauve},
         showstringspaces=false,
         tabsize=2}
+    \subsection{Haskell brute force algorithm}
+        This is very obviously an $O(n!)$ algorithm. I used it to check my ideas and generate small examples of solvable and unsolveable games. It also provided a check that the more complicated algorithms were working correctly.
+        \lstinputlisting[language=Haskell]{../na_ww_brute.hs}
     \subsection{Python implementation}
+        This was the first implementation of the algorithm described in section \ref{sec:algorithm}. It works fairly well, but is noticeably much slower than the C++ implementation. However, the networkx graph library is \emph{much} more friendly than the Boost Graph Library that I used for C++.
         \lstinputlisting[language=Python,
         breakatwhitespace=false,
         breaklines=true]{../implication.py}
     \subsection{C++ implementation}
+        I created this implementation in order to do the distributed trials described in section \ref{sec:prob}. It is more faithfull to the pseudocode in section \ref{sec:algorithm} than the python code, but it also has some ugliness introduced by the the Boost Graph Library and a few tasks that are harder to phrase in C++ than Python (for example, sorting the player on their pair count is on lines 184-235 of the C++ code, and lines 103-112 of the Python code).
         \lstinputlisting[language=C++]{../cpp_implementation/implication.cpp}
     \subsection{Python driver}
+        This is the driver mentioned in section \ref{sec:prob} that pulls Ninja Assassin Wonderwall problems from the jobs queue, spins up the C++ code to solve them, and then updates the server with the result.
         \lstinputlisting[language=Python, breakatwhitespace=false,
         breaklines=true]{../cpp_implementation/naww_client.py}
 

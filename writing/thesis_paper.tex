@@ -45,7 +45,7 @@
 
     Camp counselors who organize the game can usually expect it to last until campers grow bored or it is called off. But occasionally the running players will slow down... and stop. Every player finds themselves on the safe side of their wonderwall, protected from their ninja assassin. We call this scenario a solution, which will be more precisely defined in the next section.
 
-    For example, in the small example below, every player is in a position that satisfies their constraints--they are on a line with their ninja assassin and wonderwall with the wonderwall in the middle. The player's choices are displayed in a relationship table. Each row of the table shows a player, that player's wonderwall, and that player's ninja assassin.
+    In the small example below, every player is in a position that satisfies their constraints--they are on a line with their ninja assassin and wonderwall with the wonderwall in the middle. The player's choices are displayed in a relationship table. Each row of the table shows a player, that player's wonderwall, and that player's ninja assassin.
 
     \begin{center} %6 player example game
         \begin{multicols}{2}
@@ -84,7 +84,7 @@
          \end{multicols}
     \end{center}
 
-    Looking at that solution, it appears that we could grab players $A$ and $C$ and just \emph{twist} them into position, putting all the players on a line. But is this always the case? It seems like the extra freedom in higher dimensions might produce new solutions that don't appear on the real line. 
+    Looking at that solution, it seems like we could grab players $A$ and $C$ and pivot them around $B$, putting all the players on a line. But can we always reduce a solution to a single dimension? It seems like the extra freedom in higher dimensions might allow new solutions that don't appear on the real line.
 
     In fact, we will see that if a game has a solution in $\mathbb{R}^n$ it must also have a solution on the real line. This means that campers need not dig holes and climb trees in order to produce a solution. The result also says that in searching for solutions we can restrict our search to linear orderings of the players.
 
@@ -158,18 +158,20 @@
 
     Here, the $\w(p)$ and $\n(p)$ represent the wonderwall and ninja assassin, respectively, of a player $p$. The restrictions on the functions ensure that no player may choose themselves as either role or choose the same person for both roles. 
 
+
     \begin{definition}
-    A \emph{solution} to a Ninja Assassin Wonderwall problem is a function $S: P\to R^{n}$ such that:
-        \begin{itemize}
+    A \emph{solution} to a Ninja Assassin Wonderwall problem is a function $S: P\to \mathbb{R}^{n}$ such that:
+        \begin{enumerate}
         \item $S$ is one-to-one (two players may not occupy the same space)
-        \item For each $p \in P$, $\w(p)$ lies on the line segment between $p$ and $\n(p)$.
-        \end{itemize}
+        \item For each $p \in P$, $S(\w(p))$ lies on the line segment between $S(p)$ and $S(\n(p))$.
+        \end{enumerate}
     \end{definition}
 
 
 \section{Reduction to one dimension}
 
     It seems as though the extra freedom in higher dimensions might allow solutions to games that are unsolvable on the real line. A camp counselor might be tempted to have campers climb trees or stand on one another's shoulders in search of a solution. Perhaps surprisingly, this is unnecessary. Any game that is solvable in $\mathbb{R}^n$ is solvable in $\mathbb{R}$.
+
 
     \begin{thm}
     Any Ninja Assassin Wonderwall game which has a solution in $n$ dimensions ($n > 1$) has a solution in $n-1$ dimensions.
@@ -179,31 +181,138 @@
 
     Consider the set $L$ of all lines in $\mathbb{R}^n$ which go through two or more points in the image of $P$ under $S$. Since there are $\lvert P \rvert$ points, there are no more than $\binom{ \lvert P \rvert}{2}$ such lines. 
 
-    We want an $n-1$ dimensional hyperplane through the origin that is not perpendicular to any line in $L$. Since each line is perpendicular to exactly one hyperplane, and $\lvert L \rvert \leq \binom{\lvert P \rvert}{2}$, which is finite, such a hyperplane exists. (There are uncountably many hyperplanes through the origin of $n-1$ dimensions).
+    Now consider an $n-1$-dimensional hyperplane $\Pi$ through the origin that is not perpendicular to any line in $L$. Since each line is perpendicular to exactly one hyperplane, and $\lvert L \rvert \leq \binom{\lvert P \rvert}{2}$, which is finite, such a hyperplane exists. (There are uncountably many $n-1$-dimensional hyperplanes through the origin).
 
-    Form a new solution, $S'$ by mapping each player $p\in P$ to the projection onto the hyperplane of $S(p)$. Since we chose our hyperplane to be not perpendicular to any line in $L$, each player's position is distinct. Since projection onto a plane through the origin is a linear transformation, linear relationships are preserved. In particular, the linear relationships which put every player's wonderwall on the line segment between that player and their ninja assassin. So $S'$ is a solution in $n-1$ dimensions.
+    Form a new solution, $S'$ by mapping each player $p\in P$ to the projection onto $\Pi$. By construction, $\Pi$ is not perpendicular to any line in $L$, so each player's position is distinct. Since projection onto a plane through the origin is a linear transformation, linear relationships are preserved. In particular, the linear relationships which put every player's wonderwall on the line segment between that player and their ninja assassin. So $S'$ is a solution in $n-1$ dimensions.
     \end{proof}
+    \begin{center}
+    \begin{tabular}{r c l}
+    {%
+    \begin{pspicture}(0,0)(10,10)
+        %Future locations
+        %(included to maintain scale with other picture)
+        %(plotted first, in white, to be covered over)
+        \uput[d](0,0){\color{white}{C}}
+        \uput[d](-0.4,0){\color{white}{E}}
+        \uput[d](1,0){\color{white}{B}}
+        \uput[d](2,0){\color{white}{A}}
+        \uput[d](2.4,0){\color{white}{D}}
+        \uput[d](3.5,0){\color{white}{F}}  
+
+
+        %players and labels
+        \qdisk(0,1){2pt}
+        \uput[u](0,1){C}
+
+        \qdisk(-0.4,2){2pt}
+        \uput[u](-0.4,2){E}
+
+        \qdisk(1,2){2pt}
+        \uput[u](1,2){B}
+
+        \qdisk(2,3){2pt}
+        \uput[u](2,3){A}
+
+        \qdisk(2.4,2){2pt}
+        \uput[u](2.4,2){D}
+
+        \qdisk(3.5,2){2pt}
+        \uput[u](3.5,2){F}
+
+        %the set L
+        \psline[linestyle=dotted](-0.5,0.5)(2.5,3.5) %CBA
+        \psline[linestyle=dotted](-1,2)(4,2) %EBDF
+
+        \psline[linestyle=dotted](1.7,3.75)(2.7,1.25) %AD
+        \psline[linestyle=dotted](1.6,3.26666)(3.9,1.7333) %AF
+        \psline[linestyle=dotted](-1,1.75)(2.6,3.25) %AE
+
+        \psline[linestyle=dotted](-0.6,2.5)(0.2,0.5) %CE
+        \psline[linestyle=dotted](-0.5,0.79166)(3.3,2.375) %CD
+        \psline[linestyle=dotted](-0.4,0.8857)(3.9,2.11428) %CF
+
+        %hyperplane Pi
+        \psline(-1,0)(4,0)
+        \uput[r](4,0){$\Pi$}
+    \end{pspicture}} & {%
+    \color{white}{project}
+    } &{%
+    \begin{pspicture}(0,0)(10,10)
+
+        %old locations
+        \pscircle[linestyle=dashed](0,1){3pt}
+        \uput[u](0,1){C}
+
+        \pscircle[linestyle=dashed](-0.4,2){3pt}
+        \uput[u](-0.4,2){E}
+
+        \pscircle[linestyle=dashed](1,2){3pt}
+        \uput[u](1,2){B}
+
+        \pscircle[linestyle=dashed](2,3){3pt}
+        \uput[u](2,3){A}
+
+        \pscircle[linestyle=dashed](2.4,2){3pt}
+        \uput[u](2.4,2){D}
+
+        \pscircle[linestyle=dashed](3.5,2){3pt}
+        \uput[u](3.5,2){F}
+        
+        %lines of projection
+        \psline[linestyle=dashed](-0.4,2)(-0.4,0) %E
+        \psline[linestyle=dashed](0,1)(0,0) %C
+        \psline[linestyle=dashed](1,2)(1,0) %B
+        \psline[linestyle=dashed](2,3)(2,0) %A
+        \psline[linestyle=dashed](2.4,2)(2.4,0) %D
+        \psline[linestyle=dashed](3.5,2)(3.5,0) %F
+
+        %players and labels
+        \qdisk(0,0){2pt}
+        \uput[d](0,0){C}
+
+        \qdisk(-0.4,0){2pt}
+        \uput[d](-0.4,0){E}
+
+        \qdisk(1,0){2pt}
+        \uput[d](1,0){B}
+
+        \qdisk(2,0){2pt}
+        \uput[d](2,0){A}
+
+        \qdisk(2.4,0){2pt}
+        \uput[d](2.4,0){D}
+
+        \qdisk(3.5,0){2pt}
+        \uput[d](3.5,0){F}        
+
+
+        %hyperplane Pi
+        \psline(-1,0)(4,0)
+        \uput[r](4,0){$\Pi$}
+    \end{pspicture}}
+    \end{tabular}
+    \end{center}
 
     This theorem, repeated as necessary, shows that if a solution exists in $n>1$ dimensions, a solution exists in one dimension. Thus, if we are looking for solutions, it is enough to consider orderings of players on a line.
 
 \section{Overview: P vs NP}
+    P and NP are coarse ways to describe the time required to solve a problem. Often we are a bit cavalier about the distinction between a problem and an \emph{instance} of a problem. However, the difference is important in discussing P vs NP. A problem describes the form of the input and desired output. An instance of a problem is a \emph{specific} input of the form described. 
+
     Simply put, P is the set of all problems that can be solved in polynomial time. NP is the set of all problems whose solutions can be \emph{verified} in polynomial time. 
-
-    Often we are a bit cavalier about the distinction between a problem and an \emph{instance} of a problem. However, the difference is important in discussing P vs NP. A problem describes the form of the input and desired output. An instance of a problem is a \emph{specific} input of the form described. 
-
-    It is an open question whether or not the two classes are distinct. That is, does every problem with a polynomial verifier have a polynomial solver? This is known as the P=NP problem.
 
     For a simple example, consider the problem of sorting.  Sorting takes a set of $n$ objects for which a total order, $<$ is defined and produces a permutation of those objects $x_1 x_2 x_3 \ldots x_n$ such that $x_i < x_j$ whenever $i < j$. An instance of sorting is `sort the set $\{4, 2 ,1, 5, 8\}$', which would have the solution $\langle 1, 2, 4, 5, 8 \rangle$. 
 
-    To continue the example, one way to solve an instance of a sorting problem is to try every permutation of the $n$ objects, checking each to see whether it is in sorted order. This algorithm would require $O(n\cdot n!)$ time, since there is only one permutation that is in sorted order. This running time is larger than any polynomial, but this does \emph{not} mean that the problem of sorting is not in P. We have merely failed to show that is in P; we haven't shown that is is \emph{not} in P. In fact, there are algorithms that solve instances of sorting in $O(n \lg n)$, which is bounded by the polynomial $n^2$, so Sorting belongs in P. 
+    It is an open question whether or not the two classes are distinct. That is, does every problem with a polynomial verifier have a polynomial solver? This is known as the P=NP problem.
+
+    To continue the example, one way to solve an instance of a sorting problem is to try every permutation of the $n$ objects, checking each to see whether it is in sorted order. This algorithm would require $O(n\cdot n!)$ time, since there is only one out of $n!$ permutations that is in sorted order, and it takes as many as $n$ steps to determine whether each permutation is sorted. This running time is larger than any polynomial, but this does \emph{not} mean that the problem of sorting is not in P. We have merely failed to show that is in P; we haven't shown that is is \emph{not} in P. In fact, there are algorithms that solve instances of sorting in $O(n^2)$, which is a polynomial, so the sorting problem belongs in P. 
 
     It is also in NP, since a candidate solution could be verified (or refuted) in polynomial time. One way to verify would be to check that for every pair $x_i, x_{i+1}$, $x_i < x_{i+1}$. Another way would be to just sort the set again (using a polynomial-time algorithm) and check that the new solution matches the candidate. 
 
-    There is a related class of problems, called NP-hard. A problem $Q$is in NP-hard is every problem in NP is polynomial reducible to $Q$. That is, given an instance of some problem in NP, we can transform that instance in a polynomial number of steps into an instance of $Q$. We also require that a solution to this new instance of $Q$ produces a solution to the original instance in polynomial time.
+    There is a related class of problems, called NP-hard. A problem $Q$ is in NP-hard is every problem $R$ in NP is polynomial reducible to $Q$. That is, given an instance of $R$ we can transform that instance in a polynomial number of steps into an instance of $Q$. We also require that a solution to this new instance of $Q$ produces a solution to the original instance of $R$ in polynomial time.
 
-    There are a number of problems in NP which are also in NP-hard. These problems comprise a class called NP-complete. For instance, the Travelling Salesman Problem, the Knapsack Problem, Subset-Sum, and 3-CNF Satisfiablilty are all in NP-complete. This means that we can take an instance of, say, The Knapsack Problem, transform it into Subset-Sum in such a way that the new instance has a solution if and only if the old one did. \textcolor{red}{Should mention decision problems earlier.}
+    There are a number of problems in NP which are also in NP-hard. These problems comprise a class called NP-complete. For instance, the Travelling Salesman Problem, the Knapsack Problem, Subset-Sum, and 3-CNF Satisfiablilty are all in NP-complete. This means that we can take an instance of, say, The Knapsack Problem, and transform it into Subset-Sum in such a way that the new instance has a solution if and only if the old one did. %TODO:perhaps mention decision problems?
 
-    Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them. (If a polynomial-time solver was found for, say Subset-Sum, we could transform and instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
+    Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them~\cite{clrs}[1050]. (If a polynomial-time solver was found for, say Subset-Sum, we could transform and instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
 
     The typical way to show that a problem is NP-complete is to take an arbitrary instance of a problem that is known to be NP-complete and give a polynomial time recipe to transform that instance into an instance of the problem at hand. Then if a polynomial algorithm exists for the problem at hand, we have created one for the NP-complete problem. 
 
@@ -218,21 +327,21 @@
             \wedge  & (b_1 \vee b_2 \vee \ldots \vee b_{n_b})\\
             \vdots  &\\
             \wedge  & (x_1 \vee x_2 \vee \ldots \vee x_{n_x})
-        \end{align*} \textcolor{red}{fix this}
-    and whose output is a mapping from each atom in the statement to either true or false such that the statement as a whole is true. 
+        \end{align*}
+    and whose output is a mapping from each variable in the statement to either true or false such that the statement as a whole is true. 
 
     We begin with some notation. Let $x_{a,b}$ denote the truth of `player $a$ is left of player $b$'. Then for each row of a relationship table $p$, $\w(p)$, $\n(p)$, we can write
         \begin{align*}
-                    & (x_{p_1, \w(p_1)} \Leftrightarrow x_{p_1, \n(p_1)})\\
-            \wedge  & (x_{p_2, \w(p_2)} \Leftrightarrow x_{p_2, \n(p_2)})\\
+                    & (x_{p_1, \w(p_1)} \Leftrightarrow x_{\w(p_1), \n(p_1)})\\
+            \wedge  & (x_{p_2, \w(p_2)} \Leftrightarrow x_{\w(p_2), \n(p_2)})\\
             \vdots  &\\
-            \wedge  & (x_{p_n, \w(p_n)} \Leftrightarrow x_{p_n, \n(p_n)})
+            \wedge  & (x_{p_n, \w(p_n)} \Leftrightarrow x_{\w(p_n), \n(p_n)})
         \end{align*}
 
     In order to put our statement in CNF, we will need to convert each of those clauses. For player $i$, we will have 
         \begin{align*}
-            & (x_{p_i, \w(p_i)} \Leftrightarrow x_{p_i, \n(p_i)})\\
-            \Leftrightarrow & (\lnot x_{p_i, \w(p_i)} \vee x_{p_i, \n(p_i)}) \wedge (x_{p_i, \w(p_i)} \vee \lnot x_{p_i, \n(p_i)})
+            & (x_{p_i, \w(p_i)} \Leftrightarrow x_{\w(p_i), \n(p_i)})\\
+            \Leftrightarrow & (\lnot x_{p_i, \w(p_i)} \vee x_{\w(p_i), \n(p_i)}) \wedge (x_{p_i, \w(p_i)} \vee \lnot x_{\w(p_i), \n(p_i)})
         \end{align*}
 
     What we haven't mentioned yet is that there is a big difference between a CNF SAT problem with two variables to a clause (2-SAT), and one with three variables to a clause (3-SAT). Surprisingly, 2-SAT can be solved in linear time but 3-SAT is an NP-Complete problem. That is, no one has found an algorithm that will solve it in polynomial time (and the general sentiment is that none exists).

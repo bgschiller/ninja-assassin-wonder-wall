@@ -1,7 +1,13 @@
+thesis_paper.pdf: probplot.png digraphs thesis_paper.tex
+	pdflatex --shell-escape thesis_paper.tex
+	pdflatex --shell-escape thesis_paper.tex #twice for \tableofcontents
+
 presentation.pdf: probplot.png presentation.tex digraphs
 	pdflatex --shell-escape presentation.tex
+	pdflatex --shell-escape presentation.tex
 
-digraphs:
+digraphs: *.dot
+	touch digraphs #this is an empty file, used to prevent this section from running unneccesarily
 	dot 6ndag.dot -Tpng -o 6ndag.png
 	neato 6ndigraph-cyc.dot -Tpng -o 6ndigraph-cyc.png
 	neato 6ndigraph.dot -Tpng -o 6ndigraph.png

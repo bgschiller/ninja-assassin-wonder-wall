@@ -403,7 +403,7 @@ If one of these is acyclic, the problem has a solution.}
     \end{enumerate}
     \item<6-> Each time we add a player's constraints, we can try to wring some more information.
     \begin{itemize}
-        \item<7-> If we have added an edge $(a, b)$, and $(a, b, c)$ is a triplet $(a, \n(a), \n(a))$, we can infer that $(b,c)$ is also an edge.
+        \item<7-> If we have added an edge $(a, b)$, and $(a, b, c)$ is a triplet $(a, \w(a), \n(a))$, we can infer that $(b,c)$ is also an edge.
         \item<8-> This can dramatically reduce runtime, but not for every problem. The worst case runtime remains the same.
     \end{itemize}
     \item<9-> Consider players in an order to enhance the effect of those inferences.

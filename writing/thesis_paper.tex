@@ -25,7 +25,7 @@
     \usepackage{listings}
     \usepackage{color}
 
-    \definecolor{mygreen}{rgb}{0,0.6,0}
+    \definecolor{mygreen}{rgb}{0,0.5,0}
     \definecolor{mygray}{rgb}{0.5,0.5,0.5}
     \definecolor{mymauve}{rgb}{0.58,0,0.82}
 
@@ -312,7 +312,7 @@
 
     There are a number of problems in NP which are also in NP-hard. These problems comprise a class called NP-complete. For instance, the Travelling Salesman Problem, the Knapsack Problem, Subset-Sum, and 3-CNF Satisfiablilty are all in NP-complete. This means that we can take an instance of, say, The Knapsack Problem, and transform it into Subset-Sum in such a way that the new instance has a solution if and only if the old one did. %TODO:perhaps mention decision problems?
 
-    Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them~\cite{clrs}[1050]. (If a polynomial-time solver was found for, say Subset-Sum, we could transform and instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
+    Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them~\cite{clrs}(pg 1050). (If a polynomial-time solver was found for, say Subset-Sum, we could transform and instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
 
     The typical way to show that a problem is NP-complete is to take an arbitrary instance of a problem that is known to be NP-complete and give a polynomial time recipe to transform that instance into an instance of the problem at hand. Then if a polynomial algorithm exists for the problem at hand, we have created one for the NP-complete problem. 
 
@@ -344,11 +344,11 @@
             \Leftrightarrow & (\lnot x_{p_i, \w(p_i)} \vee x_{\w(p_i), \n(p_i)}) \wedge (x_{p_i, \w(p_i)} \vee \lnot x_{\w(p_i), \n(p_i)})
         \end{align*}
 
-    What we haven't mentioned yet is that there is a big difference between a CNF SAT problem with two variables to a clause (2-SAT), and one with three variables to a clause (3-SAT). Surprisingly, 2-SAT can be solved in linear time but 3-SAT is an NP-Complete problem. That is, no one has found an algorithm that will solve it in polynomial time (and the general sentiment is that none exists).
+    What we haven't mentioned yet is that there is a big difference between a CNF SAT problem with two variables to a clause (2-SAT), and one with three variables to a clause (3-SAT). Surprisingly, 2-SAT can be solved in linear time but 3-SAT is an NP-Complete problem~\cite{clrs}(pg 1049). That is, no one has found an algorithm that will solve it in polynomial time (and the general sentiment is that none exists).
 
     So far, so good: we only have two variables to a clause. This looks like it is leading us to a linear time solution. (Actually, since our variables are $x_{p_i, p_j}$, this would be an $O(n^2)$ solution). 
 
-    However, this is not quite enough. In moving to simple boolean values, we have given up the transitive property. As it is now, there is nothing keeping the problem from deciding that $x_{a,b}, x_{b,c}$, and $x_{c,a}$ are all true. 
+    However, this is not quite enough. In moving to simple boolean values, we have given up the transitive property. As it is now, there is nothing keeping the problem from deciding that $x_{a,b}, x_{b,c}$, and $x_{c,a}$ are all true (even though this wouldn't make sense in the context of a linear solution). One way to think about this is that a solution to the Ninja Assassin Wonderwall problem will always produce a solution to the CNF SAT problem, but not the other way around.
 
     We will need to add constraints to ensure that we respect transitivity. For every $a,b,c \in P$, we need the condition $(x_{a,b} \wedge x_{b,c}) \Rightarrow x_{a,c}$. This adds quite a bit of bloat to our statement. Specifically, it adds $n(n-1)(n-2)$ expressions of that form, all $\wedge$'d together.
 
@@ -360,13 +360,13 @@
 
     This pushes us squarely into the realm of 3-SAT, where we don't expect to find a polynomial time algorithm to save us. 
 
-    Still, this is a possible way to solve Ninja Assassin Wonderwall problems. Another option would be to stop with the 2-SAT problem created by ignoring transitivity constraints. From there, we could ennumerate all solutions (\textcolor{red}{an article describing how to do this has been requested from ILLIAD}), searching for one that respected transitivity.
+    Still, this is a possible way to solve Ninja Assassin Wonderwall problems. Another option would be to stop with the 2-SAT problem created by ignoring transitivity constraints. From there, we could ennumerate all solutions, searching for one that respected transitivity. %I've downloaded an article with an algorithm describing the enumeration step of this, but I haven't had a chance to play with it. Probably won't before I turn this in...
 
     This is very similar to the algorithm explained below, which approaches the problem directly rather than first turning an instance into a CNF problem.
 
 \section{Constructive algorithm}
     \label{sec:algorithm}
-    An instance of a Ninja Assassin Wonderwall problem is described by a set $P$ of $n$ players, and two functions $\w : P \to P, \quad \n : P \to P$, that satisfy $\w(p) \neq p$, $\n(p) \neq p$, and $\w(p) \neq \n(p)$ for all $p\in P$. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 
+    Consider a permutation $\sigma$ of the player set $P$. We'd like to know if $\sigma$ is a solution. If that $\sigma$ satisfies player $p$'s constraints, then $\sigma$ must have $\w(p)$ between $p$ and $\n(p)$. That is, either $p$ is to the left of $\w(p)$ is to the left of $\n(p)$ or else the reverse is true. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 
 
     This says, transitively, that if there is a path from $a$ to $b$, then $a$ is to the left of $b$ (we will use $a \leadsto b$ to denote both of these). Notice that if these graphs actually represent an ordering of players, they should not contain cycles. For example, when both $(a,b)$ and $(b,a)$ are in $E$, this says $a \leadsto b$ and $b \leadsto a$, which is a contradiction. 
 
@@ -513,7 +513,7 @@
     \li \Return $E$
     \end{codebox}
 
-    Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. We accomplish this by choosing our $p\in S$ on line~\ref{li:choose-p} such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible.
+    Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. We accomplish this by choosing our $p\in S$ on line~\ref{li:choose-p} of \proc{MakeAssumption} such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible.
 
 \section{Example trace of algorithm}
     We will walk through the logic of the algorithm for a small game:
@@ -590,7 +590,7 @@
         \end{tabular}
     \end{center}
 
-    Notice how each group of four players is `self-contained'. Players $A,B,C$ make no choices other than $A,B,C, \text{ and } D$; players $D, E, F$ make no choices other than $D, E, F, \text{ and } G$. The overlap is just enough so that the games are not independent. This means that any leverage gained via the heuristic will not escape the four player group.
+    Notice how each group of four players is `self-contained'. The choices of players $A,B,C$ contain no player other than $A,B,C, \text{ and } D$; the choices of players $D, E, F$ contain no player other than $D, E, F, \text{ and } G$. The overlap is just enough so that the games are not disjoint. This means that any leverage gained via the heuristic will not escape the four player group.
 
     For example, if the algorithm assumes that $A \leadsto D$, this information is useless as soon as we're addressing players other than $A,B,C,D$.
 
@@ -656,7 +656,7 @@ Suppose C->B:
             H->J and J->H form a cycle, so our assumption was wrong.
     \end{verbatimtab}
 
-    This demonstrates the fact that the algorithm will have to backtrack and reverse each assumption it makes upon reaching the cycle at the end. Since it will make one assumption for each group of three players, the running time will be $O(n \cdot 2^{n/3}) = O(n \cdot (2^{1/3})^n)$, which is exponential. 
+    This demonstrates the fact that the algorithm will have to backtrack and reverse each assumption it makes upon reaching the cycle at the end. Since it will make one assumption for each group of three players, the running time will be $O(n \cdot 2^{n/3})$, which is exponential. 
 
     This is a worst case analysis, and in practice the running times are often much better than this. We have presented a pathological case in order to show that this algorithm has not beaten the exponential bound.
 
@@ -674,28 +674,28 @@ Suppose C->B:
 
     First, how many games exist of a given size? A game depends on the independent choices of all $n$ players. Each player chooses a wonderwall and a ninja assassin from the other $n-1$ players. This means each player can has $2\cdot \binom{n-1}{2}$ ways to assign these roles. So the total number of games is $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$. This grows almost unimaginably quickly. 
     \begin{center}
-        \begin{tabular}{l | r}
+        \begin{tabular}{c | r}
         $n$ & $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$\\
         \hline
         3 & 8\\
         4 & 1296 \\
         5 & 248832 \\
         6 & 64000000\\
-        $\vdots$ & \\
+        $\vdots$ & $\vdots$ \\
         10 & 3743906242624487424
         \end{tabular}
     \end{center}
     This probably too many to enumerate for anything over $n=6$, so we will approximate the proportion with a random sample. Even so, we've seen that our algorithm is $O(n\cdot 2^n)$, if only in pathological cases. Running, say, 10000 trials for a number different sizes of game would take a long time.
 
-    We can cheat a bit using distributed computing. I randomly drew a 10000 game sample for each size from 4 to 100, putting them all in a job queue. I wrote a python script to pull problems out of the queue and pass them to a C++ implementation of the algorithm described in section \ref{sec:algorithm}. The results -- solvable or not -- where pushed to a central server. 
+    We can cheat a bit using distributed computing. I randomly drew a 10000 game sample for each size from 4 to 100, putting them all in a job queue. I wrote a python script to pull problems out of the queue and pass them to a C++ implementation of the algorithm described in section \ref{sec:algorithm}. The result -- solvable or not -- was pushed to a central server. 
 
-    I spun up this python script on about 130 computers, each with between 8-24 threads each, and obtained the results below. I was doing this over spring break, when the computers were mostly not in use.
+    I spun up this python script on about 130 computers, with between 8-24 threads each, and obtained the results below. I was doing this over spring break, when the computers were mostly not in use.
 
     \begin{center}
     \includegraphics[width=0.8\textwidth]{probplot.png}
     \end{center}
 
-    It seems like the likelihood a game having a solution increases very quickly in the number of players.
+    It seems that the likelihood a game having a solution increases very quickly in the number of players.
 
     We didn't get quite all the way to $n=100$. Around $n=90$ the processes start to really drag. Also, spring break had ended and I needed to give back some computing resources. I recieved a message from Matthew Mooney, a student in the Computer Science department:
     \begin{quote}
@@ -711,7 +711,7 @@ Suppose C->B:
 \section{Future work}
     We have danced around the question of NP-Completeness in this paper. It would be good to determine whether or not Ninja Assassin Wonderwall is NP-Complete. If it is, we should provide a proof. If not, perhaps we can find a polynomial time algorithm.
 
-    The algorithm depends on knowing all of the relationships of the players. It would be interesting to model the way people play the game. How can players with incomplete knowledge find solutions?
+    The algorithm depends on knowing all of the relationships among the players. It would be interesting to model the way people play the game. How can players with incomplete knowledge find solutions?
 
     Some games are `isomorphic'. It is possible that the number of non-isomorphic games is much smaller than the number of total games. and we could have a hope of enumerating them. For example, in the tables below the roles of $B$ and $C$ have been swapped. These two games will behave identically-- if one is solvable then the other is as well. A solution for one can be used to create a solution for the other just by swapping $B$ and $C$.
 
@@ -754,7 +754,7 @@ Suppose C->B:
         tabsize=2}
     \subsection{Haskell brute force algorithm}
         This is very obviously an $O(n!)$ algorithm. I used it to check my ideas and generate small examples of solvable and unsolveable games. It also provided a check that the more complicated algorithms were working correctly.
-        \lstinputlisting[language=Haskell]{../na_ww_brute.hs}
+        \lstinputlisting[language=Haskell,breaklines=true]{../na_ww_brute.hs}
     \subsection{Python implementation}
         This was the first implementation of the algorithm described in section \ref{sec:algorithm}. It works fairly well, but is noticeably much slower than the C++ implementation. However, the networkx graph library is \emph{much} more friendly than the Boost Graph Library that I used for C++.
         \lstinputlisting[language=Python,

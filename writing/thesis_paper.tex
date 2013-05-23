@@ -642,7 +642,7 @@
         \item We know that $E \leadsto D$, so player $C$'s choices of $(C,D,E)$ give $E\leadsto C$.
         \item We know that $E \leadsto D$, so player $C$'s choices of $(C,D,E)$ give $D\leadsto C$.
     \end{itemize}
-    We could also have used players $D$ and $E$, instead of $B$ and $C$, to infer these same edges so we should evict them from the set $S$ of as-yet-unconsidered players. (In the output from the C++ code, given in Appendix~\label{app:example_output}, $D$ and $E$ \emph{are} used redundantly). The new edges change the graph:
+    We could also have used players $D$ and $E$, instead of $B$ and $C$, to infer these same edges so we should evict them from the set $S$ of as-yet-unconsidered players. (In the output from the C++ code, given in Appendix~\ref{app:example_output}, $D$ and $E$ \emph{are} used redundantly). The new edges change the graph:
     %echo "digraph G{ rankdir=LR; B->E->D; B->D; E->C; D->C; }" | dot2tex --prog=dot --figonly
     \begin{center}
     \begin{tikzpicture}[>=latex,line join=bevel,]
@@ -1049,6 +1049,35 @@ Suppose C->B:
         This is the driver mentioned in section \ref{sec:prob} that pulls Ninja Assassin Wonderwall problems from the jobs queue, spins up the C++ code to solve them, and then updates the server with the result.
         \lstinputlisting[language=Python, breakatwhitespace=false,
         breaklines=true]{../cpp_implementation/naww_client.py}
+
+\section{Appendix: Example trace output}
+\label{app:example_output}
+\begin{verbatim}
+Assume E -> D
+  E -> D is given, so player B's choices give B -> D
+  E -> D is given, so player B's choices give B -> E
+  E -> D is given, so player C's choices give E -> C
+  E -> D is given, so player C's choices give D -> C
+  E -> D is given, so player D's choices give B -> D
+  E -> D is given, so player D's choices give B -> E
+  E -> D is given, so player E's choices give E -> C
+  E -> D is given, so player E's choices give D -> C
+  D -> C is given, so player C's choices give E -> C
+  D -> C is given, so player C's choices give E -> D
+  D -> C is given, so player E's choices give E -> C
+  D -> C is given, so player E's choices give E -> D
+  E -> C is given, so player A's choices give A -> C
+  E -> C is given, so player A's choices give A -> E
+  E -> C is given, so player E's choices give D -> C
+  E -> C is given, so player E's choices give E -> D
+  D -> C is given, so player E's choices give E -> C
+  D -> C is given, so player E's choices give E -> D
+  Assume F -> B
+    F -> B is given, so player F's choices give F -> A
+    F -> B is given, so player F's choices give B -> A
+    No more players to try, and G is acyclic: Success!
+F B A E D C
+\end{verbatim}
 
 \begin{thebibliography}{9}
 

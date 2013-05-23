@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[12pt,x11names, rgb]{article}
 
 
 
@@ -15,7 +15,6 @@
     \DeclareMathOperator{\n}{n}
     \DeclareMathOperator{\pairs}{pairs}
     \usepackage{moreverb}
-    \usepackage{color}
 
     \usepackage{multicol}
     \usepackage{pstricks}
@@ -24,6 +23,11 @@
     \usepackage{moreverb}
     \usepackage{listings}
     \usepackage{color}
+
+    %\usepackage[x11names, rgb]{xcolor}
+    \usepackage[utf8]{inputenc}
+    \usepackage{tikz}
+    \usetikzlibrary{snakes,arrows,shapes}
 
     \definecolor{mygreen}{rgb}{0,0.5,0}
     \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -189,7 +193,7 @@
     \begin{pspicture}(0,0)(10,10)
         %Future locations
         %(included to maintain scale with other picture)
-        %(plotted first, in white, to be covered over)
+        %(plotted in white, to be covered over)
         \uput[d](0,0){\color{white}{C}}
         \uput[d](-0.4,0){\color{white}{E}}
         \uput[d](1,0){\color{white}{B}}
@@ -550,50 +554,280 @@
         \end{tabular} %assume D->E, assume A->B.
     \end{center}
     \begin{comment}
- Assume E -> D
-  E -> D is given, so player B's choices give B -> D
-  E -> D is given, so player B's choices give B -> E
-  E -> D is given, so player C's choices give E -> C
-  E -> D is given, so player C's choices give D -> C
-  E -> D is given, so player D's choices give B -> D
-  E -> D is given, so player D's choices give B -> E
-  E -> D is given, so player E's choices give E -> C
-  E -> D is given, so player E's choices give D -> C
-  D -> C is given, so player C's choices give E -> C
-  D -> C is given, so player C's choices give E -> D
-  D -> C is given, so player E's choices give E -> C
-  D -> C is given, so player E's choices give E -> D
-  E -> C is given, so player A's choices give A -> C
-  E -> C is given, so player A's choices give A -> E
-  E -> C is given, so player E's choices give D -> C
-  E -> C is given, so player E's choices give E -> D
-  D -> C is given, so player E's choices give E -> C
-  D -> C is given, so player E's choices give E -> D
-  Assume F -> B
-    F -> B is given, so player F's choices give F -> A
-    F -> B is given, so player F's choices give B -> A
-    No more players to try, and G is acyclic: Success!
-F B A E D C
-\end{comment}
-
-
-    First, suppose $A \leadsto B$. We choose the pair $A$ and $B$ because that pair is tied (with $B$ and $C$) for the most common pair among all unordered pairs appearing among all triplets $(p, \w(p), \n(p))$. Immediately, we can use player $A$'s choice to infer more information. Since we have assumed $A$ is to the left of $B$, then $B$ must be to the left of $C$ or else $A$'s constraints won't be satisfied. This produces the graph below.
+        Assume E -> D
+          E -> D is given, so player B's choices give B -> D
+          E -> D is given, so player B's choices give B -> E
+          E -> D is given, so player C's choices give E -> C
+          E -> D is given, so player C's choices give D -> C
+          E -> D is given, so player D's choices give B -> D
+          E -> D is given, so player D's choices give B -> E
+          E -> D is given, so player E's choices give E -> C
+          E -> D is given, so player E's choices give D -> C
+          D -> C is given, so player C's choices give E -> C
+          D -> C is given, so player C's choices give E -> D
+          D -> C is given, so player E's choices give E -> C
+          D -> C is given, so player E's choices give E -> D
+          E -> C is given, so player A's choices give A -> C
+          E -> C is given, so player A's choices give A -> E
+          E -> C is given, so player E's choices give D -> C
+          E -> C is given, so player E's choices give E -> D
+          D -> C is given, so player E's choices give E -> C
+          D -> C is given, so player E's choices give E -> D
+          Assume F -> B
+            F -> B is given, so player F's choices give F -> A
+            F -> B is given, so player F's choices give B -> A
+            No more players to try, and G is acyclic: Success!
+         F B A E D C
+    \end{comment}
+    To start, we will direct some triplet. As we've noted, we will achieve a faster runtime if we choose a triplet containing a most common pair. A listing of each pair and the number of times it occurs is given below.
     \begin{center}
-    \includegraphics[width=\textwidth]{alg2ex1.pdf}
+    \begin{tabular}{l | c}
+        Pair & count \\
+        \hline
+        D,E & 4 \\
+        C,E & 3 \\
+        C,D & 2 \\
+        B,E & 2 \\
+        B,D & 2 \\
+        A,F & 1 \\
+        A,E & 1 \\
+        A,B & 1 \\
+        B,F & 1 \\
+        A,C & 1 
+    \end{tabular}
     \end{center}
-    Now, we can use the relationship table to make inferences of the same flavor. 
+
+    So we want to direct $p\leadsto \w(p) \leadsto \n(p)$ for some triplet $(p, \w(p), \n(p))$ where $D$ and $E$ appear in the triplet. Let's choose $B \leadsto E \leadsto D$.
+    \begin{center}
+    %created with echo "digraph G{ rankdir=LR; B->E->D; }" | dot2tex --prog=dot --codeonly
+    % Start of code
+        % \begin{tikzpicture}[anchor=mid,>=latex',line join=bevel,]
+        \begin{tikzpicture}[>=latex',line join=bevel,]
+          \pgfsetlinewidth{1bp}
+        %%
+        \pgfsetcolor{black}
+          % Edge: E -> D
+          \draw [->] (144.4bp,18bp) .. controls (152.39bp,18bp) and (161.31bp,18bp)  .. (179.92bp,18bp);
+          % Edge: B -> E
+          \draw [->] (54.403bp,18bp) .. controls (62.393bp,18bp) and (71.311bp,18bp)  .. (89.919bp,18bp);
+          % Node: B
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (27bp,18bp) ellipse (27bp and 18bp);
+          \draw (27bp,18bp) node {B};
+        \end{scope}
+          % Node: E
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (117bp,18bp) ellipse (27bp and 18bp);
+          \draw (117bp,18bp) node {E};
+        \end{scope}
+          % Node: D
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (207bp,18bp) ellipse (27bp and 18bp);
+          \draw (207bp,18bp) node {D};
+        \end{scope}
+        %
+        \end{tikzpicture}
+    % End of code
+    \end{center}
+
+    Since we're now operating under the assumption that $B \leadsto E \leadsto D$, we can infer a few edges:
     \begin{itemize}
-        \item We know $B \leadsto C$, so $B$'s constraint imposes that $C \leadsto D$.
-        \item We know $A \leadsto B$, so by $C$'s constraint, $B \leadsto C$ (which we already knew).
-        \item We know $A \leadsto B$, so by $D$'s constraint, $B \leadsto D$.
+        \item We know that $E \leadsto D$, so player $B$'s choices of $(B,E,D)$ give $B\leadsto D$.
+        \item We know that $E \leadsto D$, so player $C$'s choices of $(C,D,E)$ give $E\leadsto C$.
+        \item We know that $E \leadsto D$, so player $C$'s choices of $(C,D,E)$ give $D\leadsto C$.
     \end{itemize}
-    This produces the graph below.
+    We could also have used players $D$ and $E$, instead of $B$ and $C$, to infer these same edges so we should evict them from the set $S$ of as-yet-unconsidered players. (In the output from the C++ code, given in Appendix~\label{app:example_output}, $D$ and $E$ \emph{are} used redundantly). The new edges change the graph:
+    %echo "digraph G{ rankdir=LR; B->E->D; B->D; E->C; D->C; }" | dot2tex --prog=dot --figonly
     \begin{center}
-    \includegraphics[width=\textwidth]{alg2ex3.pdf}
+    \begin{tikzpicture}[>=latex,line join=bevel,]
+        \pgfsetlinewidth{1bp}
+        %%
+        \pgfsetcolor{black}
+          % Edge: E -> D
+          \draw [->] (138.85bp,28.901bp) .. controls (150.03bp,34.745bp) and (164bp,42.044bp)  .. (185.29bp,53.177bp);
+          % Edge: E -> C
+          \draw [->] (143.88bp,21.344bp) .. controls (174.55bp,25.308bp) and (225.83bp,31.933bp)  .. (270.37bp,37.689bp);
+          % Edge: D -> C
+          \draw [->] (232.51bp,57.593bp) .. controls (241.57bp,55.226bp) and (252.01bp,52.497bp)  .. (271.62bp,47.372bp);
+          % Edge: B -> E
+          \draw [->] (52.513bp,34.593bp) .. controls (61.572bp,32.226bp) and (72.012bp,29.497bp)  .. (91.619bp,24.372bp);
+          % Edge: B -> D
+          \draw [->] (53.883bp,44.344bp) .. controls (84.554bp,48.308bp) and (135.83bp,54.933bp)  .. (180.37bp,60.689bp);
+          % Node: C
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (297bp,41bp) ellipse (27bp and 18bp);
+          \draw (297bp,41bp) node {C};
+        \end{scope}
+          % Node: B
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (27bp,41bp) ellipse (27bp and 18bp);
+          \draw (27bp,41bp) node {B};
+        \end{scope}
+          % Node: E
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (117bp,18bp) ellipse (27bp and 18bp);
+          \draw (117bp,18bp) node {E};
+        \end{scope}
+          % Node: D
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (207bp,64bp) ellipse (27bp and 18bp);
+          \draw (207bp,64bp) node {D};
+        \end{scope}
+        %
+    \end{tikzpicture}
     \end{center}
-    Now we've exhausted all the player constraints, and the graph is acyclic! A topological sort will give a valid ordering of $\langle A, B, C, D \rangle$.
+    One of these new edges, $E \leadsto C$ gives rise to two more implied edges:
 
-    An example of a game without a solution is given in the next section.
+    \begin{itemize}
+        \item We know that $E \leadsto C$, so player $A$'s choices of $(A,E,C)$ give $A\leadsto C$.
+        \item We know that $E \leadsto C$, so player $A$'s choices of $(A,E,C)$ give $A\leadsto E$
+    \end{itemize}
+
+    This leaves us with the following graph.
+    %echo "digraph G{ rankdir=LR; B->E->D; B->D; E->C; D->C; A->C; A->E; }" | dot2tex --prog=dot --figonly
+    \begin{center}
+        \begin{tikzpicture}[>=latex,line join=bevel,]
+          \pgfsetlinewidth{1bp}
+        %%
+        \pgfsetcolor{black}
+          % Edge: E -> D
+          \draw [->] (139.3bp,55.167bp) .. controls (150.14bp,60.339bp) and (163.51bp,66.719bp)  .. (184.59bp,76.781bp);
+          % Edge: B -> E
+          \draw [->] (50.662bp,71.729bp) .. controls (60.824bp,67.572bp) and (72.99bp,62.595bp)  .. (93.415bp,54.239bp);
+          % Edge: A -> E
+          \draw [->] (52.046bp,25.378bp) .. controls (61.435bp,28.259bp) and (72.362bp,31.611bp)  .. (92.287bp,37.725bp);
+          % Edge: E -> C
+          \draw [->] (144.26bp,44.41bp) .. controls (174.85bp,43.722bp) and (225.55bp,42.583bp)  .. (269.92bp,41.586bp);
+          % Edge: D -> C
+          \draw [->] (228.85bp,76.099bp) .. controls (240.03bp,70.255bp) and (254bp,62.956bp)  .. (275.29bp,51.823bp);
+          % Edge: A -> C
+          \draw [->] (54.302bp,16.877bp) .. controls (77.841bp,16.14bp) and (113.27bp,15.689bp)  .. (144bp,18bp) .. controls (184.23bp,21.027bp) and (229.96bp,28.499bp)  .. (270.85bp,36.009bp);
+          % Edge: B -> D
+          \draw [->] (54.265bp,81.885bp) .. controls (84.851bp,82.916bp) and (135.55bp,84.625bp)  .. (179.92bp,86.121bp);
+          % Node: A
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (27bp,18bp) ellipse (27bp and 18bp);
+          \draw (27bp,18bp) node {A};
+        \end{scope}
+          % Node: C
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (297bp,41bp) ellipse (27bp and 18bp);
+          \draw (297bp,41bp) node {C};
+        \end{scope}
+          % Node: B
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (27bp,81bp) ellipse (27bp and 18bp);
+          \draw (27bp,81bp) node {B};
+        \end{scope}
+          % Node: E
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (117bp,45bp) ellipse (27bp and 18bp);
+          \draw (117bp,45bp) node {E};
+        \end{scope}
+          % Node: D
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (207bp,87bp) ellipse (27bp and 18bp);
+          \draw (207bp,87bp) node {D};
+        \end{scope}
+        %
+        \end{tikzpicture}
+    \end{center}
+
+    All that from one assumption! This graph is still acyclic, which is good, but we haven't included every player's constraints yet. So far, we've considered players $A,B,C,D$, and $E$. So $S=\{F\}$, and we will further assume $F\leadsto B \leadsto A$. This empties $S$ and gives us the graph below, which is acyclic! 
+
+    %echo "digraph G{ rankdir=LR; B->E->D; B->D; E->C; D->C; A->C; A->E; F->B->A;}" | dot2tex --prog=dot --figonly
+    \begin{center} 
+        \begin{tikzpicture}[>=latex,line join=bevel,]
+          \pgfsetlinewidth{1bp}
+        %%
+        \pgfsetcolor{black}
+          % Edge: F -> B
+          \draw [->] (54.403bp,64bp) .. controls (62.393bp,64bp) and (71.311bp,64bp)  .. (89.919bp,64bp);
+          % Edge: E -> D
+          \draw [->] (319.3bp,70.167bp) .. controls (330.14bp,75.339bp) and (343.51bp,81.719bp)  .. (364.59bp,91.781bp);
+          % Edge: B -> E
+          \draw [->] (144.26bp,63.41bp) .. controls (174.85bp,62.722bp) and (225.55bp,61.583bp)  .. (269.92bp,60.586bp);
+          % Edge: B -> A
+          \draw [->] (138.85bp,53.099bp) .. controls (150.03bp,47.255bp) and (164bp,39.956bp)  .. (185.29bp,28.823bp);
+          % Edge: A -> E
+          \draw [->] (229.3bp,28.167bp) .. controls (240.14bp,33.339bp) and (253.51bp,39.719bp)  .. (274.59bp,49.781bp);
+          % Edge: E -> C
+          \draw [->] (324.26bp,59.41bp) .. controls (354.85bp,58.722bp) and (405.55bp,57.583bp)  .. (449.92bp,56.586bp);
+          % Edge: D -> C
+          \draw [->] (408.85bp,91.099bp) .. controls (420.03bp,85.255bp) and (434bp,77.956bp)  .. (455.29bp,66.823bp);
+          % Edge: A -> C
+          \draw [->] (233.82bp,21.177bp) .. controls (257.34bp,24.11bp) and (293.03bp,28.655bp)  .. (324bp,33bp) .. controls (363.84bp,38.589bp) and (409.46bp,45.57bp)  .. (450.48bp,51.966bp);
+          % Edge: B -> D
+          \draw [->] (142.97bp,69.221bp) .. controls (154.25bp,71.479bp) and (167.77bp,74.046bp)  .. (180bp,76bp) .. controls (239.43bp,85.492bp) and (308.97bp,93.662bp)  .. (360.23bp,99.297bp);
+          % Node: A
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (207bp,18bp) ellipse (27bp and 18bp);
+          \draw (207bp,18bp) node {A};
+        \end{scope}
+          % Node: C
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (477bp,56bp) ellipse (27bp and 18bp);
+          \draw (477bp,56bp) node {C};
+        \end{scope}
+          % Node: B
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (117bp,64bp) ellipse (27bp and 18bp);
+          \draw (117bp,64bp) node {B};
+        \end{scope}
+          % Node: E
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (297bp,60bp) ellipse (27bp and 18bp);
+          \draw (297bp,60bp) node {E};
+        \end{scope}
+          % Node: D
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (387bp,102bp) ellipse (27bp and 18bp);
+          \draw (387bp,102bp) node {D};
+        \end{scope}
+          % Node: F
+        \begin{scope}
+          \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+          \pgfsetstrokecolor{strokecol}
+          \draw (27bp,64bp) ellipse (27bp and 18bp);
+          \draw (27bp,64bp) node {F};
+        \end{scope}
+        %
+        \end{tikzpicture}
+    \end{center}
 
 \section{Running time of algorithm}
     The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players, the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 

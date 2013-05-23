@@ -1,3 +1,7 @@
+all:
+	cd writing && $(MAKE) all
+	cd cpp_implementation && $(MAKE)
+
 animation: anim.gif
 	gifsicle -O3 anim.gif -o animation.gif
 

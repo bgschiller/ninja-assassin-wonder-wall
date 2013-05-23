@@ -2,6 +2,8 @@ thesis_paper.pdf: probplot.png digraphs thesis_paper.tex
 	pdflatex --shell-escape thesis_paper.tex
 	pdflatex --shell-escape thesis_paper.tex #twice for \tableofcontents
 
+all: thesis_paper.pdf presentation.pdf
+
 presentation.pdf: probplot.png presentation.tex digraphs
 	pdflatex --shell-escape presentation.tex
 	pdflatex --shell-escape presentation.tex

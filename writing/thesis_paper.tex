@@ -759,86 +759,91 @@
 
     All that from one assumption! This graph is still acyclic, which is good, but we haven't included every player's constraints yet. So far, we've considered players $A,B,C,D$, and $E$. So $S=\{F\}$, and we will further assume $F\leadsto B \leadsto A$. This empties $S$ and gives us the graph below, which is acyclic! 
 
-    %echo "digraph G{ rankdir=LR; B->E->D; B->D; E->C; D->C; A->C; A->E; F->B->A;}" | dot2tex --prog=dot --figonly
+    %echo "digraph G{ nodesep=0.15; ranksep=0.25; rankdir=LR; B->E->D; B->D; E->C; D->C; A->C; A->E; F->B->A;}" | dot2tex --prog=dot --figonly
     \begin{center} 
         \begin{tikzpicture}[>=latex,line join=bevel,]
           \pgfsetlinewidth{1bp}
         %%
         \pgfsetcolor{black}
           % Edge: F -> B
-          \draw [->] (54.403bp,64bp) .. controls (62.393bp,64bp) and (71.311bp,64bp)  .. (89.919bp,64bp);
+          \draw [->] (54.065bp,53bp) .. controls (56.492bp,53bp) and (58.981bp,53bp)  .. (71.679bp,53bp);
           % Edge: E -> D
-          \draw [->] (319.3bp,70.167bp) .. controls (330.14bp,75.339bp) and (343.51bp,81.719bp)  .. (364.59bp,91.781bp);
+          \draw [->] (266.53bp,56.335bp) .. controls (271.53bp,58.405bp) and (276.92bp,60.636bp)  .. (291.51bp,66.682bp);
           % Edge: B -> E
-          \draw [->] (144.26bp,63.41bp) .. controls (174.85bp,62.722bp) and (225.55bp,61.583bp)  .. (269.92bp,60.586bp);
+          \draw [->] (126.04bp,51.9bp) .. controls (148.32bp,50.958bp) and (180.63bp,49.593bp)  .. (215.64bp,48.114bp);
           % Edge: B -> A
-          \draw [->] (138.85bp,53.099bp) .. controls (150.03bp,47.255bp) and (164bp,39.956bp)  .. (185.29bp,28.823bp);
+          \draw [->] (121bp,42.499bp) .. controls (126.95bp,39.523bp) and (133.55bp,36.223bp)  .. (149.01bp,28.494bp);
           % Edge: A -> E
-          \draw [->] (229.3bp,28.167bp) .. controls (240.14bp,33.339bp) and (253.51bp,39.719bp)  .. (274.59bp,49.781bp);
+          \draw [->] (194.53bp,27.335bp) .. controls (199.53bp,29.405bp) and (204.92bp,31.636bp)  .. (219.51bp,37.682bp);
           % Edge: E -> C
-          \draw [->] (324.26bp,59.41bp) .. controls (354.85bp,58.722bp) and (405.55bp,57.583bp)  .. (449.92bp,56.586bp);
+          \draw [->] (270.04bp,45.9bp) .. controls (292.32bp,44.958bp) and (324.63bp,43.593bp)  .. (359.64bp,42.114bp);
           % Edge: D -> C
-          \draw [->] (408.85bp,91.099bp) .. controls (420.03bp,85.255bp) and (434bp,77.956bp)  .. (455.29bp,66.823bp);
+          \draw [->] (337bp,65.499bp) .. controls (342.95bp,62.523bp) and (349.55bp,59.223bp)  .. (365.01bp,51.494bp);
           % Edge: A -> C
-          \draw [->] (233.82bp,21.177bp) .. controls (257.34bp,24.11bp) and (293.03bp,28.655bp)  .. (324bp,33bp) .. controls (363.84bp,38.589bp) and (409.46bp,45.57bp)  .. (450.48bp,51.966bp);
+          \draw [->] (198.26bp,18.606bp) .. controls (218.03bp,19.24bp) and (245.77bp,20.508bp)  .. (270bp,23bp) .. controls (297.25bp,25.802bp) and (327.86bp,30.624bp)  .. (360.75bp,36.314bp);
           % Edge: B -> D
-          \draw [->] (142.97bp,69.221bp) .. controls (154.25bp,71.479bp) and (167.77bp,74.046bp)  .. (180bp,76bp) .. controls (239.43bp,85.492bp) and (308.97bp,93.662bp)  .. (360.23bp,99.297bp);
+          \draw [->] (125.25bp,57.686bp) .. controls (148.68bp,61.852bp) and (184.58bp,67.769bp)  .. (216bp,71bp) .. controls (236.35bp,73.093bp) and (259.18bp,74.322bp)  .. (287.74bp,75.394bp);
           % Node: A
         \begin{scope}
           \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
           \pgfsetstrokecolor{strokecol}
-          \draw (207bp,18bp) ellipse (27bp and 18bp);
-          \draw (207bp,18bp) node {A};
+          \draw (171bp,18bp) ellipse (27bp and 18bp);
+          \draw (171bp,18bp) node {A};
         \end{scope}
           % Node: C
         \begin{scope}
           \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
           \pgfsetstrokecolor{strokecol}
-          \draw (477bp,56bp) ellipse (27bp and 18bp);
-          \draw (477bp,56bp) node {C};
+          \draw (387bp,41bp) ellipse (27bp and 18bp);
+          \draw (387bp,41bp) node {C};
         \end{scope}
           % Node: B
         \begin{scope}
           \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
           \pgfsetstrokecolor{strokecol}
-          \draw (117bp,64bp) ellipse (27bp and 18bp);
-          \draw (117bp,64bp) node {B};
+          \draw (99bp,53bp) ellipse (27bp and 18bp);
+          \draw (99bp,53bp) node {B};
         \end{scope}
           % Node: E
         \begin{scope}
           \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
           \pgfsetstrokecolor{strokecol}
-          \draw (297bp,60bp) ellipse (27bp and 18bp);
-          \draw (297bp,60bp) node {E};
+          \draw (243bp,47bp) ellipse (27bp and 18bp);
+          \draw (243bp,47bp) node {E};
         \end{scope}
           % Node: D
         \begin{scope}
           \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
           \pgfsetstrokecolor{strokecol}
-          \draw (387bp,102bp) ellipse (27bp and 18bp);
-          \draw (387bp,102bp) node {D};
+          \draw (315bp,76bp) ellipse (27bp and 18bp);
+          \draw (315bp,76bp) node {D};
         \end{scope}
           % Node: F
         \begin{scope}
           \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
           \pgfsetstrokecolor{strokecol}
-          \draw (27bp,64bp) ellipse (27bp and 18bp);
-          \draw (27bp,64bp) node {F};
+          \draw (27bp,53bp) ellipse (27bp and 18bp);
+          \draw (27bp,53bp) node {F};
         \end{scope}
         %
         \end{tikzpicture}
+
     \end{center}
 
+    A topological sort of this graph gives $\langle F, B, A, E, D, C \rangle$, which is a valid solution to the Ninja Assassin Wonderwall problem. 
+
+    An example of a game without a solution is given in the next section.
+
 \section{Running time of algorithm}
-    The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players, the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 
+    Let $D$ be the set of all digraphs whose edgesets are constructed by taking either $p \leadsto \w(p) \leadsto \n(p)$ or the reverse for every $p\in P$. The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players\ref{clrs}(pg 606), the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 
 
-    So what is $\lvert D \rvert$? We're constructing the edgeset by taking each row $(p, \w(p), \n(p))$ and directing it to the left or right. So an element of $D$ for a particular relationship table is uniquely identified by a bitstring of length $n$, $01011\ldots$, where a $0$ in the $i^{\text{th}}$ row indicates direction to left and a $1$ indicates direction to the right. There are $2^n$ such bitstrings, so $\lvert D \rvert = 2^n$. This first algorithm then, takes $O(n \cdot 2^n)$ time in the worst case. 
+    So what is $\lvert D \rvert$? We're constructing the edgeset by taking each row $(p, \w(p), \n(p))$ and directing it to the left or to the right. So an element of $D$ for a particular relationship table is uniquely identified by a bitstring of length $n$, $01011\ldots$, where a $0$ in the $i^{\text{th}}$ row indicates direction to left and a $1$ indicates direction to the right. There are $2^n$ such bitstrings, so $\lvert D \rvert = 2^n$. This first algorithm then, takes $O(n \cdot 2^n)$ time in the worst case. 
 
-    It is not immediately clear what the running time of the heuristic algorithm is. The average case running time would be very hard to justify, as the heuristic muddies the water a fair bit. However, we will see that the worst case running time remains exponential.
+    It is not immediately clear what the running time of the heuristic algorithm is. The average case running time would be very hard to determine, as the heuristic muddies the water a fair bit. However, we will see that the worst case running time remains exponential.
 
-    We will set a trap for the algorithm, a class of problem designed to afford no leverage to the heuristic. We will seek to confound the main improvement of the heuristic algorithm: extrapolating extra edge information each time it directs a pair. 
+    We will set a ``trap'' for the algorithm. Specifically, we construct a class of problem designed to afford no leverage to the heuristic. We will seek to confound the main improvement of the heuristic algorithm: extrapolating extra edge information each time it directs a pair. 
 
-    The following could be considered a template for a relationship table, where we would want to replace each of $a, b, c, \text{ and }d$ with actual player names.
+    The following is a template for a relationship table, where we would want to replace each of $a, b, c, \text{ and }d$ with actual player names.
 
     \begin{center}
         \begin{tabular}{c | c | c}
@@ -876,8 +881,169 @@
 
     For example, if the algorithm assumes that $A \leadsto D$, this information is useless as soon as we're addressing players other than $A,B,C,D$.
 
-    Here is an example trace of the program, applied to the small example above:
-    \begin{verbatimtab}
+    An example trace of the program, applied to the small example above is given in Appendix~\ref{appendix:worst-case}.
+
+    This demonstrates the fact that the algorithm will have to backtrack and reverse each assumption it makes upon reaching the cycle at the end. Since it will make one assumption for each group of three players, the running time will be $O(n \cdot 2^{n/3})$, which is exponential. 
+
+    This is a worst case analysis, and in practice the running times are often much better than this. We have presented a pathological case in order to show that this algorithm has not beaten the exponential bound.
+
+\begin{comment}
+\section{Overview: Steiner Triple Systems}
+    Definition, examples
+    discuss how the number of pairs dominates the number of players
+    (this defeats our heuristic)
+    A slightly better algorithm could `outsmart' our trap from the previous section, but the existence of Steiner Triple Systems shows that we can have so few repeated pairs as to render the heuristic useless. STS shows that this is a systemic problem. 
+\end{comment}
+
+\section{Proportion of solvable games}
+    \label{sec:prob}
+    We are curious about, for a fixed $n$, what proportion of Ninja Assassin Wonderwall games have a solution. 
+
+    First, how many games exist of a given size? A game depends on the independent choices of all $n$ players. Each player chooses a wonderwall and a ninja assassin from the other $n-1$ players. This means each player can has $n(n-1)$ ways to assign these roles. So the total number of games is $\displaystyle \left(n(n-1)\right)^n$. This grows almost unimaginably quickly. The number of non-isomorphic games is smaller, of course, but I have not found a way to enumerate non-isomorphic games. One of the difficulties is described in Section~\ref{sec:future-work}.
+    \begin{center}
+        \begin{tabular}{c | r}
+        $n$ & $\displaystyle \left(n(n-1)\right)^n$\\
+        \hline
+        3 & 8\\
+        4 & 1296 \\
+        5 & 248832 \\
+        6 & 64000000\\
+        $\vdots$ & $\vdots$ \\
+        10 & 3743906242624487424
+        \end{tabular}
+    \end{center}
+    This probably too many to enumerate for anything over $n=6$, so we will approximate the proportion with a random sample. Even so, we've seen that our algorithm is $O(n\cdot 2^n)$, if only in pathological cases. Running, say, 10000 trials for a number different sizes of game would take a long time.
+
+    We can cheat a bit using distributed computing. I randomly drew a 10000 game sample for each size from 4 to 100, putting them all in a job queue. I wrote a python script to pull problems out of the queue and pass them to a C++ implementation of the algorithm described in section \ref{sec:algorithm}. The result -- solvable or not -- was pushed to a central server. 
+
+    I spun up this python script on about 130 computers, with between 8-24 threads each, and obtained the results below. I was doing this over spring break, when the computers were mostly not in use.
+
+    \begin{center}
+    \includegraphics[width=0.8\textwidth]{probplot.png}
+    \end{center}
+
+    It seems that the likelihood a game having a solution increases very quickly in the number of players.
+
+    We didn't get quite all the way to $n=100$. Around $n=90$ the processes start to really drag. Also, spring break had ended and I needed to give back some computing resources. I recieved a message from Matthew Mooney, a student in the Computer Science department:
+    \begin{quote}
+    Hey, did you know you have a process running on cf416-14 that's using 99\% of the CPU? Not a big deal as I can just switch PCs, but thought you might want to know.
+    \end{quote}
+    And then, a few minutes later:
+    \begin{quote}
+    k I take that back. On my end at least, it looks like that process is running on multiple computers (maybe all? I've checked 3). Any idea what's up?
+    \end{quote}
+
+    It seemed polite to stop the simulation at this point.
+
+\section{Future work}
+    \label{sec:future-work}
+    We have danced around the question of NP-Completeness in this paper. It would be good to determine whether or not Ninja Assassin Wonderwall is NP-Complete. If it is, we should provide a proof. If not, perhaps we can find a polynomial time algorithm.
+
+    Our algorithm depends on knowing all of the relationships among the players. It would be interesting to model the way people play the game. How can players with incomplete knowledge find solutions?
+
+    Some games are `isomorphic'. It is possible that the number of non-isomorphic games is much smaller than the number of total games. and we could have a hope of enumerating them. For example, in the tables below the roles of $B$ and $C$ have been swapped. These two games will behave identically-- if one is solvable then the other is as well. A solution for one can be used to create a solution for the other just by swapping $B$ and $C$.
+
+    \begin{center}
+    \begin{multicols}{2}
+        \begin{tabular}{l | c | c}
+             $p$ & $\w(p)$ & $\n(p)$ \\
+             \hline
+             A &  C& B\\
+             B &  D& A\\
+             C &  D& A\\
+             D &  C& E\\
+             E &  A& B\\
+        \end{tabular}
+
+
+        \columnbreak
+        \begin{tabular}{l | c | c}
+             $p$ & $\w(p)$ & $\n(p)$ \\
+             \hline
+             A &  B& C\\
+             B &  D& A\\
+             C &  D& A\\
+             D &  B& E\\
+             E &  A& C\\
+        \end{tabular}
+    \end{multicols}
+    \end{center}
+
+    It would seem from this example that we could count isomorphic games by counting the number of bijections from $P\to P$. However, some games are unchanged under some bijections. For example, the following game does not change if we swap $D$ and $E$:
+
+    \begin{center}
+        \begin{tabular}{l | c | c}
+             $p$ & $\w(p)$ & $\n(p)$ \\
+             \hline
+             A &  B& C\\
+             B &  C& A\\
+             C &  A& B\\
+             D &  A& B\\
+             E &  A& B\\
+        \end{tabular}
+    \end{center}
+
+
+\section{Appendix: code}
+    \renewcommand{\ttdefault}{pcr}
+    \lstset{basicstyle=\footnotesize\ttfamily,
+        commentstyle=\color{mygreen},
+        keywordstyle=\bfseries\color{blue},
+        numbers=left,
+        numbersep=5pt,
+        numberstyle=\tiny\color{mygray},
+        stepnumber=5,
+        stringstyle=\color{mymauve},
+        showstringspaces=false,
+        tabsize=2}
+    \subsection{Haskell brute force algorithm}
+        This is very obviously an $O(n!)$ algorithm. I used it to check my ideas and generate small examples of solvable and unsolveable games. It also provided a check that the more complicated algorithms were working correctly.
+        \lstinputlisting[language=Haskell,breaklines=true]{../na_ww_brute.hs}
+    \subsection{Python implementation}
+        This was the first implementation of the algorithm described in section \ref{sec:algorithm}. It works fairly well, but is noticeably much slower than the C++ implementation. However, the networkx graph library is \emph{much} more friendly than the Boost Graph Library that I used for C++.
+        \lstinputlisting[language=Python,
+        breakatwhitespace=false,
+        breaklines=true]{../implication.py}
+    \subsection{C++ implementation}
+        I created this implementation in order to do the distributed trials described in section \ref{sec:prob}. It is more faithfull to the pseudocode in section \ref{sec:algorithm} than the python code, but it also has some ugliness introduced by the the Boost Graph Library and a few tasks that are harder to phrase in C++ than Python (for example, sorting the player on their pair count is on lines 184-235 of the C++ code, and lines 103-112 of the Python code).
+        \lstinputlisting[language=C++]{../cpp_implementation/implication.cpp}
+    \subsection{Python driver}
+        This is the driver mentioned in section \ref{sec:prob} that pulls Ninja Assassin Wonderwall problems from the jobs queue, spins up the C++ code to solve them, and then updates the server with the result.
+        \lstinputlisting[language=Python, breakatwhitespace=false,
+        breaklines=true]{../cpp_implementation/naww_client.py}
+
+\section{Appendix: Example game trace}
+\label{app:example_output}
+\begin{verbatim}
+Assume E -> D
+  E -> D is given, so player B's choices give B -> D
+  E -> D is given, so player B's choices give B -> E
+  E -> D is given, so player C's choices give E -> C
+  E -> D is given, so player C's choices give D -> C
+  E -> D is given, so player D's choices give B -> D
+  E -> D is given, so player D's choices give B -> E
+  E -> D is given, so player E's choices give E -> C
+  E -> D is given, so player E's choices give D -> C
+  D -> C is given, so player C's choices give E -> C
+  D -> C is given, so player C's choices give E -> D
+  D -> C is given, so player E's choices give E -> C
+  D -> C is given, so player E's choices give E -> D
+  E -> C is given, so player A's choices give A -> C
+  E -> C is given, so player A's choices give A -> E
+  E -> C is given, so player E's choices give D -> C
+  E -> C is given, so player E's choices give E -> D
+  D -> C is given, so player E's choices give E -> C
+  D -> C is given, so player E's choices give E -> D
+  Assume F -> B
+    F -> B is given, so player F's choices give F -> A
+    F -> B is given, so player F's choices give B -> A
+    No more players to try, and G is acyclic: Success!
+F B A E D C
+\end{verbatim}
+
+\section{Appendix: Unsolvable game trace}
+\label{appendix:worst-case}
+   \begin{verbatim}
 Suppose B -> C:
     We know B->C, and (A,B,C) is a triplet, so A->B, A->C.
     We know B->C, and (B,C,D) is a triplet, so C->D, B->D.
@@ -936,147 +1102,6 @@ Suppose C->B:
             We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
             We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
             H->J and J->H form a cycle, so our assumption was wrong.
-    \end{verbatimtab}
-
-    This demonstrates the fact that the algorithm will have to backtrack and reverse each assumption it makes upon reaching the cycle at the end. Since it will make one assumption for each group of three players, the running time will be $O(n \cdot 2^{n/3})$, which is exponential. 
-
-    This is a worst case analysis, and in practice the running times are often much better than this. We have presented a pathological case in order to show that this algorithm has not beaten the exponential bound.
-
-\begin{comment}
-\section{Overview: Steiner Triple Systems}
-    Definition, examples
-    discuss how the number of pairs dominates the number of players
-    (this defeats our heuristic)
-    A slightly better algorithm could `outsmart' our trap from the previous section, but the existence of Steiner Triple Systems shows that we can have so few repeated pairs as to render the heuristic useless. STS shows that this is a systemic problem. 
-\end{comment}
-
-\section{Proportion of solvable games}
-    \label{sec:prob}
-    We are curious about, for a fixed $n$, what proportion of Ninja Assassin Wonderwall game have a solution. 
-
-    First, how many games exist of a given size? A game depends on the independent choices of all $n$ players. Each player chooses a wonderwall and a ninja assassin from the other $n-1$ players. This means each player can has $2\cdot \binom{n-1}{2}$ ways to assign these roles. So the total number of games is $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$. This grows almost unimaginably quickly. 
-    \begin{center}
-        \begin{tabular}{c | r}
-        $n$ & $\displaystyle \left(2 \cdot \binom{n-1}{2}\right)^n$\\
-        \hline
-        3 & 8\\
-        4 & 1296 \\
-        5 & 248832 \\
-        6 & 64000000\\
-        $\vdots$ & $\vdots$ \\
-        10 & 3743906242624487424
-        \end{tabular}
-    \end{center}
-    This probably too many to enumerate for anything over $n=6$, so we will approximate the proportion with a random sample. Even so, we've seen that our algorithm is $O(n\cdot 2^n)$, if only in pathological cases. Running, say, 10000 trials for a number different sizes of game would take a long time.
-
-    We can cheat a bit using distributed computing. I randomly drew a 10000 game sample for each size from 4 to 100, putting them all in a job queue. I wrote a python script to pull problems out of the queue and pass them to a C++ implementation of the algorithm described in section \ref{sec:algorithm}. The result -- solvable or not -- was pushed to a central server. 
-
-    I spun up this python script on about 130 computers, with between 8-24 threads each, and obtained the results below. I was doing this over spring break, when the computers were mostly not in use.
-
-    \begin{center}
-    \includegraphics[width=0.8\textwidth]{probplot.png}
-    \end{center}
-
-    It seems that the likelihood a game having a solution increases very quickly in the number of players.
-
-    We didn't get quite all the way to $n=100$. Around $n=90$ the processes start to really drag. Also, spring break had ended and I needed to give back some computing resources. I recieved a message from Matthew Mooney, a student in the Computer Science department:
-    \begin{quote}
-    Hey, did you know you have a process running on cf416-14 that's using 99\% of the CPU? Not a big deal as I can just switch PCs, but thought you might want to know.
-    \end{quote}
-    And then, a few minutes later:
-    \begin{quote}
-    k I take that back. On my end at least, it looks like that process is running on multiple computers (maybe all? I've checked 3). Any idea what's up?
-    \end{quote}
-
-    It seemed polite to stop the simulation at this point.
-
-\section{Future work}
-    We have danced around the question of NP-Completeness in this paper. It would be good to determine whether or not Ninja Assassin Wonderwall is NP-Complete. If it is, we should provide a proof. If not, perhaps we can find a polynomial time algorithm.
-
-    The algorithm depends on knowing all of the relationships among the players. It would be interesting to model the way people play the game. How can players with incomplete knowledge find solutions?
-
-    Some games are `isomorphic'. It is possible that the number of non-isomorphic games is much smaller than the number of total games. and we could have a hope of enumerating them. For example, in the tables below the roles of $B$ and $C$ have been swapped. These two games will behave identically-- if one is solvable then the other is as well. A solution for one can be used to create a solution for the other just by swapping $B$ and $C$.
-
-    \begin{multicols}{2}
-        \begin{tabular}{l | c | c}
-             $p$ & $\w(p)$ & $\n(p)$ \\
-             \hline
-             A &  C& B\\
-             B &  D& A\\
-             C &  D& A\\
-             D &  C& E\\
-             E &  A& B\\
-        \end{tabular}
-
-
-        \columnbreak
-        \begin{tabular}{l | c | c}
-             $p$ & $\w(p)$ & $\n(p)$ \\
-             \hline
-             A &  B& C\\
-             B &  D& A\\
-             C &  D& A\\
-             D &  B& E\\
-             E &  A& C\\
-        \end{tabular}
-    \end{multicols}
-
-
-\section{Appendix: code}
-    \renewcommand{\ttdefault}{pcr}
-    \lstset{basicstyle=\footnotesize\ttfamily,
-        commentstyle=\color{mygreen},
-        keywordstyle=\bfseries\color{blue},
-        numbers=left,
-        numbersep=5pt,
-        numberstyle=\tiny\color{mygray},
-        stepnumber=5,
-        stringstyle=\color{mymauve},
-        showstringspaces=false,
-        tabsize=2}
-    \subsection{Haskell brute force algorithm}
-        This is very obviously an $O(n!)$ algorithm. I used it to check my ideas and generate small examples of solvable and unsolveable games. It also provided a check that the more complicated algorithms were working correctly.
-        \lstinputlisting[language=Haskell,breaklines=true]{../na_ww_brute.hs}
-    \subsection{Python implementation}
-        This was the first implementation of the algorithm described in section \ref{sec:algorithm}. It works fairly well, but is noticeably much slower than the C++ implementation. However, the networkx graph library is \emph{much} more friendly than the Boost Graph Library that I used for C++.
-        \lstinputlisting[language=Python,
-        breakatwhitespace=false,
-        breaklines=true]{../implication.py}
-    \subsection{C++ implementation}
-        I created this implementation in order to do the distributed trials described in section \ref{sec:prob}. It is more faithfull to the pseudocode in section \ref{sec:algorithm} than the python code, but it also has some ugliness introduced by the the Boost Graph Library and a few tasks that are harder to phrase in C++ than Python (for example, sorting the player on their pair count is on lines 184-235 of the C++ code, and lines 103-112 of the Python code).
-        \lstinputlisting[language=C++]{../cpp_implementation/implication.cpp}
-    \subsection{Python driver}
-        This is the driver mentioned in section \ref{sec:prob} that pulls Ninja Assassin Wonderwall problems from the jobs queue, spins up the C++ code to solve them, and then updates the server with the result.
-        \lstinputlisting[language=Python, breakatwhitespace=false,
-        breaklines=true]{../cpp_implementation/naww_client.py}
-
-\section{Appendix: Example trace output}
-\label{app:example_output}
-\begin{verbatim}
-Assume E -> D
-  E -> D is given, so player B's choices give B -> D
-  E -> D is given, so player B's choices give B -> E
-  E -> D is given, so player C's choices give E -> C
-  E -> D is given, so player C's choices give D -> C
-  E -> D is given, so player D's choices give B -> D
-  E -> D is given, so player D's choices give B -> E
-  E -> D is given, so player E's choices give E -> C
-  E -> D is given, so player E's choices give D -> C
-  D -> C is given, so player C's choices give E -> C
-  D -> C is given, so player C's choices give E -> D
-  D -> C is given, so player E's choices give E -> C
-  D -> C is given, so player E's choices give E -> D
-  E -> C is given, so player A's choices give A -> C
-  E -> C is given, so player A's choices give A -> E
-  E -> C is given, so player E's choices give D -> C
-  E -> C is given, so player E's choices give E -> D
-  D -> C is given, so player E's choices give E -> C
-  D -> C is given, so player E's choices give E -> D
-  Assume F -> B
-    F -> B is given, so player F's choices give F -> A
-    F -> B is given, so player F's choices give B -> A
-    No more players to try, and G is acyclic: Success!
-F B A E D C
 \end{verbatim}
 
 \begin{thebibliography}{9}

@@ -332,7 +332,7 @@ Spring 2013
     If Ninja Assassin Wonderwall were an NP-complete problem, finding a polynomial time solver would be beyond the scope of this project. Unfortunately, I have been unable to either show it is NP-complete or find a polynomial time algorithm. 
 
 \section{Relation to known problems}
-    A simple, though possibly inefficient, way to solve a Ninja Assassin Wonderwall problem would be to transform it into an instance of a known problem for which solvers already exist. We will transform an aribitrary Ninja Assassin Wonderwall problem into a Conjunctive Normal Form Satisfiability (CNF SAT) problem.
+    A simple, though possibly inefficient, way to solve a Ninja Assassin Wonderwall problem would be to transform it into an instance of a known problem for which solvers already exist. We will transform an arbitrary Ninja Assassin Wonderwall problem into a Conjunctive Normal Form Satisfiability (CNF SAT) problem.
 
     Conjunctive Normal Form Satisfiability, or CNF Sat, is a problem whose input is a statement in propositional logic of the form
         \begin{align*} 
@@ -551,6 +551,7 @@ Spring 2013
     In fact, we get the first choice we make for free. Since for any solution, the reverse of that permutation is also a solution, it doesn't matter which way we direct the edges of the first player we consider.
 
 \section{Example trace of algorithm}
+\label{sec:alg-example}
     We will walk through the logic of the algorithm for a small game:
 
     \begin{center}
@@ -847,6 +848,7 @@ Spring 2013
     An example of a game without a solution is given in the next section.
 
 \section{Running time of algorithm}
+\label{sec:run-time}
     Let $D$ be the set of all digraphs whose edgesets are constructed by taking either $p \leadsto \w(p) \leadsto \n(p)$ or the reverse for every $p\in P$. The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players~\cite{clrs}(pg 606), the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 
 
     So what is $\lvert D \rvert$? We're constructing the edgeset by taking each row $(p, \w(p), \n(p))$ and directing it to the left or to the right. So an element of $D$ for a particular relationship table is uniquely identified by a bitstring of length $n$, $01011\ldots$, where a $0$ in the $i^{\text{th}}$ row indicates direction to left and a $1$ indicates direction to the right. There are $2^n$ such bitstrings, so $\lvert D \rvert = 2^n$. This first algorithm then, takes $O(n \cdot 2^n)$ time in the worst case. 
@@ -997,6 +999,8 @@ Spring 2013
         \end{tabular}
     \end{center}
 
+%\section{Conclusion}
+I hope this has been enlightening for camp counselors and other outdoor educators. Counselors who are hoping to keep their campers occupied now know they are better off splitting their 30-person group into two 15-person games, which are less likely to have solutions. If, instead, they're trying to bring a game to a resolution, we have provided algorithms and code to find solutions when they exist. And (perhaps to the dismay of tree-climbing, hole-digging campers), we have shown that players need not venture to three (or more!) dimensions to find solutions, but can instead keep their feet safely on the ground. 
 
 \section{Appendix: code}
     \renewcommand{\ttdefault}{pcr}
@@ -1011,7 +1015,7 @@ Spring 2013
         showstringspaces=false,
         tabsize=2}
     \subsection{Haskell brute force algorithm}
-        This is very obviously an $O(n!)$ algorithm. I used it to check my ideas and generate small examples of solvable and unsolveable games. It also provided a check that the more complicated algorithms were working correctly.
+        This is very obviously an $O(n!)$ algorithm. I used it to check my ideas and generate small examples of solvable and unsolvable games. It also provided a check that the more complicated algorithms were working correctly.
         \lstinputlisting[language=Haskell,breaklines=true]{../na_ww_brute.hs}
     \subsection{Python implementation}
         This was the first implementation of the algorithm described in section \ref{sec:algorithm}. It works fairly well, but is noticeably much slower than the C++ implementation. However, the networkx graph library is \emph{much} more friendly than the Boost Graph Library that I used for C++.
@@ -1019,7 +1023,7 @@ Spring 2013
         breakatwhitespace=false,
         breaklines=true]{../implication.py}
     \subsection{C++ implementation}
-        I created this implementation in order to do the distributed trials described in section \ref{sec:prob}. It is more faithfull to the pseudocode in section \ref{sec:algorithm} than the python code, but it also has some ugliness introduced by the the Boost Graph Library and a few tasks that are harder to phrase in C++ than Python (for example, sorting the player on their pair count is on lines 184-235 of the C++ code, and lines 103-112 of the Python code).
+        I created this implementation in order to do the distributed trials described in section \ref{sec:prob}. It is more faithful to the pseudocode in section \ref{sec:algorithm} than the python code, but it also has some ugliness introduced by the the Boost Graph Library and a few tasks that are harder to phrase in C++ than Python (for example, sorting the player on their pair count is on lines 184-235 of the C++ code, and lines 103-112 of the Python code).
         \lstinputlisting[language=C++]{../cpp_implementation/implication.cpp}
     \subsection{Python driver}
         This is the driver mentioned in section \ref{sec:prob} that pulls Ninja Assassin Wonderwall problems from the jobs queue, spins up the C++ code to solve them, and then updates the server with the result.
@@ -1028,6 +1032,7 @@ Spring 2013
 
 \section{Appendix: Example game trace}
 \label{app:example_output}
+This is the output from supplying the example game from section~\ref{sec:alg-example} to the C++ implementation of the algorithm. I have changed the numbers to letters ($0\mapsto A, 1\mapsto B, \ldots$) to match the table in the section.
 \begin{verbatim}
 Assume E -> D
   E -> D is given, so player B's choices give B -> D
@@ -1057,6 +1062,7 @@ F B A E D C
 
 \section{Appendix: Unsolvable game trace}
 \label{appendix:worst-case}
+The algorithm trace here refers to the pathological `trap' game that we designed in section~\ref{sec:run-time}. This is similar to the output from the C++ code, but it is intended to be easier to follow.
    \begin{verbatim}
 Suppose B -> C:
     We know B->C, and (A,B,C) is a triplet, so A->B, A->C.

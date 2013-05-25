@@ -40,7 +40,18 @@
 
 
 \begin{document}
-\maketitle
+\begin{center}
+{\LARGE The Ninja Assassin Wonderwall Game }
+
+\large
+\vspace{12pt}
+Brian Schiller\\
+advised by Dr. Tilmann Glimm
+\vspace{6pt}
+
+Spring 2013
+\end{center}
+%\maketitle
 
 \tableofcontents
 
@@ -49,7 +60,7 @@
 
     Camp counselors who organize the game can usually expect it to last until campers grow bored or it is called off. But occasionally the running players will slow down... and stop. Every player finds themselves on the safe side of their wonderwall, protected from their ninja assassin. We call this scenario a solution, which will be more precisely defined in the next section.
 
-    In the small example below, every player is in a position that satisfies their constraints--they are on a line with their ninja assassin and wonderwall with the wonderwall in the middle. The player's choices are displayed in a relationship table. Each row of the table shows a player, that player's wonderwall, and that player's ninja assassin.
+    In the small example below, every player is in a position that satisfies their constraints--they are on a line with their ninja assassin and wonderwall with the wonderwall in the middle. The players' choices are displayed in a relationship table at right. Each row of the table shows a player, that player's wonderwall, and that player's ninja assassin.
 
     \begin{center} %6 player example game
         \begin{multicols}{2}
@@ -91,9 +102,9 @@
     Looking at that solution, it seems like we could grab players $A$ and $C$ and pivot them around $B$, putting all the players on a line. But can we always reduce a solution to a single dimension? It seems like the extra freedom in higher dimensions might allow new solutions that don't appear on the real line.
 
     In fact, we will see that if a game has a solution in $\mathbb{R}^n$ it must also have a solution on the real line. This means that campers need not dig holes and climb trees in order to produce a solution. The result also says that in searching for solutions we can restrict our search to linear orderings of the players.
-
+\newpage
     Not every game has a solution. Below are two four-player games, one with a solution and one without.
-    \newpage
+
     \begin{center} %4 player games
         \begin{multicols}{2} %solved game
             \begin{pspicture}(-5,-5)(5,5)
@@ -158,9 +169,9 @@
     A \emph{Ninja Assassin Wonderwall problem} is a set $P$ together with two functions $\w:P\to P, \quad \n: P\to P$ that satisfy $\w(p) \neq p, \n(p) \neq p, \text{ and } \w(p) \neq \n(p)$ for all $p \in P$.
     \end{definition}
 
-    Here, the $\w(p)$ and $\n(p)$ represent the wonderwall and ninja assassin, respectively, of a player $p$. The restrictions on the functions ensure that no player may choose themselves as either role or choose the same person for both roles. 
-
-
+    Here, $\w(p)$ and $\n(p)$ represent the wonderwall and ninja assassin, respectively, of a player $p$. The restrictions on the functions ensure that no player may choose themselves as either role or choose the same person for both roles. 
+	
+	\vspace{12pt}
     \begin{definition}
     A \emph{solution} to a Ninja Assassin Wonderwall problem is a function $S: P\to \mathbb{R}^{n}$ such that:
         \begin{enumerate}
@@ -174,7 +185,7 @@
 
     It seems as though the extra freedom in higher dimensions might allow solutions to games that are unsolvable on the real line. A camp counselor might be tempted to have campers climb trees or stand on one another's shoulders in search of a solution. Perhaps surprisingly, this is unnecessary. Any game that is solvable in $\mathbb{R}^n$ is solvable in $\mathbb{R}$.
 
-
+	\vspace{12pt}
     \begin{thm}
     Any Ninja Assassin Wonderwall game which has a solution in $n$ dimensions ($n > 1$) has a solution in $n-1$ dimensions.
     \end{thm}
@@ -183,7 +194,7 @@
 
     Consider the set $L$ of all lines in $\mathbb{R}^n$ which go through two or more points in the image of $P$ under $S$. Since there are $\lvert P \rvert$ points, there are no more than $\binom{ \lvert P \rvert}{2}$ such lines. 
 
-    Now consider an $n-1$-dimensional hyperplane $\Pi$ through the origin that is not perpendicular to any line in $L$. Since each line is perpendicular to exactly one hyperplane, and $\lvert L \rvert \leq \binom{\lvert P \rvert}{2}$, which is finite, such a hyperplane exists. (There are uncountably many $n-1$-dimensional hyperplanes through the origin).
+    Now consider an $n-1$-dimensional hyperplane $\Pi$ through the origin that is not perpendicular to any line in $L$. Since each line is perpendicular to exactly one hyperplane, and $\lvert L \rvert \leq \binom{\lvert P \rvert}{2}$, which is finite, such a hyperplane exists. (There are uncountably many $(n-1)$-dimensional hyperplanes through the origin).
 
     Form a new solution, $S'$ by mapping each player $p\in P$ to the projection onto $\Pi$. By construction, $\Pi$ is not perpendicular to any line in $L$, so each player's position is distinct. Since projection onto a plane through the origin is a linear transformation, linear relationships are preserved. In particular, the linear relationships which put every player's wonderwall on the line segment between that player and their ninja assassin. So $S'$ is a solution in $n-1$ dimensions.
     \end{proof}
@@ -298,7 +309,7 @@
     This theorem, repeated as necessary, shows that if a solution exists in $n>1$ dimensions, a solution exists in one dimension. Thus, if we are looking for solutions, it is enough to consider orderings of players on a line.
 
 \section{Overview: P vs NP}
-    P and NP are coarse ways to describe the time required to solve a problem. Often we are a bit cavalier about the distinction between a problem and an \emph{instance} of a problem. However, the difference is important in discussing P vs NP. A problem describes the form of the input and desired output. An instance of a problem is a \emph{specific} input of the form described. 
+    The sets P and NP (not the same as $P$ or $\n(p)$ from other sections) are coarse ways to describe the time required to solve a problem. Often we are a bit cavalier about the distinction between a problem and an \emph{instance} of a problem. However, the difference is important in discussing P vs NP. A problem describes the form of the input and desired output. An instance of a problem is a \emph{specific} input of the form described. 
 
     Simply put, P is the set of all problems that can be solved in polynomial time. NP is the set of all problems whose solutions can be \emph{verified} in polynomial time. 
 
@@ -306,17 +317,17 @@
 
     It is an open question whether or not the two classes are distinct. That is, does every problem with a polynomial verifier have a polynomial solver? This is known as the P=NP problem.
 
-    To continue the example, one way to solve an instance of a sorting problem is to try every permutation of the $n$ objects, checking each to see whether it is in sorted order. This algorithm would require $O(n\cdot n!)$ time, since there is only one out of $n!$ permutations that is in sorted order, and it takes as many as $n$ steps to determine whether each permutation is sorted. This running time is larger than any polynomial, but this does \emph{not} mean that the problem of sorting is not in P. We have merely failed to show that is in P; we haven't shown that is is \emph{not} in P. In fact, there are algorithms that solve instances of sorting in $O(n^2)$, which is a polynomial, so the sorting problem belongs in P. 
+    To continue the example, one way to solve an instance of a sorting problem is to try every permutation of the $n$ objects, checking each to see whether it is in sorted order. This algorithm would require $O(n\cdot n!)$ time, since there is only one out of $n!$ permutations that is in sorted order, and it takes as many as $n$ steps to determine whether each permutation is sorted. This running time is larger than any polynomial, but this does \emph{not} mean that the problem of sorting is not in P. We have merely failed to show that is in P; we haven't shown that is \emph{not} in P. In fact, there are algorithms that solve instances of sorting in $O(n^2)$, which is a polynomial, so the sorting problem belongs in P. 
 
     It is also in NP, since a candidate solution could be verified (or refuted) in polynomial time. One way to verify would be to check that for every pair $x_i, x_{i+1}$, $x_i < x_{i+1}$. Another way would be to just sort the set again (using a polynomial-time algorithm) and check that the new solution matches the candidate. 
 
-    There is a related class of problems, called NP-hard. A problem $Q$ is in NP-hard is every problem $R$ in NP is polynomial reducible to $Q$. That is, given an instance of $R$ we can transform that instance in a polynomial number of steps into an instance of $Q$. We also require that a solution to this new instance of $Q$ produces a solution to the original instance of $R$ in polynomial time.
+    There is a related class of problems, called NP-hard. A problem $Q$ is NP-hard if every problem $R$ in NP is polynomial reducible to $Q$. That is, given an instance of $R$ we can transform that instance in a polynomial number of steps into an instance of $Q$. We also require that a solution to this new instance of $Q$ produces a solution to the original instance of $R$ in polynomial time.
 
-    There are a number of problems in NP which are also in NP-hard. These problems comprise a class called NP-complete. For instance, the Travelling Salesman Problem, the Knapsack Problem, Subset-Sum, and 3-CNF Satisfiablilty are all in NP-complete. This means that we can take an instance of, say, The Knapsack Problem, and transform it into Subset-Sum in such a way that the new instance has a solution if and only if the old one did. %TODO:perhaps mention decision problems?
+    There are a number of problems in NP which are also in NP-hard. These problems comprise a class called NP-complete. For instance, the Traveling Salesman Problem, the Knapsack Problem, Subset-Sum, and 3-CNF Satisfiability are all in NP-complete. This means that we can take an instance of, say, The Knapsack Problem, and transform it into Subset-Sum in such a way that the new instance has a solution if and only if the old one did. %TODO:perhaps mention decision problems?
 
-    Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them~\cite{clrs}(pg 1050). (If a polynomial-time solver was found for, say Subset-Sum, we could transform and instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
+    Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them~\cite{clrs}(pg 1050). (If a polynomial-time solver was found for say, Subset-Sum, we could transform an instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
 
-    The typical way to show that a problem is NP-complete is to take an arbitrary instance of a problem that is known to be NP-complete and give a polynomial time recipe to transform that instance into an instance of the problem at hand. Then if a polynomial algorithm exists for the problem at hand, we have created one for the NP-complete problem. 
+    The typical way to show that a problem is NP-complete is to take an arbitrary instance of a problem that is known to be NP-complete and give a polynomial time recipe to transform that instance into an instance of the problem at hand. Then if a polynomial algorithm exists for the problem at hand, we have created one for the NP-complete problem. This shows that the problem we're working with is at least as expressive as the known NP-complete problem.
 
     If Ninja Assassin Wonderwall were an NP-complete problem, finding a polynomial time solver would be beyond the scope of this project. Unfortunately, I have been unable to either show it is NP-complete or find a polynomial time algorithm. 
 
@@ -332,7 +343,7 @@
         \end{align*}
     and whose output is a mapping from each variable in the statement to either true or false such that the statement as a whole is true. 
 
-    We begin with some notation. Let $x_{a,b}$ denote the truth of `player $a$ is left of player $b$'. Then for each row of a relationship table $p$, $\w(p)$, $\n(p)$, we can write
+    We begin with some notation. Let $x_{a,b}$ denote the truth of `player $a$ is left of player $b$'. Also, note that $x_{a,b} = \lnot x_{b,a}$, so we have $\binom{n}{2}$ variables. Then for each row of a relationship table $p$, $\w(p)$, $\n(p)$, we can write
         \begin{align*}
                     & (x_{p_1, \w(p_1)} \Leftrightarrow x_{\w(p_1), \n(p_1)})\\
             \wedge  & (x_{p_2, \w(p_2)} \Leftrightarrow x_{\w(p_2), \n(p_2)})\\
@@ -361,31 +372,32 @@
     \end{align*}
 
     This pushes us squarely into the realm of 3-SAT, where we don't expect to find a polynomial time algorithm to save us. 
+    
+    To sum up the problem, we have a number of clauses all $\wedge$'d together. For every player $p_i \in P$, we have:
+\[
+	(\lnot x_{p_i, \w(p_i)} \vee x_{\w(p_i), \n(p_i)}) \wedge (x_{p_i, \w(p_i)} \vee \lnot x_{\w(p_i), \n(p_i)})
+\]
+	And for every $a,b,c \in P$, 
+\[
+	\lnot x_{a,b} \vee \lnot x_{b,c} \vee x_{a,c}
+\]
+	\vspace{12pt}
+	\begin{thm} A solution to this CNF problem gives a solution to the Ninja Assassin Wonderwall problem. 
+	\end{thm}
+    \begin{proof}
+    Suppose we have solution to this CNF problem. That is, we have a mapping from $\{x_{a,b} \mid a,b \in P\}$ into $\{\const{true}, \const{false}\}$. We claim that the values of $x_{a,b}$ give rise to a strict total order relation, $<$, where $a<b$ if and only if $x_{a,b}$ is true. To be a total order, $<$ must be defined for all $a,b \in P$, which we have because either $x_{a,b}$ or $x_{b,a}$ is defined by the solution to the CNF problem (we take $x_{a,a}$ to be always \const{false}). We also need transitivity, but this is exactly what the second set of constraints is designed to give us.
 
-    \begin{proof}[A solution to this 3-SAT problem gives a solution to the Ninja Assassin Wonderwall problem]
-    Suppose we have solution to this 3-SAT problem. That is, we have a mapping from $\{x_{a,b} \mid a,b \in P\}$ into $\{\const{true}, \const{false}\}$. Does that give a solution to the Ninja Assassin Wonderwall problem? We can interpret the values of $x_{a,b}$ as a strict total order relation, $<$, where $a<b$ if and only if $x_{a,b}$ is true. 
-
-    Let $\sigma$ be the permutation of P that comes from sorting according to this total order. Suppose some player $p$'s constraints are not satisfied by $\sigma$. Then either 
-    \begin{align*}
-    x_{p,\n(p)} &\wedge x_{\n(p),\w(p)} \text{ or } \\
-    x_{\w(p),\n(p)} &\wedge x_{\n(p),p}
-    \end{align*}. Without loss of generality, say $x_{p,\n(p)} \wedge x_{\n(p),\w(p)}$. By the transitivity constraints, we must also have $x_{p,\w(p)}$. We know from the first clause of $p$'s constraint that 
-    \begin{align*}
-        \lnot x_{p_i, \w(p_i)} \vee x_{\w(p_i), \n(p_i)}\\
-        \lnot x_{p, \w(p)} &&\text{(since $x_{\n(p),\w(p)}$ is true.)}\\
-    \end{align*}
-    So we have $\lnot x_{p, \w(p)}$ and $x_{p,\n(p)}$. This is a contradiction, so no such player $p$ can exist.
+    Let $\{p_i\}$ be the permutation of $P$ that comes from sorting according to this total order. Define $\phi: P \to \mathbb{R}$ by $\phi(p_i) = i$. Each player is taken to its unique index, so $\phi$ is one-to-one. The first set of constraints to the CNF problem ensure that the permutation $\{p_i\}$ satisfies each player's constraints. Since $\phi(P)$ are all on the real line in the same order as in the sequence $\{p_i\}$, $\phi$ also satisfies each player's constraints. So $\phi$ is a solution to the Ninja Assassin Wonderwall problem.
+    
     \end{proof}
 
-    So this is a possible way to solve Ninja Assassin Wonderwall problems. Another option would be to stop with the 2-SAT problem created by ignoring transitivity constraints. From there, we could ennumerate all solutions, searching for one that respected transitivity. %I've downloaded an article with an algorithm describing the enumeration step of this, but I haven't had a chance to play with it. Probably won't before I turn this in...
-
-    This is very similar to the algorithm explained below, which approaches the problem directly rather than first turning it into an instance into a CNF problem.
+    So this is a possible way to solve Ninja Assassin Wonderwall problems. Another option would be to stop with the 2-SAT problem created by ignoring transitivity constraints. From there, we could enumerate all solutions, searching for one that respected transitivity. %I've downloaded an article with an algorithm describing the enumeration step of this, but I haven't had a chance to play with it. Probably won't before I turn this in...
 
 \section{Constructive algorithm}
     \label{sec:algorithm}
     Consider a permutation $\sigma$ of the player set $P$. We'd like to know if $\sigma$ is a solution. If that $\sigma$ satisfies player $p$'s constraints, then $\sigma$ must have $\w(p)$ between $p$ and $\n(p)$. That is, either $p$ is to the left of $\w(p)$ is to the left of $\n(p)$ or else the reverse is true. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 
 
-    This says, transitively, that if there is a path from $a$ to $b$, then $a$ is to the left of $b$ (we will use $a \leadsto b$ to denote both of these). Notice that if these graphs actually represent an ordering of players, they do not contain cycles. For example, when both $(a,b)$ and $(b,a)$ are in $E$, this says $a \leadsto b$ and $b \leadsto a$, which is a contradiction. 
+    This says, transitively, that if there is a path from $a$ to $b$, then $a$ is to the left of $b$ (we will use $a \leadsto b$ to denote both of these). Notice that if these graphs actually represent an ordering of players, they do not contain cycles. For example, when both $(a,b)$ and $(b,a)$ are in $E$, this says $a \leadsto b$ and $b \leadsto a$, which is a contradiction. So we know we are looking for a graph with no cycles -- a directed acyclic graph, or DAG.
 
     \begin{thm}
     A Ninja Assassin Wonderwall problem has a solution iff there is a directed acyclic graph $G=(P,E)$ such that, for all $p\in P$, either  $p \leadsto \w(p) \leadsto \n(p)$ or $\n(p) \leadsto \w(p) \leadsto p$.
@@ -422,7 +434,7 @@
     \begin{codebox}
     \Procname{$\proc{FindOrdering}(P,n,w)$}
     \li $G \gets (\emptyset, \emptyset)$
-    \li $S \gets P$ \> \Comment $S$ is the players whose constraints have yet to be considered
+    \li $S \gets P$ \> \> \Comment $S$ is the set of players whose constraints have yet to be considered
     \li $G \gets \proc{MakeAssumption}(G,S,n,w)$
     \li \If $G$ is acyclic
     \li     \Do
@@ -493,7 +505,7 @@
     %\li     $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(r,s)\}$
     \li     \For $(t,u) \in \proc{ImpliedEdges}((r,s),S,\n,\w)$
     \li         \Do
-                \If $(t,u) \notin \attrib{F}{E}$
+                \If $(t,u) \notin \text{ edgeset of } F$%\attrib{F}{E}$
     \li             \Do
                     Add $(t,u)$ to the edgeset of $F$.
                     %$\attrib{F}{E} \gets \attrib{F}{E} \cup \{(t,u)\}$
@@ -579,7 +591,7 @@
             No more players to try, and G is acyclic: Success!
          F B A E D C
     \end{comment}
-    To start, we will direct some triplet. As we've noted, we will achieve a faster runtime if we choose a triplet containing a most common pair. A listing of each pair and the number of times it occurs is given below.
+    To start, we will direct some triplet. As we've noted, we will achieve a faster runtime if we choose a triplet containing a most common pair. A listing of each pair and the number of times it occurs in one of the triples is given below.
     \begin{center}
     \begin{tabular}{l | c}
         Pair & count \\
@@ -835,7 +847,7 @@
     An example of a game without a solution is given in the next section.
 
 \section{Running time of algorithm}
-    Let $D$ be the set of all digraphs whose edgesets are constructed by taking either $p \leadsto \w(p) \leadsto \n(p)$ or the reverse for every $p\in P$. The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players\ref{clrs}(pg 606), the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 
+    Let $D$ be the set of all digraphs whose edgesets are constructed by taking either $p \leadsto \w(p) \leadsto \n(p)$ or the reverse for every $p\in P$. The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players~\cite{clrs}(pg 606), the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 
 
     So what is $\lvert D \rvert$? We're constructing the edgeset by taking each row $(p, \w(p), \n(p))$ and directing it to the left or to the right. So an element of $D$ for a particular relationship table is uniquely identified by a bitstring of length $n$, $01011\ldots$, where a $0$ in the $i^{\text{th}}$ row indicates direction to left and a $1$ indicates direction to the right. There are $2^n$ such bitstrings, so $\lvert D \rvert = 2^n$. This first algorithm then, takes $O(n \cdot 2^n)$ time in the worst case. 
 
@@ -899,7 +911,7 @@
     \label{sec:prob}
     We are curious about, for a fixed $n$, what proportion of Ninja Assassin Wonderwall games have a solution. 
 
-    First, how many games exist of a given size? A game depends on the independent choices of all $n$ players. Each player chooses a wonderwall and a ninja assassin from the other $n-1$ players. This means each player can has $n(n-1)$ ways to assign these roles. So the total number of games is $\displaystyle \left(n(n-1)\right)^n$. This grows almost unimaginably quickly. The number of non-isomorphic games is smaller, of course, but I have not found a way to enumerate non-isomorphic games. One of the difficulties is described in Section~\ref{sec:future-work}.
+    First, how many games exist of a given size? A game depends on the independent choices of all $n$ players. Each player chooses a wonderwall and a ninja assassin from the other $n-1$ players. This means each player has $n(n-1)$ ways to assign these roles. So the total number of games is $\displaystyle \left(n(n-1)\right)^n$. This grows almost unimaginably quickly, as illustrated in the table below. The number of non-isomorphic games is smaller, of course, but I have not found a way to enumerate non-isomorphic games. One of the difficulties is described in Section~\ref{sec:future-work}.
     \begin{center}
         \begin{tabular}{c | r}
         $n$ & $\displaystyle \left(n(n-1)\right)^n$\\
@@ -912,7 +924,7 @@
         10 & 3743906242624487424
         \end{tabular}
     \end{center}
-    This probably too many to enumerate for anything over $n=6$, so we will approximate the proportion with a random sample. Even so, we've seen that our algorithm is $O(n\cdot 2^n)$, if only in pathological cases. Running, say, 10000 trials for a number different sizes of game would take a long time.
+    This probably too many to enumerate for anything over $n=6$, so we will approximate the proportion with a random sample. Even so, we've seen that our algorithm is $O(n\cdot 2^n)$, if only in pathological cases. Running, say, 10000 trials for a number of different sizes of game would take a long time.
 
     We can cheat a bit using distributed computing. I randomly drew a 10000 game sample for each size from 4 to 100, putting them all in a job queue. I wrote a python script to pull problems out of the queue and pass them to a C++ implementation of the algorithm described in section \ref{sec:algorithm}. The result -- solvable or not -- was pushed to a central server. 
 
@@ -924,7 +936,7 @@
 
     It seems that the likelihood a game having a solution increases very quickly in the number of players.
 
-    We didn't get quite all the way to $n=100$. Around $n=90$ the processes start to really drag. Also, spring break had ended and I needed to give back some computing resources. I recieved a message from Matthew Mooney, a student in the Computer Science department:
+    We didn't get quite all the way to $n=100$. Around $n=90$ the processes start to really drag. Also, spring break had ended and I needed to give back some computing resources. I received a message from Matthew Mooney, a student in the Computer Science department:
     \begin{quote}
     Hey, did you know you have a process running on cf416-14 that's using 99\% of the CPU? Not a big deal as I can just switch PCs, but thought you might want to know.
     \end{quote}
@@ -939,9 +951,11 @@
     \label{sec:future-work}
     We have danced around the question of NP-Completeness in this paper. It would be good to determine whether or not Ninja Assassin Wonderwall is NP-Complete. If it is, we should provide a proof. If not, perhaps we can find a polynomial time algorithm.
 
-    Our algorithm depends on knowing all of the relationships among the players. It would be interesting to model the way people play the game. How can players with incomplete knowledge find solutions?
+    Our algorithm depends on knowing all of the relationships among the players. It would be interesting to model the way \emph{people} play the game. How can players with incomplete knowledge find solutions?
 
-    Some games are `isomorphic'. It is possible that the number of non-isomorphic games is much smaller than the number of total games. and we could have a hope of enumerating them. For example, in the tables below the roles of $B$ and $C$ have been swapped. These two games will behave identically-- if one is solvable then the other is as well. A solution for one can be used to create a solution for the other just by swapping $B$ and $C$.
+ Two Ninja Assassin Wonderwall problems $(P,w,n)$, $(P', w', n')$ are isomorphic if there is a bijection $\phi: P\to P'$ such that $w'=\phi\circ w\circ \phi^{-1}$ and $n'=\phi\circ n\circ \phi^{-1}$.  (i.e. one gets the other by ``renaming'' the players.)
+
+    Some games are isomorphic in this way. We would like to be able to count how many non-isomorphic games exist on a given player set. It is also possible that the number of non-isomorphic games is much smaller than the number of total games. and we could have a hope of enumerating them. For example, in the tables below the roles of $B$ and $C$ have been swapped. These two games will behave identically-- if one is solvable then so is the other. A solution for one can be used to create a solution for the other just by swapping $B$ and $C$.
 
     \begin{center}
     \begin{multicols}{2}
@@ -969,7 +983,7 @@
     \end{multicols}
     \end{center}
 
-    It would seem from this example that we could count isomorphic games by counting the number of bijections from $P\to P$. However, some games are unchanged under some bijections. For example, the following game does not change if we swap $D$ and $E$:
+    It would seem from this example that we could count isomorphic games on a given set of players by counting the number of bijections from $P\to P$. However, some games are unchanged under some bijections. For example, the following game does not change if we swap $D$ and $E$:
 
     \begin{center}
         \begin{tabular}{l | c | c}

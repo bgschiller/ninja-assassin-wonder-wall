@@ -14,6 +14,7 @@ digraphs: *.dot
 	neato 6ndigraph-cyc.dot -Tpng -o 6ndigraph-cyc.png
 	neato 6ndigraph.dot -Tpng -o 6ndigraph.png
 	neato 6ngraph.dot -Tpng -o 6ngraph.png
+	neato 6ngraph-red.dot -Tpng -o 6ngraph-red.png
 	dot alg2ex1.dot -Tpdf -o alg2ex1.pdf
 	dot alg2ex2.dot -Tpdf -o alg2ex2.pdf
 	dot alg2ex3.dot -Tpdf -o alg2ex3.pdf

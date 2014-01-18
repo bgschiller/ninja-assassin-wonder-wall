@@ -308,30 +308,8 @@ Spring 2013
 
     This theorem, repeated as necessary, shows that if a solution exists in $n>1$ dimensions, a solution exists in one dimension. Thus, if we are looking for solutions, it is enough to consider orderings of players on a line.
 
-\section{Overview: P vs NP}
-    The sets P and NP (not the same as $P$ or $\n(p)$ from other sections) are coarse ways to describe the time required to solve a problem. Often we are a bit cavalier about the distinction between a problem and an \emph{instance} of a problem. However, the difference is important in discussing P vs NP. A problem describes the form of the input and desired output. An instance of a problem is a \emph{specific} input of the form described. 
-
-    Simply put, P is the set of all problems that can be solved in polynomial time. NP is the set of all problems whose solutions can be \emph{verified} in polynomial time. 
-
-    For a simple example, consider the problem of sorting.  Sorting takes a set of $n$ objects for which a total order, $<$ is defined and produces a permutation of those objects $x_1 x_2 x_3 \ldots x_n$ such that $x_i < x_j$ whenever $i < j$. An instance of sorting is `sort the set $\{4, 2 ,1, 5, 8\}$', which would have the solution $\langle 1, 2, 4, 5, 8 \rangle$. 
-
-    It is an open question whether or not the two classes are distinct. That is, does every problem with a polynomial verifier have a polynomial solver? This is known as the P=NP problem.
-
-    To continue the example, one way to solve an instance of a sorting problem is to try every permutation of the $n$ objects, checking each to see whether it is in sorted order. This algorithm would require $O(n\cdot n!)$ time, since there is only one out of $n!$ permutations that is in sorted order, and it takes as many as $n$ steps to determine whether each permutation is sorted. This running time is larger than any polynomial, but this does \emph{not} mean that the problem of sorting is not in P. We have merely failed to show that is in P; we haven't shown that is \emph{not} in P. In fact, there are algorithms that solve instances of sorting in $O(n^2)$, which is a polynomial, so the sorting problem belongs in P. 
-
-    It is also in NP, since a candidate solution could be verified (or refuted) in polynomial time. One way to verify would be to check that for every pair $x_i, x_{i+1}$, $x_i < x_{i+1}$. Another way would be to just sort the set again (using a polynomial-time algorithm) and check that the new solution matches the candidate. 
-
-    There is a related class of problems, called NP-hard. A problem $Q$ is NP-hard if every problem $R$ in NP is polynomial reducible to $Q$. That is, given an instance of $R$ we can transform that instance in a polynomial number of steps into an instance of $Q$. We also require that a solution to this new instance of $Q$ produces a solution to the original instance of $R$ in polynomial time.
-
-    There are a number of problems in NP which are also in NP-hard. These problems comprise a class called NP-complete. For instance, the Traveling Salesman Problem, the Knapsack Problem, Subset-Sum, and 3-CNF Satisfiability are all in NP-complete. This means that we can take an instance of, say, The Knapsack Problem, and transform it into Subset-Sum in such a way that the new instance has a solution if and only if the old one did. %TODO:perhaps mention decision problems?
-
-    Problems in NP-complete are much studied and the prevailing opinion is that there are no polynomial time solvers for any of them~\cite{clrs}(pg 1050). (If a polynomial-time solver was found for say, Subset-Sum, we could transform an instance from any of the others into an instance of Subset-Sum and BOOM: we've just created a polynomial time solver for the other problem.)
-
-    The typical way to show that a problem is NP-complete is to take an arbitrary instance of a problem that is known to be NP-complete and give a polynomial time recipe to transform that instance into an instance of the problem at hand. Then if a polynomial algorithm exists for the problem at hand, we have created one for the NP-complete problem. This shows that the problem we're working with is at least as expressive as the known NP-complete problem.
-
-    If Ninja Assassin Wonderwall were an NP-complete problem, finding a polynomial time solver would be beyond the scope of this project. Unfortunately, I have been unable to either show it is NP-complete or find a polynomial time algorithm. 
-
-\section{Relation to known problems}
+\section{Algorithms}
+\subsection{Relation to CNF-Sat}
     A simple, though possibly inefficient, way to solve a Ninja Assassin Wonderwall problem would be to transform it into an instance of a known problem for which solvers already exist. We will transform an arbitrary Ninja Assassin Wonderwall problem into a Conjunctive Normal Form Satisfiability (CNF SAT) problem.
 
     Conjunctive Normal Form Satisfiability, or CNF Sat, is a problem whose input is a statement in propositional logic of the form
@@ -393,7 +371,7 @@ Spring 2013
 
     So this is a possible way to solve Ninja Assassin Wonderwall problems. Another option would be to stop with the 2-SAT problem created by ignoring transitivity constraints. From there, we could enumerate all solutions, searching for one that respected transitivity. %I've downloaded an article with an algorithm describing the enumeration step of this, but I haven't had a chance to play with it. Probably won't before I turn this in...
 
-\section{Constructive algorithm}
+\subsection{Constructive algorithm}
     \label{sec:algorithm}
     Consider a permutation $\sigma$ of the player set $P$. We'd like to know if $\sigma$ is a solution. If that $\sigma$ satisfies player $p$'s constraints, then $\sigma$ must have $\w(p)$ between $p$ and $\n(p)$. That is, either $p$ is to the left of $\w(p)$ is to the left of $\n(p)$ or else the reverse is true. We can construct a directed graph $G=(P,E)$, where we interpret an edge $(a,b) \in E$ to represent the statement `player $a$ is to the left of player $b$ in an ordering of players'. 
 
@@ -550,7 +528,7 @@ Spring 2013
 
     In fact, we get the first choice we make for free. Since for any solution, the reverse of that permutation is also a solution, it doesn't matter which way we direct the edges of the first player we consider.
 
-\section{Example trace of algorithm}
+\subsection{Example trace of algorithm}
 \label{sec:alg-example}
     We will walk through the logic of the algorithm for a small game:
 
@@ -847,7 +825,7 @@ Spring 2013
 
     An example of a game without a solution is given in the next section.
 
-\section{Running time of algorithm}
+\subsection{Running time of algorithm}
 \label{sec:run-time}
     Let $D$ be the set of all digraphs whose edgesets are constructed by taking either $p \leadsto \w(p) \leadsto \n(p)$ or the reverse for every $p\in P$. The first algorithm described examines each digraph $G$ in $D$, checking each to see if it is acyclic. Since the check for acyclic takes $O(n)$ time where $n$ is the number of players~\cite{clrs}(pg 606), the whole algorithm takes $O(\lvert D \rvert \cdot n)$ time. 
 
@@ -1002,127 +980,6 @@ Spring 2013
 %\section{Conclusion}
 We hope this has been enlightening for camp counselors and other outdoor educators. Counselors who are trying to keep their campers occupied now know they are better off splitting their 30-person group into two 15-person games, which are less likely to have solutions. If, instead, they're trying to bring a game to a resolution, we have provided algorithms and code to find solutions when they exist. And (perhaps to the dismay of tree-climbing, hole-digging campers), we have shown that players need not venture to three (or more!) dimensions to find solutions, but can instead keep their feet safely on the ground. 
 
-\section{Appendix: code}
-    \renewcommand{\ttdefault}{pcr}
-    \lstset{basicstyle=\footnotesize\ttfamily,
-        commentstyle=\color{mygreen},
-        keywordstyle=\bfseries\color{blue},
-        numbers=left,
-        numbersep=5pt,
-        numberstyle=\tiny\color{mygray},
-        stepnumber=5,
-        stringstyle=\color{mymauve},
-        showstringspaces=false,
-        tabsize=2}
-    \subsection{Haskell brute force algorithm}
-        This is very obviously an $O(n!)$ algorithm. I used it to check my ideas and generate small examples of solvable and unsolvable games. It also provided a check that the more complicated algorithms were working correctly.
-        \lstinputlisting[language=Haskell,breaklines=true]{../na_ww_brute.hs}
-    \subsection{Python implementation}
-        This was the first implementation of the algorithm described in section \ref{sec:algorithm}. It works fairly well, but is noticeably much slower than the C++ implementation. However, the networkx graph library is \emph{much} more friendly than the Boost Graph Library that I used for C++.
-        \lstinputlisting[language=Python,
-        breakatwhitespace=false,
-        breaklines=true]{../implication.py}
-    \subsection{C++ implementation}
-        I created this implementation in order to do the distributed trials described in section \ref{sec:prob}. It is more faithful to the pseudocode in section \ref{sec:algorithm} than the python code, but it also has some ugliness introduced by the the Boost Graph Library and a few tasks that are harder to phrase in C++ than Python (for example, sorting the player on their pair count is on lines 184-235 of the C++ code, and lines 103-112 of the Python code).
-        \lstinputlisting[language=C++]{../cpp_implementation/implication.cpp}
-    \subsection{Python driver}
-        This is the driver mentioned in section \ref{sec:prob} that pulls Ninja Assassin Wonderwall problems from the jobs queue, spins up the C++ code to solve them, and then updates the server with the result.
-        \lstinputlisting[language=Python, breakatwhitespace=false,
-        breaklines=true]{../cpp_implementation/naww_client.py}
-
-\section{Appendix: Example game trace}
-\label{app:example_output}
-This is the output from supplying the example game from section~\ref{sec:alg-example} to the C++ implementation of the algorithm. I have changed the numbers to letters ($0\mapsto A, 1\mapsto B, \ldots$) to match the table in the section.
-\begin{verbatim}
-Assume E -> D
-  E -> D is given, so player B's choices give B -> D
-  E -> D is given, so player B's choices give B -> E
-  E -> D is given, so player C's choices give E -> C
-  E -> D is given, so player C's choices give D -> C
-  E -> D is given, so player D's choices give B -> D
-  E -> D is given, so player D's choices give B -> E
-  E -> D is given, so player E's choices give E -> C
-  E -> D is given, so player E's choices give D -> C
-  D -> C is given, so player C's choices give E -> C
-  D -> C is given, so player C's choices give E -> D
-  D -> C is given, so player E's choices give E -> C
-  D -> C is given, so player E's choices give E -> D
-  E -> C is given, so player A's choices give A -> C
-  E -> C is given, so player A's choices give A -> E
-  E -> C is given, so player E's choices give D -> C
-  E -> C is given, so player E's choices give E -> D
-  D -> C is given, so player E's choices give E -> C
-  D -> C is given, so player E's choices give E -> D
-  Assume F -> B
-    F -> B is given, so player F's choices give F -> A
-    F -> B is given, so player F's choices give B -> A
-    No more players to try, and G is acyclic: Success!
-F B A E D C
-\end{verbatim}
-
-\section{Appendix: Unsolvable game trace}
-\label{appendix:worst-case}
-The algorithm trace here refers to the pathological `trap' game that we designed in section~\ref{sec:run-time}. This is similar to the output from the C++ code, but it is intended to be easier to follow.
-   \begin{verbatim}
-Suppose B -> C:
-    We know B->C, and (A,B,C) is a triplet, so A->B, A->C.
-    We know B->C, and (B,C,D) is a triplet, so C->D, B->D.
-    Suppose E->F:
-        We know E->F, and (D,E,F) is a triplet, so D->E, D->F.
-        We know E->F, and (E,F,G) is a triplet, so F->G, E->G.
-        Suppose H->I:
-            We know H->I, and (G,H,I) is a triplet, so G->H, G->I.
-            We know H->I, and (H,I,J) is a triplet, so I->J, H->J.
-            We know G->H, and (J,G,H) is a triplet, so J->G, J->H.
-            H->J and J->H form a cycle, so our assumption was wrong.
-        Suppose I->H:
-            We know I->H, and (G,H,I) is a triplet, so H->G, I->G.
-            We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
-            We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
-            H->J and J->H form a cycle, so our assumption was wrong.
-    Suppose F->E:
-        We know F->E, and (D,E,F) is a triplet, so E->D, F->D.
-        We know F->E, and (E,F,G) is a triplet, so G->F, G->E.
-        Suppose H->I:
-            We know H->I, and (G,H,I) is a triplet, so G->H, G->I.
-            We know H->I, and (H,I,J) is a triplet, so I->J, H->J.
-            We know G->H, and (J,G,H) is a triplet, so J->G, J->H.
-            H->J and J->H form a cycle, so our assumption was wrong.
-        Suppose I->H:
-            We know I->H, and (G,H,I) is a triplet, so H->G, I->G.
-            We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
-            We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
-            H->J and J->H form a cycle, so our assumption was wrong.
-Suppose C->B:
-    We know C->B, and (A,B,C) is a triplet, so B->A, C->A.
-    We know C->B, and (B,C,D) is a triplet, so D->C, D->B.
-    Suppose E->F:
-        We know E->F, and (D,E,F) is a triplet, so D->E, D->F.
-        We know E->F, and (E,F,G) is a triplet, so F->G, E->G.
-        Suppose H->I:
-            We know H->I, and (G,H,I) is a triplet, so G->H, G->I.
-            We know H->I, and (H,I,J) is a triplet, so I->J, H->J.
-            We know G->H, and (J,G,H) is a triplet, so J->G, J->H.
-            H->J and J->H form a cycle, so our assumption was wrong.
-        Suppose I->H:
-            We know I->H, and (G,H,I) is a triplet, so H->G, I->G.
-            We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
-            We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
-            H->J and J->H form a cycle, so our assumption was wrong.
-    Suppose F->E:
-        We know F->E, and (D,E,F) is a triplet, so E->D, F->D.
-        We know F->E, and (E,F,G) is a triplet, so G->F, G->E.
-        Suppose H->I:
-            We know H->I, and (G,H,I) is a triplet, so G->H, G->I.
-            We know H->I, and (H,I,J) is a triplet, so I->J, H->J.
-            We know G->H, and (J,G,H) is a triplet, so J->G, J->H.
-            H->J and J->H form a cycle, so our assumption was wrong.
-        Suppose I->H:
-            We know I->H, and (G,H,I) is a triplet, so H->G, I->G.
-            We know I->H, and (H,I,J) is a triplet, so J->I, J->H.
-            We know H->G, and (J,G,H) is a triplet, so G->J, H->J.
-            H->J and J->H form a cycle, so our assumption was wrong.
-\end{verbatim}
 
 \begin{thebibliography}{9}
 

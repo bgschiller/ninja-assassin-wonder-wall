@@ -5,4 +5,8 @@
 *.pyc
 *.pdf
 *.log
+*.nav
+*.snm
+*.toc
+*.syntex.gz
 

@@ -3,7 +3,7 @@
 
 
     \usepackage{clrscode3e}
-
+    \usepackage{hyperref}
     \usepackage[parfill]{parskip}
     \usepackage{amsmath,amsthm,amssymb}
     \usepackage{latexsym} %gives nice \leadsto
@@ -56,6 +56,7 @@ Spring 2013
 \tableofcontents
 
 \section{Introduction}
+\label{sec:introduction}
     Ninja Assassin Wonderwall is a game played at summer camps, sometimes under the name `Eclipse'. It is played with as few as 4 players, though it is better with ten or more. To play, each player chooses two other players (without indicating their choices), one to be their ninja assassin and the other to be their wonderwall. When the game starts, every player tries to keep their wonderwall between themself and their ninja assassin.
 
     Camp counselors who organize the game can usually expect it to last until campers grow bored or it is called off. But occasionally the running players will slow down... and stop. Every player finds themselves on the safe side of their wonderwall, protected from their ninja assassin. We call this scenario a solution, which will be more precisely defined in the next section.
@@ -101,7 +102,7 @@ Spring 2013
 
     Looking at that solution, it seems like we could grab players $A$ and $C$ and pivot them around $B$, putting all the players on a line. But can we always reduce a solution to a single dimension? It seems like the extra freedom in higher dimensions might allow new solutions that don't appear on the real line.
 
-    In fact, we will see that if a game has a solution in $\mathbb{R}^n$ it must also have a solution on the real line. This means that campers need not dig holes and climb trees in order to produce a solution. The result also says that in searching for solutions we can restrict our search to linear orderings of the players.
+    In fact, we will see in section~\ref{sec:reduction_to_one} that if a game has a solution in $\mathbb{R}^n$ it must also have a solution on the real line. This means that campers need not dig holes and climb trees in order to produce a solution. The result also means that in searching for solutions we can restrict our search to linear orderings of the players.
 \newpage
     Not every game has a solution. Below are two four-player games, one with a solution and one without.
 
@@ -160,10 +161,14 @@ Spring 2013
             \end{tabular}
         \end{multicols}
     \end{center}
-    How can we tell from the relationship table whether or not a game has a solution? Since it is sufficient to search the orderings of players, we could simply try every permutation of the players. This proves to be too computationally expensive. We will explore another algorithm, based on finding cycles in directed graphs, that will be considerably faster. We will also give a recipe for transforming an instance of a ninja assassin wonderwall game into an instance of a Boolean Satisfiability problem.
+    How can we tell from the relationship table whether or not a game has a solution? Since it is sufficient to search the orderings of players, we could simply try every permutation of the players. However, this proves to be too computationally expensive. In section~\ref{sec:cnf_sat} we will give a recipe for transforming an instance of a ninja assassin wonderwall game into an instance of a Boolean Satisfiability problem. We will explore another algorithm in section~\ref{sec:algorithm}, based on finding cycles in directed graphs.
 
+    Finally, in section~\ref{sec:prob}, we apply this algorithm to a random sample of games in order to estimate the proportion that are solvable, and how that proportion changes with the number of players.
 
-\section{Definitions}
+\section{Reduction to one dimension}
+\label{sec:reduction_to_one}
+
+    Before we can reason precisely about Ninja Assassin Wonderwall games, we need a few definitions.
 
     \begin{definition}
     A \emph{Ninja Assassin Wonderwall problem} is a set $P$ together with two functions $\w:P\to P, \quad \n: P\to P$ that satisfy $\w(p) \neq p, \n(p) \neq p, \text{ and } \w(p) \neq \n(p)$ for all $p \in P$.
@@ -180,8 +185,44 @@ Spring 2013
         \end{enumerate}
     \end{definition}
 
+    As noted in the example game from section~\ref{sec:introduction}, reproduced below, it looks like we could just pivot player $A$ and $C$ down into line with the others. The ordering $ECBADF$, for example, puts every player on a straight line and satisfies everyone's contraints. Given a solution, can we always make a new solution with all players on a line?
 
-\section{Reduction to one dimension}
+    \begin{center} %6 player example game
+        \begin{multicols}{2}
+            \begin{pspicture}(0,0)(10,10)
+                \qdisk(0,1){2pt}
+                \uput[u](0,1){C}
+
+                \qdisk(-0.4,2){2pt}
+                \uput[u](-0.4,2){E}
+
+                \qdisk(1,2){2pt}
+                \uput[u](1,2){B}
+
+                \qdisk(2,3){2pt}
+                \uput[u](2,3){A}
+
+                \qdisk(2.4,2){2pt}
+                \uput[u](2.4,2){D}
+
+                \qdisk(3.5,2){2pt}
+                \uput[u](3.5,2){F}
+            \end{pspicture}
+
+            \columnbreak
+
+            \begin{tabular}{l | c | c}
+                $p$ & $\w(p)$ & $\n(p)$ \\
+                \hline
+                A &  B& C\\
+                B &  D& F\\
+                C &  B& A\\
+                D &  B& E\\
+                E &  D& F\\
+                F &  D& B
+            \end{tabular}
+         \end{multicols}
+    \end{center}
 
     It seems as though the extra freedom in higher dimensions might allow solutions to games that are unsolvable on the real line. A camp counselor might be tempted to have campers climb trees or stand on one another's shoulders in search of a solution. Perhaps surprisingly, this is unnecessary. Any game that is solvable in $\mathbb{R}^n$ is solvable in $\mathbb{R}$.
 
@@ -304,12 +345,14 @@ Spring 2013
         \uput[r](4,0){$\Pi$}
     \end{pspicture}}
     \end{tabular}
+    \emph{Notice that hyperplane $\Pi$ is not perpendicular to any line connecting two or more players. This means that $S'$, the projection of the players' positions onto $\Pi$, maps each player to a distinct position.}
     \end{center}
 
     This theorem, repeated as necessary, shows that if a solution exists in $n>1$ dimensions, a solution exists in one dimension. Thus, if we are looking for solutions, it is enough to consider orderings of players on a line.
 
 \section{Algorithms}
 \subsection{Relation to CNF-Sat}
+\label{sec:cnf_sat}
     A simple, though possibly inefficient, way to solve a Ninja Assassin Wonderwall problem would be to transform it into an instance of a known problem for which solvers already exist. We will transform an arbitrary Ninja Assassin Wonderwall problem into a Conjunctive Normal Form Satisfiability (CNF SAT) problem.
 
     Conjunctive Normal Form Satisfiability, or CNF Sat, is a problem whose input is a statement in propositional logic of the form
@@ -395,138 +438,15 @@ Spring 2013
 
     This proof leads to an algorithm for constructing solutions. Consider the set $D$ of all digraphs $G=(P,E)$, where $E$ is constructed by taking, for all $p \in P$, either  $(p,\w(p)), (\w(p),\n(p))$ or $(\n(p),\w(p)),(\w(p),p)$. There are $2^n$ such graphs, and if a NAWW problem has a solution, one of them must be acyclic. Furthermore, the solution will be given by a Topological Sort of that graph. (A Topological Sort on a directed acyclic graph is an ordering that puts vertex $a$ before every vertex to which $a$ has outgoing edges.)
 
-    \begin{codebox}
-    \Procname{$\proc{FindOrdering}(P,n,w)$}
-    \li \For $G\in D$
-    \li     \Do
-            \If $G$ is acyclic
-    \li         \Do
-                    \Return $\proc{TopologicalSort}(G)$
-            \End
-        \End
-    \li \Return None
-    \end{codebox}
-        
+    Pseudocode for this algorithm, and the more efficienct versions described below, can be found in the appendix, section~\ref{sec:appendix_pseudocode}.
+ 
     There are many small efficiencies we can add to this algorithm. We can avoid enumerating all the elements of $D$ by trying to construct our graph from scratch. We will start with an empty graph $G$. Then we will choose a $p \in P$, add the edges $(p,\w(p))$ and $(\w(p),\n(p))$ and recurse. If this leads to a cyclic graph, we will try the opposite edges and recurse. If \emph{this} leads to a cyclic graph, then neither $p \leadsto \w(p) \leadsto \n(p)$ nor $\n(p) \leadsto \w(p) \leadsto p$ is consistent with the graph, and so there is no solution.
 
-    \begin{codebox}
-    \Procname{$\proc{FindOrdering}(P,n,w)$}
-    \li $G \gets (\emptyset, \emptyset)$
-    \li $S \gets P$ \> \> \Comment $S$ is the set of players whose constraints have yet to be considered
-    \li $G \gets \proc{MakeAssumption}(G,S,n,w)$
-    \li \If $G$ is acyclic
-    \li     \Do
-            \Return $\proc{TopologicalSort}(G)$
-        \End
-    \li \Return None
-    \end{codebox}
+    We can make another small improvement by noticing that if $a \leadsto b$ where $a,b \in \{p, \w(p), \n(p)\}$ for some $p$, is already in the graph, then we can add the third element of $\{p, \w(p), \n(p)\}$ immediately. For example if $p \leadsto \n(p)$, then if $G$ is a subgraph of the acyclic graph in the theorem, $p \leadsto \w(p)$ and $\w(p) \leadsto \n(p)$. Edges that we can infer in this way are called \emph{implied edges}.
 
+    Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. We accomplish this by choosing our $p\in S$ at the start of each recursive call such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible. 
 
-    \begin{codebox}
-    \Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
-    \li \If $S \isequal \emptyset$
-    \li     \Then
-            \Return $G$ \Comment Success!
-        \End
-    \li \If $G$ contains a cycle
-    \li     \Then
-            \Return $G$ \Comment Failure case
-        \End
-    \li Let $p \in S$
-    \li $F \gets G$
-    \li Add $(p,\w(p))$ and $(\w(p),\n(p))$ to the edgeset of $F$.
-    %\li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(p,\w(p)), (\w(p),\n(p))\}$
-    \li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
-    \li \If $F$ is acyclic
-    \li     \Do
-            \Return $F$ \Comment Success!
-        \End
-    \li $F \gets G$ \Comment That didn't work, try the other way.
-    \li Add $(\n(p),\w(p))$ and $(\w(p),p)$ to the edgeset of $F$.
-    %\li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(\n(p), \w(p)), (\w(p),p)\}$
-    \li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
-    \end{codebox}
-
-    We can make another small improvement by noticing that if $a \leadsto b$ where $a,b \in \{p, \w(p), \n(p)\}$ for some $p$, is already in the graph, then we can add the third element of $\{p, \w(p), \n(p)\}$ immediately. For example if $p \leadsto \n(p)$, then if $G$ is a subgraph of the acyclic graph in the theorem, $p \leadsto \w(p)$ and $\w(p) \leadsto \n(p)$. Edges that we can infer in this way are called `implied edges' in the pseudocode. We will use the same definition of $\proc{FindOrdering}$.
-
-    \begin{codebox}
-    \Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
-    \li \If $S = \emptyset$
-    \li \Do \Return $G$ \Comment Success!
-        \End
-    \li \If $G$ contains a cycle
-    \li     \Then
-            \Return $G$ \Comment Failure case
-        \End
-    \li Let $p \in S$.  			\label{li:choose-p}
-    \li $F \gets G$
-    \li $F \gets \proc{AddImpliedEdges}(F, (p,\w(p)), S,\n,\w)$
-    \li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
-    \li \If $F$ is acyclic
-    \li     \Do
-            \Return $F$ \Comment Success!
-        \End
-    \li $F \gets G$ \Comment That didn't work, try the other way.
-    \li $F \gets \proc{AddImpliedEdges}(F, (\w(p), p), S, \n, \w)$
-    \li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
-    \end{codebox}
-
-
-    \begin{codebox}
-    \Procname{$\proc{AddImpliedEdges}(F,(a,b),S,\n,\w)$}
-    \li $Q \gets \emptyset$
-    \li $\proc{Enqueue}(Q,(a,b))$
-    \li \While $Q$ is not empty
-    \li     \Do
-            $(r,s) \gets \proc{Dequeue}(Q)$
-    \li      Add $(r,s)$ to the edgeset of $F$.
-    %\li     $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(r,s)\}$
-    \li     \For $(t,u) \in \proc{ImpliedEdges}((r,s),S,\n,\w)$
-    \li         \Do
-                \If $(t,u) \notin \text{ edgeset of } F$%\attrib{F}{E}$
-    \li             \Do
-                    Add $(t,u)$ to the edgeset of $F$.
-                    %$\attrib{F}{E} \gets \attrib{F}{E} \cup \{(t,u)\}$
-    \li             $\proc{Enqueue}(Q,(t,u))$
-                \End
-            \End
-        \End
-    \li \Return $F$
-    \end{codebox}
-
-
-
-    \begin{codebox}
-    \Procname{$\proc{ImpliedEdges}((r,s),S,\n,\w)$}
-    \li $E \gets \emptyset$
-    \li \For $t \in S$
-    \li     \Do
-            \If $(r,s) \isequal (t, \w(t))$
-    \li         \Do
-                $E \gets E \cup \{(\w(t),\n(t)), (t, \n(t))\}$
-    \li     \ElseIf $(r,s) \isequal (\w(t), t)$
-    \li         \Do
-                $E \gets E \cup \{(\n(t),\w(t)), (\n(t), t)\}$ 
-    \li     \ElseIf $(r,s) \isequal (t, \n(t))$
-    \li         \Do
-                $E \gets E \cup \{(t,\w(t)), (\w(t), \n(t))\}$
-    \li     \ElseIf $(r,s) \isequal (\n(t), t)$
-    \li         \Do
-                $E \gets E \cup \{(\w(t), t), (\n(t), \w(t))\}$
-    \li     \ElseIf $(r,s) \isequal (\w(t), \n(t))$
-    \li         \Do
-                $E \gets E \cup \{(t,\w(t)), (t, \n(t))\}$
-    \li     \ElseIf $(r,s) \isequal (\n(t), \w(t))$
-    \li         \Do
-                $E \gets E \cup \{(\w(t), t), (\n(t), t)\}$
-            \End
-        \End
-    \li \Return $E$
-    \end{codebox}
-
-    Finally, notice that every \emph{implied edge} we add potentially cuts our running time in half. We no longer need a tree of $2^{\lvert S \rvert}$ recursive calls to determine the direction of that player's constraint. Each edge we add that has an \emph{implied edge} gives us some extra leverage over the problem. Heuristically, it seems like we should exert this leverage as early as possible. We accomplish this by choosing our $p\in S$ on line~\ref{li:choose-p} of \proc{MakeAssumption} such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible. 
-
-    In fact, we get the first choice we make for free. Since for any solution, the reverse of that permutation is also a solution, it doesn't matter which way we direct the edges of the first player we consider.
+    %In fact, we get the first choice we make for free. Since for any solution, the reverse of that permutation is also a solution, it doesn't matter which way we direct the edges of the first player we consider.
 
 \subsection{Example trace of algorithm}
 \label{sec:alg-example}
@@ -570,7 +490,7 @@ Spring 2013
             No more players to try, and G is acyclic: Success!
          F B A E D C
     \end{comment}
-    To start, we will direct some triplet. As we've noted, we will achieve a faster runtime if we choose a triplet containing a most common pair. A listing of each pair and the number of times it occurs in one of the triples is given below.
+    To start, we will direct some triplet. As we've noted, we will achieve a faster runtime if we choose a triplet containing a most common pair. A listing of each pair and the number of times it occurs in one of the triplets is given below.
     \begin{center}
     \begin{tabular}{l | c}
         Pair & count \\
@@ -633,7 +553,7 @@ Spring 2013
         \item We know that $E \leadsto D$, so player $C$'s choices of $(C,D,E)$ give $E\leadsto C$.
         \item We know that $E \leadsto D$, so player $C$'s choices of $(C,D,E)$ give $D\leadsto C$.
     \end{itemize}
-    We could also have used players $D$ and $E$, instead of $B$ and $C$, to infer these same edges so we should evict them from the set $S$ of as-yet-unconsidered players. (In the output from the C++ code, given in Appendix~\ref{app:example_output}, $D$ and $E$ \emph{are} used redundantly). The new edges change the graph:
+    We could also have used players $D$ and $E$, instead of $B$ and $C$, to infer these same edges so we should evict them from the set $S$ of as-yet-unconsidered players. The new edges change the graph:
     %echo "digraph G{ rankdir=LR; B->E->D; B->D; E->C; D->C; }" | dot2tex --prog=dot --figonly
     \begin{center}
     \begin{tikzpicture}[>=latex,line join=bevel,]
@@ -833,7 +753,7 @@ Spring 2013
 
     It is not immediately clear what the running time of the heuristic algorithm is. The average case running time would be very hard to determine, as the heuristic muddies the water a fair bit. However, we will see that the worst case running time remains exponential.
 
-    We will set a ``trap'' for the algorithm. Specifically, we construct a class of problem designed to afford no leverage to the heuristic. We will seek to confound the main improvement of the heuristic algorithm: extrapolating extra edge information each time it directs a pair. 
+    We will set a ``trap'' for the algorithm. Specifically, we construct a class of problem designed to afford no leverage to the heuristic. We seek to confound the main improvement of the heuristic algorithm: extrapolating extra edge information each time it directs a pair. 
 
     The following is a template for a relationship table, where we would want to replace each of $a, b, c, \text{ and }d$ with actual player names.
 
@@ -872,8 +792,6 @@ Spring 2013
     Notice how each group of four players is `self-contained'. The choices of players $A,B,C$ contain no player other than $A,B,C, \text{ and } D$; the choices of players $D, E, F$ contain no player other than $D, E, F, \text{ and } G$. The overlap is just enough so that the games are not disjoint. This means that any leverage gained via the heuristic will not escape the four player group.
 
     For example, if the algorithm assumes that $A \leadsto D$, this information is useless as soon as we're addressing players other than $A,B,C,D$.
-
-    An example trace of the program, applied to the small example above is given in Appendix~\ref{appendix:worst-case}.
 
     This demonstrates the fact that the algorithm will have to backtrack and reverse each assumption it makes upon reaching the cycle at the end. Since it will make one assumption for each group of three players, the running time will be $O(n \cdot 2^{n/3})$, which is exponential. 
 
@@ -914,7 +832,7 @@ Spring 2013
     \includegraphics[width=0.8\textwidth]{probplot.png}
     \end{center}
 
-    It seems that the likelihood a game having a solution increases very quickly in the number of players.
+    It seems that the likelihood that a game has a solution increases very quickly with the number of players.
 
     We didn't get quite all the way to $n=100$. Around $n=90$ the processes start to really drag. Also, spring break had ended and I needed to give back some computing resources. I received a message from Matthew Mooney, a student in the Computer Science department:
     \begin{quote}
@@ -980,6 +898,140 @@ Spring 2013
 %\section{Conclusion}
 We hope this has been enlightening for camp counselors and other outdoor educators. Counselors who are trying to keep their campers occupied now know they are better off splitting their 30-person group into two 15-person games, which are less likely to have solutions. If, instead, they're trying to bring a game to a resolution, we have provided algorithms and code to find solutions when they exist. And (perhaps to the dismay of tree-climbing, hole-digging campers), we have shown that players need not venture to three (or more!) dimensions to find solutions, but can instead keep their feet safely on the ground. 
 
+\section{Appendix: Pseudocode}
+\label{sec:appendix_pseudocode}
+
+Pseudocode for section~\ref{sec:algorithm}. This first version takes advantage of none of the efficiencies we develop.
+
+   \begin{codebox}
+    \Procname{$\proc{FindOrdering}(P,n,w)$}
+    \li \For $G\in D$
+    \li     \Do
+            \If $G$ is acyclic
+    \li         \Do
+                    \Return $\proc{TopologicalSort}(G)$
+            \End
+        \End
+    \li \Return None
+    \end{codebox}
+
+The second version avoids enumerating all elements of $D$ by building up the graph one edge at a time.
+
+    \begin{codebox}
+    \Procname{$\proc{FindOrdering}(P,n,w)$}
+    \li $G \gets (\emptyset, \emptyset)$
+    \li $S \gets P$ \> \> \Comment $S$ is the set of players whose constraints have yet to be considered
+    \li $G \gets \proc{MakeAssumption}(G,S,n,w)$
+    \li \If $G$ is acyclic
+    \li     \Do
+            \Return $\proc{TopologicalSort}(G)$
+        \End
+    \li \Return None
+    \end{codebox}
+
+
+    \begin{codebox}
+    \Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
+    \li \If $S \isequal \emptyset$
+    \li     \Then
+            \Return $G$ \Comment Success!
+        \End
+    \li \If $G$ contains a cycle
+    \li     \Then
+            \Return $G$ \Comment Failure case
+        \End
+    \li Let $p \in S$
+    \li $F \gets G$
+    \li Add $(p,\w(p))$ and $(\w(p),\n(p))$ to the edgeset of $F$.
+    %\li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(p,\w(p)), (\w(p),\n(p))\}$
+    \li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
+    \li \If $F$ is acyclic
+    \li     \Do
+            \Return $F$ \Comment Success!
+        \End
+    \li $F \gets G$ \Comment That didn't work, try the other way.
+    \li Add $(\n(p),\w(p))$ and $(\w(p),p)$ to the edgeset of $F$.
+    %\li $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(\n(p), \w(p)), (\w(p),p)\}$
+    \li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
+    \end{codebox}
+
+This last version takes advantage of the \emph{implied edges} described in section~\ref{sec:algorithm}. These implied edges speed up the runtime by moving toward either a finished graph or a contradiction with fewer recursive steps. We will use the same definition of $\proc{FindOrdering}$. It is implicit that we will choose our $p\in S$ on line~\ref{li:choose-p} of \proc{MakeAssumption} such that the set $\{p,\w(p), \n(p)\}$ shares two elements with as many $\{t, \w(t), \n(t)\}, t\in S$ as possible, in order to take advantage of \emph{implied edges} as early as possible.
+
+
+    \begin{codebox}
+    \Procname{$\proc{MakeAssumption}(G,S,\n,\w)$}
+    \li \If $S = \emptyset$
+    \li \Do \Return $G$ \Comment Success!
+        \End
+    \li \If $G$ contains a cycle
+    \li     \Then
+            \Return $G$ \Comment Failure case
+        \End
+    \li Let $p \in S$.              \label{li:choose-p}
+    \li $F \gets G$
+    \li $F \gets \proc{AddImpliedEdges}(F, (p,\w(p)), S,\n,\w)$
+    \li $F \gets \proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$
+    \li \If $F$ is acyclic
+    \li     \Do
+            \Return $F$ \Comment Success!
+        \End
+    \li $F \gets G$ \Comment That didn't work, try the other way.
+    \li $F \gets \proc{AddImpliedEdges}(F, (\w(p), p), S, \n, \w)$
+    \li \Return $\proc{MakeAssumption}(F,S\setminus \{p\}, \n, \w)$ \Comment acyclic or not, this is our best shot.
+    \end{codebox}
+
+
+    \begin{codebox}
+    \Procname{$\proc{AddImpliedEdges}(F,(a,b),S,\n,\w)$}
+    \li $Q \gets \emptyset$
+    \li $\proc{Enqueue}(Q,(a,b))$
+    \li \While $Q$ is not empty
+    \li     \Do
+            $(r,s) \gets \proc{Dequeue}(Q)$
+    \li      Add $(r,s)$ to the edgeset of $F$.
+    %\li     $\attrib{F}{E} \gets \attrib{F}{E} \cup \{(r,s)\}$
+    \li     \For $(t,u) \in \proc{ImpliedEdges}((r,s),S,\n,\w)$
+    \li         \Do
+                \If $(t,u) \notin \text{ edgeset of } F$%\attrib{F}{E}$
+    \li             \Do
+                    Add $(t,u)$ to the edgeset of $F$.
+                    %$\attrib{F}{E} \gets \attrib{F}{E} \cup \{(t,u)\}$
+    \li             $\proc{Enqueue}(Q,(t,u))$
+                \End
+            \End
+        \End
+    \li \Return $F$
+    \end{codebox}
+
+
+
+    \begin{codebox}
+    \Procname{$\proc{ImpliedEdges}((r,s),S,\n,\w)$}
+    \li $E \gets \emptyset$
+    \li \For $t \in S$
+    \li     \Do
+            \If $(r,s) \isequal (t, \w(t))$
+    \li         \Do
+                $E \gets E \cup \{(\w(t),\n(t)), (t, \n(t))\}$
+    \li     \ElseIf $(r,s) \isequal (\w(t), t)$
+    \li         \Do
+                $E \gets E \cup \{(\n(t),\w(t)), (\n(t), t)\}$ 
+    \li     \ElseIf $(r,s) \isequal (t, \n(t))$
+    \li         \Do
+                $E \gets E \cup \{(t,\w(t)), (\w(t), \n(t))\}$
+    \li     \ElseIf $(r,s) \isequal (\n(t), t)$
+    \li         \Do
+                $E \gets E \cup \{(\w(t), t), (\n(t), \w(t))\}$
+    \li     \ElseIf $(r,s) \isequal (\w(t), \n(t))$
+    \li         \Do
+                $E \gets E \cup \{(t,\w(t)), (t, \n(t))\}$
+    \li     \ElseIf $(r,s) \isequal (\n(t), \w(t))$
+    \li         \Do
+                $E \gets E \cup \{(\w(t), t), (\n(t), t)\}$
+            \End
+        \End
+    \li \Return $E$
+    \end{codebox}
 
 \begin{thebibliography}{9}
 
